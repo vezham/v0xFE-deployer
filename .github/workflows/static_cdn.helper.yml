@@ -101,15 +101,15 @@ jobs:
       - name: logs | ls
         run: ls
         
-      # - name: cloud | build
-      #   run: npm run build --name=${{ env.NX_APP_NAME }}
+      - name: cloud | build
+        run: npm run build --name=${{ env.NX_APP_NAME }}
 
-      # - name: logs | archive npm failure logs
-      #   if: failure()
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: npm-logs
-      #     path: ~/.npm/_logs
+      - name: logs | archive npm failure logs
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: npm-logs
+          path: ~/.npm/_logs
 
       - name: cloud-setup | firebase
         run: bash ${{ env.CI_DIR }}/firebase.sh ${{ env.CI_PATH }}
