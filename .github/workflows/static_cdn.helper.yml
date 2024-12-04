@@ -94,12 +94,6 @@ jobs:
           envkey_V_IS_DEBUG: ${{ inputs.IS_DEBUG }}
           envkey_V_IS_BETA: ${{ inputs.IS_BETA }}
           envkey_V_APP_NAME: ${{ inputs.APP_NAME }}
-      
-      - name: logs | sk
-        run: echo ${{ secrets.GCP_SA_KEY }}
-
-      - name: logs | pid
-        run: echo ${{ secrets.GCP_PROJECT_ID }}
         
       - name: logs | post env
         run: pwd
