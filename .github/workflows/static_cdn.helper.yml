@@ -1,0 +1,116 @@
+name: static_cdn | helper
+
+on:
+  workflow_call:
+    secrets:
+      GCP_PROJECT_ID:
+        required: true
+      GCP_SA_KEY:
+        required: true
+    inputs:
+      GIT_REPO:
+        required: false
+        type: string
+      GIT_BRANCH:
+        required: false
+        type: string
+      IS_PREVIEW:
+        required: false
+        type: boolean
+        default: false
+      IS_DEBUG:
+        required: false
+        type: boolean
+        default: false
+      IS_BETA:
+        required: false
+        type: boolean
+        default: false
+      APP_NAME:
+        type: string
+      # wjdlz | NOTE: custom-fields
+
+env:
+  REPO: ${{ inputs.GIT_REPO || 'vezham/v0xFE-apps-cdns' }}
+  BRANCH: ${{ inputs.GIT_BRANCH || 'timeline' }}
+  ENTRY_POINT: ./apps_cdns/static_cdn
+  DX_APP_NAME: static_cdn
+  NX_APP_NAME: static_cdn
+
+jobs:
+  build_and_deploy:
+    strategy:
+      matrix:
+        node-version: [18]
+        pnpm-version: [8]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: ${{ env.ENTRY_POINT }}
+    steps:
+      - name: checkout | ${{ env.REPO }} | ${{ env.BRANCH }}
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ env.REPO }}
+          ref: ${{ env.BRANCH }}
+
+      - name: setup | short-sha
+        uses: benjlevesque/short-sha@v3.0
+        id: short-sha
+
+      - name: setup | $SHA
+        run: |
+          echo 'SHA=${{ steps.short-sha.outputs.sha }}' >> $GITHUB_ENV
+
+      - name: setup | run_if
+        id: run_if
+        run: |
+          echo "DX_APP_URL=${{ env.DX_APP_NAME }}-${{ env.BRANCH }}-${{ env.SHA }}-${{ github.actor }}.ui.dx.tva.v0x.in" >> $GITHUB_ENV
+
+      - name: setup | pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: ${{ matrix.pnpm-version }}
+
+      - name: setup | node env
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+          cache-dependency-path: '**/pnpm-lock.yaml'
+
+      - name: setup | pnpm install dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - name: setup | .env vars
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+          directory: ${{ env.ENTRY_POINT }}
+          envkey_V_IS_PREVIEW: ${{ inputs.IS_PREVIEW }}
+          envkey_V_IS_DEBUG: ${{ inputs.IS_DEBUG }}
+          envkey_V_IS_BETA: ${{ inputs.IS_BETA }}
+          envkey_V_APP_NAME: ${{ inputs.APP_NAME }}
+      
+      - name: cloud | build
+        run: npm run build --name=${{ env.NX_APP_NAME }}
+
+      - name: logs | archive npm failure logs
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: npm-logs
+          path: ~/.npm/_logs
+
+      - name: cloud-setup | firebase
+        run: bash ./v/bin/firebase.sh ${{ env.NX_APP_NAME }}
+
+      - name: gcp | cloud CLI
+        uses: w9jds/firebase-action@v12.9.0
+        with:
+          args: deploy --only hosting
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+
+    # wjdlz | TODO: vercel cloud-setup, deployer | create commit comment
