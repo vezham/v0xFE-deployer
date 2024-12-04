@@ -135,6 +135,6 @@ jobs:
           repoToken: ${{ env.GITHUB_TOKEN }}
           projectId: ${{ secrets.GCP_PROJECT_ID }}
           firebaseServiceAccount: ${{ secrets.GCP_SA_KEY }}
-          entryPoint: ${{ env.ENTRY_POINT }}
+          # entryPoint: ${{ env.ENTRY_POINT }}
 
     # wjdlz | TODO: vercel cloud-setup, deployer | create commit comment
