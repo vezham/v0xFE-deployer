@@ -35,6 +35,7 @@ env:
   BRANCH: ${{ inputs.GIT_BRANCH || 'timeline' }}
   ENTRY_POINT: ./apps_cdns/static_cdn
   CI_DIR: ../../v/bin/ci
+  CI_PATH: apps_cdns/static_cdn
   DX_APP_NAME: static_cdn
   NX_APP_NAME: static_cdn
 
@@ -82,7 +83,7 @@ jobs:
           cache-dependency-path: '**/pnpm-lock.yaml'
 
       - name: setup | pnpm install dependencies
-        run: pnpm install
+        run: pnpm install --ignore-scripts
         # run: pnpm install --frozen-lockfile
         # run: pnpm install --frozen-lockfile --ignore-scripts
 
@@ -106,7 +107,7 @@ jobs:
           path: ~/.npm/_logs
 
       - name: cloud-setup | firebase
-        run: bash ${{ env.CI_DIR }}/firebase.sh ${{ env.NX_APP_NAME }}
+        run: bash ${{ env.CI_DIR }}/firebase.sh ${{ env.CI_PATH }}
 
       - name: gcp | cloud CLI
         uses: w9jds/firebase-action@v12.9.0
