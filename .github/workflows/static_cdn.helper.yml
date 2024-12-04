@@ -104,7 +104,7 @@ jobs:
           path: ~/.npm/_logs
 
       - name: cloud-setup | firebase
-        run: bash ./v/bin/firebase.sh ${{ env.NX_APP_NAME }}
+        run: bash ./v/bin/ci/firebase.sh ${{ env.NX_APP_NAME }}
 
       - name: gcp | cloud CLI
         uses: w9jds/firebase-action@v12.9.0
