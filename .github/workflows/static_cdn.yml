@@ -9,7 +9,7 @@ on:
 
 jobs:
   tva:
-    name: data_center | TVA
+    name: dc/TVA
     if: ${{ inputs.CALLER == 'timeline' }}
     uses: vezham/v0xFE-deployer/.github/workflows/static_cdn.helper.yml@timeline
     secrets:
@@ -22,7 +22,7 @@ jobs:
       APP_NAME: static_cdn
       
   dev:
-    name: data_center | dev
+    name: dc/dev
     if: ${{ inputs.CALLER == 'deploy/dev' || inputs.CALLER == 'scheduler' }}
     uses: vezham/v0xFE-deployer/.github/workflows/static_cdn.helper.yml@timeline
     secrets:
@@ -35,7 +35,7 @@ jobs:
       APP_NAME: static_cdn
 
   qa:
-    name: data_center | qa
+    name: dc/qa
     if: ${{ inputs.CALLER == 'deploy/qa' || inputs.CALLER == 'scheduler' }}
     uses: vezham/v0xFE-deployer/.github/workflows/static_cdn.helper.yml@timeline
     secrets:
@@ -47,7 +47,7 @@ jobs:
       APP_NAME: static_cdn
 
   preview:
-    name: data_center | preview
+    name: dc/preview
     if: ${{ inputs.CALLER == 'deploy/preview' || inputs.CALLER == 'scheduler' }}
     uses: vezham/v0xFE-deployer/.github/workflows/static_cdn.helper.yml@timeline
     secrets:
@@ -58,7 +58,7 @@ jobs:
       APP_NAME: static_cdn
       
   live:
-    name: data_center | live
+    name: dc/live
     if: ${{ inputs.CALLER == 'deploy/live' || inputs.CALLER == 'scheduler' }}
     uses: vezham/v0xFE-deployer/.github/workflows/static_cdn.helper.yml@timeline
     secrets:

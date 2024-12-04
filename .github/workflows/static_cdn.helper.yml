@@ -34,6 +34,7 @@ env:
   REPO: ${{ inputs.GIT_REPO || 'vezham/v0xFE-apps-cdns' }}
   BRANCH: ${{ inputs.GIT_BRANCH || 'timeline' }}
   ENTRY_POINT: ./apps_cdns/static_cdn
+  CI_DIR: ../../v/bin/ci
   DX_APP_NAME: static_cdn
   NX_APP_NAME: static_cdn
 
@@ -82,6 +83,7 @@ jobs:
 
       - name: setup | pnpm install dependencies
         run: pnpm install
+        # run: pnpm install --frozen-lockfile
         # run: pnpm install --frozen-lockfile --ignore-scripts
 
       - name: setup | .env vars
@@ -104,7 +106,7 @@ jobs:
           path: ~/.npm/_logs
 
       - name: cloud-setup | firebase
-        run: bash ./v/bin/ci/firebase.sh ${{ env.NX_APP_NAME }}
+        run: bash ${{ env.CI_DIR }} /firebase.sh ${{ env.NX_APP_NAME }}
 
       - name: gcp | cloud CLI
         uses: w9jds/firebase-action@v12.9.0
