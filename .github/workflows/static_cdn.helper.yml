@@ -119,14 +119,6 @@ jobs:
 
       - name: logs | ls
         run: ls
-        
-      - name: gcp | cloud CLI
-        uses: w9jds/firebase-action@v12.9.0
-        with:
-          args: deploy --only hosting
-        env:
-          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
-          PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
           
       # - name: gcp | cloud CLI
       #   uses: w9jds/firebase-action@v12.9.0
