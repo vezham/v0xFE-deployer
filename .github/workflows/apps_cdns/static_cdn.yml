@@ -1,0 +1,69 @@
+name: static_cdn | deployer
+
+on:
+  workflow_call:
+    inputs:
+      CALLER:
+        required: true
+        type: string
+
+jobs:
+  tva:
+    name: data_center | TVA
+    if: ${{ inputs.CALLER == 'timeline' }}
+    uses: vezham/v0xFE-deployer/.github/workflows/apps_cdns/static_cdn.helper.yml@deployer
+    secrets:
+      GCP_PROJECT_ID: ${{ secrets.STATIC_CDN_TVA_GCP_PROJECT_ID }}
+      GCP_SA_KEY: ${{ secrets.STATIC_CDN_TVA_GCP_SA_KEY }}
+    with:
+      GIT_BRANCH: ${{ inputs.CALLER }}
+      IS_DEBUG: true
+      IS_BETA: true
+      APP_NAME: static_cdn
+      
+  dev:
+    name: data_center | dev
+    if: ${{ inputs.CALLER == 'deploy/dev' || inputs.CALLER == 'scheduler' }}
+    uses: vezham/v0xFE-deployer/.github/workflows/apps_cdns/static_cdn.helper.yml@deployer
+    secrets:
+      GCP_PROJECT_ID: ${{ secrets.STATIC_CDN_DEV_GCP_PROJECT_ID }}
+      GCP_SA_KEY: ${{ secrets.STATIC_CDN_DEV_GCP_SA_KEY }}
+    with:
+      GIT_BRANCH: deploy/dev
+      IS_DEBUG: true
+      IS_BETA: true
+      APP_NAME: static_cdn
+
+  qa:
+    name: data_center | qa
+    if: ${{ inputs.CALLER == 'deploy/qa' || inputs.CALLER == 'scheduler' }}
+    uses: vezham/v0xFE-deployer/.github/workflows/apps_cdns/static_cdn.helper.yml@deployer
+    secrets:
+      GCP_PROJECT_ID: ${{ secrets.STATIC_CDN_QA_GCP_PROJECT_ID }}
+      GCP_SA_KEY: ${{ secrets.STATIC_CDN_QA_GCP_SA_KEY }}
+    with:
+      GIT_BRANCH: deploy/qa
+      IS_BETA: true
+      APP_NAME: static_cdn
+
+  preview:
+    name: data_center | preview
+    if: ${{ inputs.CALLER == 'deploy/preview' || inputs.CALLER == 'scheduler' }}
+    uses: vezham/v0xFE-deployer/.github/workflows/apps_cdns/static_cdn.helper.yml@deployer
+    secrets:
+      GCP_PROJECT_ID: ${{ secrets.STATIC_CDN_PREVIEW_GCP_PROJECT_ID }}
+      GCP_SA_KEY: ${{ secrets.STATIC_CDN_PREVIEW_GCP_SA_KEY }}
+    with:
+      GIT_BRANCH: deploy/preview
+      APP_NAME: static_cdn
+      
+  live:
+    name: data_center | live
+    if: ${{ inputs.CALLER == 'deploy/live' || inputs.CALLER == 'scheduler' }}
+    uses: vezham/v0xFE-deployer/.github/workflows/apps_cdns/static_cdn.helper.yml@deployer
+    secrets:
+      GCP_PROJECT_ID: ${{ secrets.STATIC_CDN_LIVE_GCP_PROJECT_ID }}
+      GCP_SA_KEY: ${{ secrets.STATIC_CDN_LIVE_GCP_SA_KEY }}
+    with:
+      GIT_BRANCH: deploy/live
+      APP_NAME: static_cdn
