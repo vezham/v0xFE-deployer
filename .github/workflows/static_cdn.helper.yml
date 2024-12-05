@@ -35,7 +35,7 @@ env:
   BRANCH: ${{ inputs.GIT_BRANCH || 'timeline' }}
   CI_DIR: ../../v/bin/ci
   ENTRY_POINT: ./apps_cdns/static_cdn
-  APP_PATH: apps_cdns/static_cdn
+  DX_APP_PATH: apps_cdns/static_cdn
   DX_APP_NAME: static_cdn
   NX_APP_NAME: static_cdn
 
@@ -83,7 +83,7 @@ jobs:
           cache: 'pnpm'
           cache-dependency-path: '**/pnpm-lock.yaml'
 
-      - name: setup | pnpm install dependencies
+      - name: setup | pnpm install
         # run: pnpm install --ignore-scripts
         run: pnpm install --frozen-lockfile --ignore-scripts
 
@@ -107,7 +107,7 @@ jobs:
           path: ~/.npm/_logs
 
       - name: cloud-setup | firebase
-        run: bash ${{ env.CI_DIR }}/firebase.sh ${{ env.APP_PATH }}
+        run: bash ${{ env.CI_DIR }}/firebase.sh ${{ env.DX_APP_PATH }}
 
       - name: cloud-cli | gcp/preview
         uses: FirebaseExtended/action-hosting-deploy@v0
@@ -147,5 +147,5 @@ jobs:
         with:
           body: |
             🚀 Build deployed successfully to the following URLs
-            - [Preview](${{steps.gcp-preview-url.outputs.value}})
+            - [Preview](${{ steps.gcp-preview-url.outputs.value }}) - ${{ steps.gcp-preview.outputs.expire_time_formatted }}
             - [Live Demo](https://${{ secrets.GCP_PROJECT_ID }}.web.app)
