@@ -84,8 +84,8 @@ jobs:
           cache-dependency-path: '**/pnpm-lock.yaml'
 
       - name: setup | pnpm install dependencies
-        run: pnpm install --ignore-scripts
-        # run: pnpm install --frozen-lockfile --ignore-scripts
+        # run: pnpm install --ignore-scripts
+        run: pnpm install --frozen-lockfile --ignore-scripts
 
       - name: setup | .env vars
         uses: SpicyPizza/create-envfile@v1.3
