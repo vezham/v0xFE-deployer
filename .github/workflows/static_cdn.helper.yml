@@ -33,9 +33,9 @@ on:
 env:
   REPO: ${{ inputs.GIT_REPO || 'vezham/v0xFE-apps-cdns' }}
   BRANCH: ${{ inputs.GIT_BRANCH || 'timeline' }}
-  ENTRY_POINT: ./apps_cdns/static_cdn
   CI_DIR: ../../v/bin/ci
-  CI_PATH: apps_cdns/static_cdn
+  ENTRY_POINT: ./apps_cdns/static_cdn
+  APP_PATH: apps_cdns/static_cdn
   DX_APP_NAME: static_cdn
   NX_APP_NAME: static_cdn
 
@@ -44,7 +44,7 @@ jobs:
     strategy:
       matrix:
         node-version: [20]
-        pnpm-version: [8.9.2]
+        pnpm-version: [9.6.0]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     defaults:
@@ -95,12 +95,6 @@ jobs:
           envkey_V_IS_BETA: ${{ inputs.IS_BETA }}
           envkey_V_APP_NAME: ${{ inputs.APP_NAME }}
         
-      - name: logs | post env
-        run: pwd
-
-      - name: logs | ls
-        run: ls
-        
       - name: cloud | build
         run: npm run build --name=${{ env.NX_APP_NAME }}
 
@@ -112,24 +106,25 @@ jobs:
           path: ~/.npm/_logs
 
       - name: cloud-setup | firebase
-        run: bash ${{ env.CI_DIR }}/firebase.sh ${{ env.CI_PATH }}
+        run: bash ${{ env.CI_DIR }}/firebase.sh ${{ env.APP_PATH }}
 
       - name: logs | post env
         run: pwd
 
       - name: logs | ls
         run: ls
-          
+
       # - name: gcp | cloud CLI
       #   uses: w9jds/firebase-action@v12.9.0
       #   with:
       #     args: deploy --only hosting
       #   env:
-      #     GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
       #     PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+      #     GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
 
       - name: gcp | cloud CLI
         uses: FirebaseExtended/action-hosting-deploy@v0
+        id: gcp
         with:
           channelId: live
           repoToken: ${{ env.GITHUB_TOKEN }}
@@ -138,3 +133,11 @@ jobs:
           # entryPoint: ${{ env.ENTRY_POINT }}
 
     # wjdlz | TODO: vercel cloud-setup, deployer | create commit comment
+      - name: deployer | create commit comment
+        uses: peter-evans/commit-comment@v1
+        with:
+          body: |
+            Build deployed successfully to the following URLs
+            - https://${{ env.DX_APP_URL }}
+            - urls ${{steps.gcp.outputs.url}}
+            - details_url ${{steps.gcp.outputs.details_url}}
