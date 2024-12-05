@@ -128,7 +128,7 @@ jobs:
           find: '***'
           replace: ${{ secrets.GCP_PROJECT_ID }}
         
-      - name: gcp | cloud CLI
+      - name: gcp/live | cloud CLI
         uses: FirebaseExtended/action-hosting-deploy@v0
         id: gcp
         with:
@@ -146,5 +146,5 @@ jobs:
         with:
           body: |
             🚀 Build deployed successfully to the following URLs
-            - https://${{steps.gcp-preview-url.outputs.value}}
-            - https://${{ secrets.GCP_PROJECT_ID }}.web.app
+            - [Preview](${{steps.gcp-preview-url.outputs.value}})
+            - [Live Demo](https://${{ secrets.GCP_PROJECT_ID }}.web.app)
