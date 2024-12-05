@@ -127,6 +127,9 @@ jobs:
           firebaseServiceAccount: ${{ secrets.GCP_SA_KEY }}
           # entryPoint: ${{ env.ENTRY_POINT }}
           
+      - name: Set step summary
+        run: echo '🚀[Deploy URL](${{ steps.gcp-preview.outputs.details_url }})' >> $GITHUB_STEP_SUMMARY
+        
       - name: gcp | cloud CLI
         uses: FirebaseExtended/action-hosting-deploy@v0
         id: gcp
@@ -137,10 +140,15 @@ jobs:
           firebaseServiceAccount: ${{ secrets.GCP_SA_KEY }}
           # entryPoint: ${{ env.ENTRY_POINT }}
 
+      - name: Set step summary
+        run: echo '🚀[Deploy URL](${{ steps.gcp.outputs.details_url }})' >> $GITHUB_STEP_SUMMARY
+
       # wjdlz | TODO: vercel cloud-setup
 
       - name: Check outputs
         run: |
+          echo urls ${{toJSON(steps.gcp.outputs)}}
+          echo urls ${{toJSON(steps.gcp-preview.outputs)}}
           echo urls ${{steps.gcp-preview.outputs}}
           echo urls ${{steps.gcp-preview.outputs.url}}
           echo expire_time ${{steps.gcp-preview.outputs.expire_time}}
