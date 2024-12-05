@@ -120,13 +120,6 @@ jobs:
           firebaseServiceAccount: ${{ secrets.GCP_SA_KEY }}
           # entryPoint: ${{ env.ENTRY_POINT }}
           
-      - name: Check outputs
-        run: |
-          echo urls ${{steps.gcp-preview.outputs.url}}
-          echo expire_time ${{steps.gcp-preview.outputs.expire_time}}
-          echo expire_time_formatted ${{steps.gcp-preview.outputs.expire_time_formatted}}
-          echo details_url ${{steps.gcp-preview.outputs.details_url}}
-          
       - name: setup | fetch preview url
         uses: mad9000/actions-find-and-replace-string@5
         id: gcp-preview-url
@@ -154,5 +147,5 @@ jobs:
         with:
           body: |
             🚀 Build deployed successfully to the following URLs
-            - [Preview](${{ steps.gcp-preview-url.outputs.value }}) - ${{ steps.gcp-preview.outputs.expire_time_formatted }}
+            - [Preview](${{ steps.gcp-preview-url.outputs.value }}) - ${{ steps.gcp-preview.outputs.expire_time }}
             - [Live Demo](https://${{ secrets.GCP_PROJECT_ID }}.web.app)
