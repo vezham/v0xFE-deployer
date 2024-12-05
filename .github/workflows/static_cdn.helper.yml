@@ -108,12 +108,6 @@ jobs:
       - name: cloud-setup | firebase
         run: bash ${{ env.CI_DIR }}/firebase.sh ${{ env.APP_PATH }}
 
-      - name: logs | post env
-        run: pwd
-
-      - name: logs | ls
-        run: ls
-
       # - name: gcp | cloud CLI
       #   uses: w9jds/firebase-action@v12.9.0
       #   with:
@@ -122,6 +116,16 @@ jobs:
       #     PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
       #     GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
 
+      - name: gcp/preview | cloud CLI
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        id: gcp-preview
+        with:
+          expires: 14d
+          repoToken: ${{ env.GITHUB_TOKEN }}
+          projectId: ${{ secrets.GCP_PROJECT_ID }}
+          firebaseServiceAccount: ${{ secrets.GCP_SA_KEY }}
+          # entryPoint: ${{ env.ENTRY_POINT }}
+          
       - name: gcp | cloud CLI
         uses: FirebaseExtended/action-hosting-deploy@v0
         id: gcp
@@ -132,12 +136,14 @@ jobs:
           firebaseServiceAccount: ${{ secrets.GCP_SA_KEY }}
           # entryPoint: ${{ env.ENTRY_POINT }}
 
-    # wjdlz | TODO: vercel cloud-setup, deployer | create commit comment
+      # wjdlz | TODO: vercel cloud-setup
+
       - name: Check outputs
         run: |
-          echo urls ${{steps.gcp.outputs.url}}
-          echo expire_time ${{steps.gcp.outputs.expire_time}}
-          echo details_url ${{steps.gcp.outputs.details_url}}
+          echo urls ${{steps.gcp-preview.outputs}}
+          echo urls ${{steps.gcp-preview.outputs.url}}
+          echo expire_time ${{steps.gcp-preview.outputs.expire_time}}
+          echo details_url ${{steps.gcp-preview.outputs.details_url}}
           
       - name: deployer | create commit comment
         uses: peter-evans/commit-comment@v1
@@ -145,6 +151,6 @@ jobs:
           body: |
             Build deployed successfully to the following URLs
             - https://${{ env.DX_APP_URL }}
-            - - urls ${{steps.gcp.outputs}}
+            - urls ${{steps.gcp.outputs}}
             - urls ${{steps.gcp.outputs.url}}
             - details_url ${{steps.gcp.outputs.details_url}}
