@@ -120,7 +120,8 @@ jobs:
         uses: FirebaseExtended/action-hosting-deploy@v0
         id: gcp-preview
         with:
-          expires: 14d
+          expires: 30d
+          channelId: ${{ env.DX_APP_URL }}
           repoToken: ${{ env.GITHUB_TOKEN }}
           projectId: ${{ secrets.GCP_PROJECT_ID }}
           firebaseServiceAccount: ${{ secrets.GCP_SA_KEY }}
