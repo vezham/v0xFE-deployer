@@ -67,8 +67,9 @@ jobs:
 
       - name: setup | run_if
         id: run_if
+        # echo "DX_APP_URL=${{ env.DX_APP_NAME }}-${{ env.BRANCH }}-${{ env.SHA }}-${{ github.actor }}.ui.dx.tva.v0x.in" >> $GITHUB_ENV
         run: |
-          echo "DX_APP_URL=${{ env.DX_APP_NAME }}-${{ env.BRANCH }}-${{ env.SHA }}-${{ github.actor }}.ui.dx.tva.v0x.in" >> $GITHUB_ENV
+          echo "DX_APP_URL=${{ env.DX_APP_NAME }}-${{ env.BRANCH }}-${{ env.SHA }}" >> $GITHUB_ENV
 
       - name: setup | pnpm
         uses: pnpm/action-setup@v4
@@ -108,14 +109,6 @@ jobs:
       - name: cloud-setup | firebase
         run: bash ${{ env.CI_DIR }}/firebase.sh ${{ env.APP_PATH }}
 
-      # - name: gcp | cloud CLI
-      #   uses: w9jds/firebase-action@v12.9.0
-      #   with:
-      #     args: deploy --only hosting
-      #   env:
-      #     PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
-      #     GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
-
       - name: gcp/preview | cloud CLI
         uses: FirebaseExtended/action-hosting-deploy@v0
         id: gcp-preview
@@ -127,8 +120,13 @@ jobs:
           firebaseServiceAccount: ${{ secrets.GCP_SA_KEY }}
           # entryPoint: ${{ env.ENTRY_POINT }}
           
-      - name: Set step summary
-        run: echo '🚀[Deploy URL](${{ steps.gcp-preview.outputs.details_url }})' >> $GITHUB_STEP_SUMMARY
+      - name: fetch preview url
+        uses: mad9000/actions-find-and-replace-string@5
+        id: gcp-preview-url
+        with:
+          source: ${{ steps.gcp-preview.outputs.details_url }}
+          find: '***'
+          replace: ${{ secrets.GCP_PROJECT_ID }}
         
       - name: gcp | cloud CLI
         uses: FirebaseExtended/action-hosting-deploy@v0
@@ -140,26 +138,13 @@ jobs:
           firebaseServiceAccount: ${{ secrets.GCP_SA_KEY }}
           # entryPoint: ${{ env.ENTRY_POINT }}
 
-      - name: Set step summary
-        run: echo '🚀[Deploy URL](${{ steps.gcp.outputs.details_url }})' >> $GITHUB_STEP_SUMMARY
-
       # wjdlz | TODO: vercel cloud-setup
 
-      - name: Check outputs
-        run: |
-          echo urls ${{toJSON(steps.gcp.outputs)}}
-          echo urls ${{toJSON(steps.gcp-preview.outputs)}}
-          echo urls ${{steps.gcp-preview.outputs}}
-          echo urls ${{steps.gcp-preview.outputs.url}}
-          echo expire_time ${{steps.gcp-preview.outputs.expire_time}}
-          echo details_url ${{steps.gcp-preview.outputs.details_url}}
-          
       - name: deployer | create commit comment
         uses: peter-evans/commit-comment@v1
+        # - https://${{ env.DX_APP_URL }}
         with:
           body: |
-            Build deployed successfully to the following URLs
-            - https://${{ env.DX_APP_URL }}
-            - urls ${{steps.gcp.outputs}}
-            - urls ${{steps.gcp.outputs.url}}
-            - details_url ${{steps.gcp.outputs.details_url}}
+            🚀 Build deployed successfully to the following URLs
+            - https://${{steps.gcp-preview-url.outputs.value}}
+            - https://${{ secrets.GCP_PROJECT_ID }}.web.app
