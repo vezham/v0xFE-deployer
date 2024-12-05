@@ -28,7 +28,7 @@ on:
         default: false
       APP_NAME:
         type: string
-      # wjdlz | NOTE: custom-fields
+      # wjdlz/NOTE: custom-fields
 
 env:
   REPO: ${{ inputs.GIT_REPO || 'vezham/v0xFE-apps-cdns' }}
@@ -51,7 +51,7 @@ jobs:
       run:
         working-directory: ${{ env.ENTRY_POINT }}
     steps:
-      - name: checkout | ${{ env.REPO }} | ${{ env.BRANCH }}
+      - name: checkout | ${{ env.REPO }}@${{ env.BRANCH }}
         uses: actions/checkout@v4
         with:
           repository: ${{ env.REPO }}
@@ -65,8 +65,8 @@ jobs:
         run: |
           echo 'SHA=${{ steps.short-sha.outputs.sha }}' >> $GITHUB_ENV
 
-      - name: setup | run_if
-        id: run_if
+      - name: setup | gen DX_APP_URL
+        id: gen-dx-app-url
         # echo "DX_APP_URL=${{ env.DX_APP_NAME }}-${{ env.BRANCH }}-${{ env.SHA }}-${{ github.actor }}.ui.dx.tva.v0x.in" >> $GITHUB_ENV
         run: |
           echo "DX_APP_URL=${{ env.DX_APP_NAME }}-${{ env.BRANCH }}-${{ env.SHA }}" >> $GITHUB_ENV
@@ -96,7 +96,7 @@ jobs:
           envkey_V_IS_BETA: ${{ inputs.IS_BETA }}
           envkey_V_APP_NAME: ${{ inputs.APP_NAME }}
         
-      - name: cloud | build
+      - name: setup | build
         run: npm run build --name=${{ env.NX_APP_NAME }}
 
       - name: logs | archive npm failure logs
@@ -109,7 +109,7 @@ jobs:
       - name: cloud-setup | firebase
         run: bash ${{ env.CI_DIR }}/firebase.sh ${{ env.APP_PATH }}
 
-      - name: gcp/preview | cloud CLI
+      - name: cloud-cli | gcp/preview
         uses: FirebaseExtended/action-hosting-deploy@v0
         id: gcp-preview
         with:
@@ -120,7 +120,7 @@ jobs:
           firebaseServiceAccount: ${{ secrets.GCP_SA_KEY }}
           # entryPoint: ${{ env.ENTRY_POINT }}
           
-      - name: fetch preview url
+      - name: setup | fetch preview url
         uses: mad9000/actions-find-and-replace-string@5
         id: gcp-preview-url
         with:
@@ -128,17 +128,18 @@ jobs:
           find: '***'
           replace: ${{ secrets.GCP_PROJECT_ID }}
         
-      - name: gcp/live | cloud CLI
+      - name: cloud-cli | gcp/live
         uses: FirebaseExtended/action-hosting-deploy@v0
         id: gcp
         with:
+          # expires: 30d
           channelId: live
           # repoToken: ${{ env.GITHUB_TOKEN }}
           projectId: ${{ secrets.GCP_PROJECT_ID }}
           firebaseServiceAccount: ${{ secrets.GCP_SA_KEY }}
           # entryPoint: ${{ env.ENTRY_POINT }}
 
-      # wjdlz | TODO: vercel cloud-setup
+      # wjdlz/NOTE: cloud-setup | vercel - alternative
 
       - name: deployer | create commit comment
         uses: peter-evans/commit-comment@v1
