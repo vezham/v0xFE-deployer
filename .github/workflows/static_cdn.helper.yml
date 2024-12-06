@@ -76,7 +76,7 @@ jobs:
         run: |
           OUT=${{ secrets.GCP_SA_KEY }}
           
-          GCP_PROJECT_ID1=${{ fromJSON(${{ OUT }})['project_id'] }}
+          GCP_PROJECT_ID1=${{ fromJSON(OUT)['project_id'] }}
           echo "::add-mask::$GCP_PROJECT_ID1"
           echo "GCP_PROJECT_ID1=$GCP_PROJECT_ID1" >> $GITHUB_ENV
           echo "::add-mask::${{ fromJSON(secrets.GCP_SA_KEY)['project_id'] }}"
