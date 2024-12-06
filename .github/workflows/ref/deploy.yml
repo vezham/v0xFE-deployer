@@ -6,3 +6,53 @@
       #   env:
       #     PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
       #     GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+
+
+      # - name: ci-setup | extract $ENV_TOKENS
+      #   id: extract-credentials
+      #   run: |
+      #     # wjdlz/NOTE: save token to temporary file
+      #     echo '${{ secrets.GCP_SA_KEY }}' > token.json
+          
+      #     # wjdlz/NOTE: extract & mask credentials
+      #     bash ${{ env.CI_DIR }}/firebase/extract-credentials.sh token.json "$GITHUB_OUTPUT"
+          
+      #     # wjdlz/NOTE: clean up
+      #     rm token.json
+
+      # - name: ci-setup | gen $ENV_TOKENS
+      #   id: gen-env-tokens
+      #   env:
+      #     GCP_PROJECT_ID: ${{ steps.extract-credentials.outputs.GCP_PROJECT_ID }}
+      #     VERCEL_TOKEN: ${{ steps.extract-credentials.outputs.VERCEL_TOKEN }}
+      #     VERCEL_ORG_ID: ${{ steps.extract-credentials.outputs.VERCEL_ORG_ID }}
+      #     VERCEL_PROJECT_ID: ${{ steps.extract-credentials.outputs.VERCEL_PROJECT_ID }}
+      #   run: |
+      #     {
+      #       echo "GCP_PROJECT_ID=$GCP_PROJECT_ID"
+      #       echo "VERCEL_TOKEN=$VERCEL_TOKEN"
+      #       echo "VERCEL_ORG_ID=$VERCEL_ORG_ID"
+      #       echo "VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID"
+      #     } >> $GITHUB_ENV
+
+      # -------
+
+      # - name: Extract credentials
+      #   id: fetch-credentials
+      #   run: |
+      #     # wjdlz/NOTE: save token to temporary file
+      #     echo '${{ secrets.GCP_SA_KEY }}' > token.json
+          
+      #     # wjdlz/NOTE: extract credentials & mask
+      #     .github/scripts/utils/extract-credentials.sh token.json "$GITHUB_OUTPUT"
+          
+      #     # Clean up
+      #     rm token.json
+
+      # - name: Mask credentials
+      #   run: |
+      #     .github/scripts/mask-credentials.sh \
+      #       "${{ steps.fetch-credentials.outputs.GCP_PROJECT_ID }}" \
+      #       "${{ steps.fetch-credentials.outputs.VERCEL_TOKEN }}" \
+      #       "${{ steps.fetch-credentials.outputs.VERCEL_ORG_ID }}" \
+      #       "${{ steps.fetch-credentials.outputs.VERCEL_PROJECT_ID }}"
