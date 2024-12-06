@@ -32,7 +32,7 @@ env:
   REPO: ${{ inputs.GIT_REPO || 'vezham/v0xFE-apps-cdns' }}
   BRANCH: ${{ inputs.GIT_BRANCH || 'timeline' }}
   CI_DIR: ../../v/bin/ci
-  CI_TOKEN_URL : https://lab5-ic-web-vezham.web.app/ci/gcp.json
+  CI_TOKEN_URL : https://lab5-ic-web-vezham.web.app/ci/gcp
   ENTRY_POINT: ./apps_cdns/static_cdn
   DX_APP_PATH: apps_cdns/static_cdn
   DX_APP_NAME: static_cdn
