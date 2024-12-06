@@ -74,6 +74,9 @@ jobs:
       - name: setup | mask $ENV_TOKENS
         id: mask-env-tokens
         run: |
+          OUT=${{ secrets.GCP_SA_KEY }}
+          the_secret=$(echo $OUT | jq -r '.project_id')
+          echo "::add-mask::$the_secret"
           echo "::add-mask::${{ fromJSON(secrets.GCP_SA_KEY)['project_id'] }}"
           
       - name: setup | gen $ENV_TOKENS
