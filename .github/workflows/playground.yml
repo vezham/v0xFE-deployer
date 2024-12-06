@@ -13,7 +13,6 @@ jobs:
     if: ${{ inputs.CALLER == 'timeline' }}
     uses: vezham/v0xFE-deployer/.github/workflows/playground.helper.yml@timeline
     secrets:
-      GCP_PROJECT_ID: ${{ secrets.PLAYGROUND_TVA_GCP_PROJECT_ID }}
       GCP_SA_KEY: ${{ secrets.PLAYGROUND_TVA_GCP_SA_KEY }}
     with:
       GIT_BRANCH: ${{ inputs.CALLER }}
@@ -29,7 +28,6 @@ jobs:
     if: ${{ inputs.CALLER == 'deploy/dev' || inputs.CALLER == 'scheduler' }}
     uses: vezham/v0xFE-deployer/.github/workflows/playground.helper.yml@timeline
     secrets:
-      GCP_PROJECT_ID: ${{ secrets.PLAYGROUND_DEV_GCP_PROJECT_ID }}
       GCP_SA_KEY: ${{ secrets.PLAYGROUND_DEV_GCP_SA_KEY }}
     with:
       GIT_BRANCH: deploy/dev
@@ -45,7 +43,6 @@ jobs:
     if: ${{ inputs.CALLER == 'deploy/qa' || inputs.CALLER == 'scheduler' }}
     uses: vezham/v0xFE-deployer/.github/workflows/playground.helper.yml@timeline
     secrets:
-      GCP_PROJECT_ID: ${{ secrets.PLAYGROUND_QA_GCP_PROJECT_ID }}
       GCP_SA_KEY: ${{ secrets.PLAYGROUND_QA_GCP_SA_KEY }}
     with:
       GIT_BRANCH: deploy/qa
@@ -60,7 +57,6 @@ jobs:
     if: ${{ inputs.CALLER == 'deploy/preview' || inputs.CALLER == 'scheduler' }}
     uses: vezham/v0xFE-deployer/.github/workflows/playground.helper.yml@timeline
     secrets:
-      GCP_PROJECT_ID: ${{ secrets.PLAYGROUND_PREVIEW_GCP_PROJECT_ID }}
       GCP_SA_KEY: ${{ secrets.PLAYGROUND_PREVIEW_GCP_SA_KEY }}
     with:
       GIT_BRANCH: deploy/preview
@@ -74,7 +70,6 @@ jobs:
     if: ${{ inputs.CALLER == 'deploy/live' || inputs.CALLER == 'scheduler' }}
     uses: vezham/v0xFE-deployer/.github/workflows/playground.helper.yml@timeline
     secrets:
-      GCP_PROJECT_ID: ${{ secrets.PLAYGROUND_LIVE_GCP_PROJECT_ID }}
       GCP_SA_KEY: ${{ secrets.PLAYGROUND_LIVE_GCP_SA_KEY }}
     with:
       GIT_BRANCH: deploy/live
