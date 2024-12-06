@@ -41,3 +41,11 @@ v0xFE-apps-internals
 ----
 
 v0xFE-lab
+
+
+steps:
+  - run: |
+      token=$( callEndpoint | jq '.authorizationToken' )
+      echo "AUTH_TOKEN=$token" >> "$GITHUB_ENV"
+
+    - run: echo "$AUTH_TOKEN"

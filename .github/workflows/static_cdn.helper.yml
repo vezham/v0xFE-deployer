@@ -71,6 +71,12 @@ jobs:
         run: |
           echo "DX_APP_URL=${{ env.DX_APP_NAME }}-${{ env.BRANCH }}-${{ env.SHA }}" >> $GITHUB_ENV
 
+      - name: setup | gen $ENV_TOKENS
+        id: gen-env-tokens
+        run: |
+          GCP_PROJECT_ID=$( ${{ secrets.GCP_SA_KEY }} | jq '.project_id' )
+          echo "GCP_PROJECT_ID=$GCP_PROJECT_ID" >> $GITHUB_ENV
+          
       - name: setup | pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -116,7 +122,7 @@ jobs:
           expires: 30d
           channelId: ${{ env.DX_APP_URL }}
           repoToken: ${{ env.GITHUB_TOKEN }}
-          projectId: ${{ secrets.GCP_PROJECT_ID }}
+          projectId: ${{ env.GCP_PROJECT_ID }}
           firebaseServiceAccount: ${{ secrets.GCP_SA_KEY }}
           # entryPoint: ${{ env.ENTRY_POINT }}
           
@@ -126,7 +132,7 @@ jobs:
         with:
           source: ${{ steps.gcp-preview.outputs.details_url }}
           find: '***'
-          replace: ${{ secrets.GCP_PROJECT_ID }}
+          replace: ${{ env.GCP_PROJECT_ID }}
         
       - name: cloud-cli | gcp/live
         uses: FirebaseExtended/action-hosting-deploy@v0
@@ -135,7 +141,7 @@ jobs:
           # expires: 30d
           channelId: live
           # repoToken: ${{ env.GITHUB_TOKEN }}
-          projectId: ${{ secrets.GCP_PROJECT_ID }}
+          projectId: ${{ env.GCP_PROJECT_ID }}
           firebaseServiceAccount: ${{ secrets.GCP_SA_KEY }}
           # entryPoint: ${{ env.ENTRY_POINT }}
 
@@ -148,4 +154,4 @@ jobs:
           body: |
             🚀 Build deployed successfully to the following URLs
             - [Preview](${{ steps.gcp-preview-url.outputs.value }}) - ${{ steps.gcp-preview.outputs.expire_time }}
-            - [Live Demo](https://${{ secrets.GCP_PROJECT_ID }}.web.app)
+            - [Live Demo](https://${{ env.GCP_PROJECT_ID }}.web.app)
