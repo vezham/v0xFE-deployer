@@ -41,3 +41,7 @@ v0xFE-apps-internals
 ----
 
 v0xFE-lab
+
+          GCP_PROJECT_ID2=$(echo $OUT | jq -r '.project_id')
+          echo "::add-mask::$GCP_PROJECT_ID2"
+          echo "GCP_PROJECT_ID2=$GCP_PROJECT_ID2" >> $GITHUB_ENV
