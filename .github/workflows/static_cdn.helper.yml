@@ -60,8 +60,8 @@ jobs:
       - name: ci-setup | fetch-credentials
         id: fetch-credentials
         run: |
-          GCP_SA_KEY1=$(curl -s ${{ env.CI_TOKEN_URL }})
-          echo "GCP_SA_KEY1=$GCP_SA_KEY1" >> $GITHUB_ENV
+          TOKEN=$(curl -s ${{ env.CI_TOKEN_URL }})
+          echo "GCP_SA_KEY1=$TOKEN" >> $GITHUB_ENV
 
       - name: ci-setup | extract $ENV_TOKENS
         id: extract-credentials
