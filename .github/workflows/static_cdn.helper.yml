@@ -71,13 +71,6 @@ jobs:
         run: |
           echo "DX_APP_URL=${{ env.DX_APP_NAME }}-${{ env.BRANCH }}-${{ env.SHA }}" >> $GITHUB_ENV
 
-      - name: Create scripts directory
-        run: mkdir -p scripts/utils
-        
-      - name: Set execute permissions
-        run: |
-          find ./scripts -type f -name "*.sh" -exec chmod +x {} \;
-
       - name: Extract credentials
         id: credentials-step
         run: |
@@ -85,14 +78,14 @@ jobs:
           echo '${{ secrets.GCP_SA_KEY }}' > token.json
           
           # Extract credentials
-          ./scripts/utils/extract-credentials.sh token.json "$GITHUB_OUTPUT"
+          .github/scripts/utils/extract-credentials.sh token.json "$GITHUB_OUTPUT"
           
           # Clean up
           rm token.json
 
       - name: Mask credentials
         run: |
-          ./scripts/mask-credentials.sh \
+          .github/scripts/mask-credentials.sh \
             "${{ steps.credentials-step.outputs.GCP_PROJECT_ID }}" \
             "${{ steps.credentials-step.outputs.VERCEL_TOKEN }}" \
             "${{ steps.credentials-step.outputs.VERCEL_ORG_ID }}" \
