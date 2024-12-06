@@ -51,26 +51,6 @@ jobs:
       run:
         working-directory: ${{ env.ENTRY_POINT }}
     steps:
-      - name: checkout | ${{ env.REPO }}@${{ env.BRANCH }}
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ env.REPO }}
-          ref: ${{ env.BRANCH }}
-
-      - name: setup | short-sha
-        uses: benjlevesque/short-sha@v3.0
-        id: short-sha
-
-      - name: setup | $SHA
-        run: |
-          echo 'SHA=${{ steps.short-sha.outputs.sha }}' >> $GITHUB_ENV
-
-      - name: setup | gen DX_APP_URL
-        id: gen-dx-app-url
-        # echo "DX_APP_URL=${{ env.DX_APP_NAME }}-${{ env.BRANCH }}-${{ env.SHA }}-${{ github.actor }}.ui.dx.tva.v0x.in" >> $GITHUB_ENV
-        run: |
-          echo "DX_APP_URL=${{ env.DX_APP_NAME }}-${{ env.BRANCH }}-${{ env.SHA }}" >> $GITHUB_ENV
-
       - name: Extract credentials
         id: credentials-step
         run: |
@@ -106,6 +86,62 @@ jobs:
             echo "VERCEL_ORG_ID=$VERCEL_ORG_ID"
             echo "VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID"
           } >> $GITHUB_ENV
+          
+      - name: checkout | ${{ env.REPO }}@${{ env.BRANCH }}
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.REPO }}
+          ref: ${{ env.BRANCH }}
+
+      - name: setup | short-sha
+        uses: benjlevesque/short-sha@v3.0
+        id: short-sha
+
+      - name: setup | $SHA
+        run: |
+          echo 'SHA=${{ steps.short-sha.outputs.sha }}' >> $GITHUB_ENV
+
+      - name: setup | gen DX_APP_URL
+        id: gen-dx-app-url
+        # echo "DX_APP_URL=${{ env.DX_APP_NAME }}-${{ env.BRANCH }}-${{ env.SHA }}-${{ github.actor }}.ui.dx.tva.v0x.in" >> $GITHUB_ENV
+        run: |
+          echo "DX_APP_URL=${{ env.DX_APP_NAME }}-${{ env.BRANCH }}-${{ env.SHA }}" >> $GITHUB_ENV
+
+      # - name: Extract credentials
+      #   id: credentials-step
+      #   run: |
+      #     # Save token to temporary file
+      #     echo '${{ secrets.GCP_SA_KEY }}' > token.json
+          
+      #     # Extract credentials
+      #     .github/scripts/utils/extract-credentials.sh token.json "$GITHUB_OUTPUT"
+          
+      #     # Clean up
+      #     rm token.json
+
+      # - name: Mask credentials
+      #   run: |
+      #     .github/scripts/mask-credentials.sh \
+      #       "${{ steps.credentials-step.outputs.GCP_PROJECT_ID }}" \
+      #       "${{ steps.credentials-step.outputs.VERCEL_TOKEN }}" \
+      #       "${{ steps.credentials-step.outputs.VERCEL_ORG_ID }}" \
+      #       "${{ steps.credentials-step.outputs.VERCEL_PROJECT_ID }}"
+
+      # - name: Set environment variables
+      #   env:
+      #     APP_NAME: ${{ inputs.app-name }}
+      #     GCP_PROJECT_ID: ${{ steps.credentials-step.outputs.GCP_PROJECT_ID }}
+      #     VERCEL_TOKEN: ${{ steps.credentials-step.outputs.VERCEL_TOKEN }}
+      #     VERCEL_ORG_ID: ${{ steps.credentials-step.outputs.VERCEL_ORG_ID }}
+      #     VERCEL_PROJECT_ID: ${{ steps.credentials-step.outputs.VERCEL_PROJECT_ID }}
+      #   run: |
+      #     {
+      #       echo "APP_NAME=$APP_NAME"
+      #       echo "GCP_PROJECT_ID=$GCP_PROJECT_ID"
+      #       echo "VERCEL_TOKEN=$VERCEL_TOKEN"
+      #       echo "VERCEL_ORG_ID=$VERCEL_ORG_ID"
+      #       echo "VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID"
+      #     } >> $GITHUB_ENV
           
       # - name: setup | mask $ENV_TOKENS
       #   id: mask-env-tokens
