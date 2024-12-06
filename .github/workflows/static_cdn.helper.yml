@@ -92,21 +92,24 @@ jobs:
         run: |
           echo "DX_APP_URL=${{ env.DX_APP_NAME }}-${{ env.BRANCH }}-${{ env.SHA }}" >> $GITHUB_ENV
 
-      - name: setup | pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: ${{ matrix.pnpm-version }}
+      # - name: setup | pnpm
+      #   uses: pnpm/action-setup@v4
+      #   with:
+      #     version: ${{ matrix.pnpm-version }}
 
-      - name: setup | node env
-        uses: actions/setup-node@v4
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'pnpm'
-          cache-dependency-path: '**/pnpm-lock.yaml'
+      # - name: setup | node env
+      #   uses: actions/setup-node@v4
+      #   with:
+      #     node-version: ${{ matrix.node-version }}
+      #     cache: 'pnpm'
+      #     cache-dependency-path: '**/pnpm-lock.yaml'
 
-      - name: setup | pnpm install
-        run: pnpm install --frozen-lockfile --ignore-scripts
+      # - name: setup | pnpm install
+      #   run: pnpm install --frozen-lockfile --ignore-scripts
 
+      - name: ca | install
+        uses: vezham/v0xFE-deployer/.github/workflows/ca-installyml@timeline
+        
       - name: setup | .env vars
         uses: SpicyPizza/create-envfile@v1.3
         with:
