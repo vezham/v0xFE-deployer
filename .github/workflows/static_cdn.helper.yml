@@ -74,7 +74,6 @@ jobs:
       - name: setup | gen $ENV_TOKENS
         id: gen-env-tokens
         run: |
-          OUT=${{ secrets.GCP_SA_KEY }}
           echo "::add-mask::${{ fromJSON(secrets.GCP_SA_KEY)['project_id'] }}"
           echo "GCP_PROJECT_ID=${{ fromJSON(secrets.GCP_SA_KEY)['project_id'] }}" >> $GITHUB_ENV
           
