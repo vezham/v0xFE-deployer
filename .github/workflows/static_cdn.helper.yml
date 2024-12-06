@@ -71,18 +71,51 @@ jobs:
         run: |
           echo "DX_APP_URL=${{ env.DX_APP_NAME }}-${{ env.BRANCH }}-${{ env.SHA }}" >> $GITHUB_ENV
 
-      - name: setup | mask $ENV_TOKENS
-        id: mask-env-tokens
+      - name: Extract credentials
+        id: credentials-step
         run: |
-          OUT=${{ secrets.GCP_SA_KEY }}
-          the_secret=$(echo $OUT | jq -r '.project_id')
-          echo "::add-mask::$the_secret"
-          echo "::add-mask::${{ fromJSON(secrets.GCP_SA_KEY)['project_id'] }}"
+          # Get token from secrets and save to temporary file
+          echo '${{ secrets.GCP_SA_KEY }}' > token.json
           
-      - name: setup | gen $ENV_TOKENS
-        id: gen-env-tokens
+          # Extract all required values using jq
+          echo "GCP_PROJECT_ID=$(jq -r '.project_id' token.json)" >> $GITHUB_OUTPUT
+          echo "VERCEL_TOKEN=$(jq -r '.VERCEL_TOKEN' token.json)" >> $GITHUB_OUTPUT
+          echo "VERCEL_ORG_ID=$(jq -r '.VERCEL_ORG_ID' token.json)" >> $GITHUB_OUTPUT
+          echo "VERCEL_PROJECT_ID=$(jq -r '.VERCEL_PROJECT_ID' token.json)" >> $GITHUB_OUTPUT
+          
+          # Clean up temporary file
+          rm token.json
+          
+      - name: Mask credentials
         run: |
-          echo "GCP_PROJECT_ID=${{ fromJSON(secrets.GCP_SA_KEY)['project_id'] }}" >> $GITHUB_ENV
+          chmod +x ./scripts/mask-credentials.sh
+          ./scripts/mask-credentials.sh \
+            "${{ steps.credentials-step.outputs.GCP_PROJECT_ID }}" \
+            "${{ steps.credentials-step.outputs.VERCEL_TOKEN }}" \
+            "${{ steps.credentials-step.outputs.VERCEL_ORG_ID }}" \
+            "${{ steps.credentials-step.outputs.VERCEL_PROJECT_ID }}"
+    
+      - name: Set environment variables
+        env:
+          GCP_PROJECT_ID: ${{ steps.credentials-step.outputs.GCP_PROJECT_ID }}
+          VERCEL_TOKEN: ${{ steps.credentials-step.outputs.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ steps.credentials-step.outputs.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ steps.credentials-step.outputs.VERCEL_PROJECT_ID }}
+        run: |
+          echo "GCP_PROJECT_ID=$GCP_PROJECT_ID" >> $GITHUB_ENV
+          echo "VERCEL_TOKEN=$VERCEL_TOKEN" >> $GITHUB_ENV
+          echo "VERCEL_ORG_ID=$VERCEL_ORG_ID" >> $GITHUB_ENV
+          echo "VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID" >> $GITHUB_ENV
+          
+      # - name: setup | mask $ENV_TOKENS
+      #   id: mask-env-tokens
+      #   run: |
+      #     echo "::add-mask::${{ fromJSON(secrets.GCP_SA_KEY)['project_id'] }}"
+          
+      # - name: setup | gen $ENV_TOKENS
+      #   id: gen-env-tokens
+      #   run: |
+      #     echo "GCP_PROJECT_ID=${{ fromJSON(secrets.GCP_SA_KEY)['project_id'] }}" >> $GITHUB_ENV
           
       - name: setup | pnpm
         uses: pnpm/action-setup@v4
