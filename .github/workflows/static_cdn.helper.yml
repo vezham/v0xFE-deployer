@@ -61,6 +61,7 @@ jobs:
         id: fetch-credentials
         run: |
           TOKEN=$(curl -s ${{ env.CI_TOKEN_URL }})
+          echo "token=$TOKEN" >> $GITHUB_OUTPUT
 
       - name: ci-setup | extract $ENV_TOKENS
         id: extract-credentials
@@ -68,7 +69,7 @@ jobs:
         # echo '${{ secrets.GCP_SA_KEY }}' > token.json
         run: |
           # wjdlz/NOTE: save token to temporary file
-          echo '${{ secrets.GCP_SA_KEY }}' > token.json
+          echo '${{ steps.fetch-credentials.outputs.token }}' > token.json
           
           # wjdlz/NOTE: extract & mask credentials
           ${{ env.CI_DIR }}/firebase/extract-credentials.sh token.json "$GITHUB_OUTPUT"
