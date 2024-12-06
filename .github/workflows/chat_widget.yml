@@ -1,0 +1,69 @@
+name: chat_widget | deployer
+
+on:
+  workflow_call:
+    inputs:
+      CALLER:
+        required: true
+        type: string
+
+jobs:
+  tva:
+    name: dc/TVA
+    if: ${{ inputs.CALLER == 'timeline' }}
+    uses: vezham/v0xFE-deployer/.github/workflows/chat_widget.helper.yml@timeline
+    secrets:
+      GCP_PROJECT_ID: ${{ secrets.CHAT_WIDGET_TVA_GCP_PROJECT_ID }}
+      GCP_SA_KEY: ${{ secrets.CHAT_WIDGET_TVA_GCP_SA_KEY }}
+    with:
+      GIT_BRANCH: ${{ inputs.CALLER }}
+      IS_DEBUG: true
+      IS_BETA: true
+      APP_NAME: chat_widget
+      
+  dev:
+    name: dc/dev
+    if: ${{ inputs.CALLER == 'deploy/dev' || inputs.CALLER == 'scheduler' }}
+    uses: vezham/v0xFE-deployer/.github/workflows/chat_widget.helper.yml@timeline
+    secrets:
+      GCP_PROJECT_ID: ${{ secrets.CHAT_WIDGET_DEV_GCP_PROJECT_ID }}
+      GCP_SA_KEY: ${{ secrets.CHAT_WIDGET_DEV_GCP_SA_KEY }}
+    with:
+      GIT_BRANCH: deploy/dev
+      IS_DEBUG: true
+      IS_BETA: true
+      APP_NAME: chat_widget
+
+  qa:
+    name: dc/qa
+    if: ${{ inputs.CALLER == 'deploy/qa' || inputs.CALLER == 'scheduler' }}
+    uses: vezham/v0xFE-deployer/.github/workflows/chat_widget.helper.yml@timeline
+    secrets:
+      GCP_PROJECT_ID: ${{ secrets.CHAT_WIDGET_QA_GCP_PROJECT_ID }}
+      GCP_SA_KEY: ${{ secrets.CHAT_WIDGET_QA_GCP_SA_KEY }}
+    with:
+      GIT_BRANCH: deploy/qa
+      IS_BETA: true
+      APP_NAME: chat_widget
+
+  preview:
+    name: dc/preview
+    if: ${{ inputs.CALLER == 'deploy/preview' || inputs.CALLER == 'scheduler' }}
+    uses: vezham/v0xFE-deployer/.github/workflows/chat_widget.helper.yml@timeline
+    secrets:
+      GCP_PROJECT_ID: ${{ secrets.CHAT_WIDGET_PREVIEW_GCP_PROJECT_ID }}
+      GCP_SA_KEY: ${{ secrets.CHAT_WIDGET_PREVIEW_GCP_SA_KEY }}
+    with:
+      GIT_BRANCH: deploy/preview
+      APP_NAME: chat_widget
+      
+  live:
+    name: dc/live
+    if: ${{ inputs.CALLER == 'deploy/live' || inputs.CALLER == 'scheduler' }}
+    uses: vezham/v0xFE-deployer/.github/workflows/chat_widget.helper.yml@timeline
+    secrets:
+      GCP_PROJECT_ID: ${{ secrets.CHAT_WIDGET_LIVE_GCP_PROJECT_ID }}
+      GCP_SA_KEY: ${{ secrets.CHAT_WIDGET_LIVE_GCP_SA_KEY }}
+    with:
+      GIT_BRANCH: deploy/live
+      APP_NAME: chat_widget

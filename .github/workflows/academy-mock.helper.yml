@@ -1,0 +1,112 @@
+name: academy-mock | helper
+
+on:
+  workflow_call:
+    secrets:
+      VERCEL_ORG_ID:
+        required: true
+      VERCEL_PROJECT_ID:
+        required: true
+      VERCEL_TOKEN:
+        required: true
+    inputs:
+      GIT_REPO:
+        required: false
+        type: string
+      GIT_BRANCH:
+        required: false
+        type: string
+      IS_PREVIEW:
+        required: false
+        type: boolean
+        default: false
+      IS_DEBUG:
+        required: false
+        type: boolean
+        default: false
+      IS_BETA:
+        required: false
+        type: boolean
+        default: false
+      APP_NAME:
+        type: string
+      # wjdlz/NOTE: custom-fields
+
+      # MOCK_DATA_PATH:
+      #   type: string
+
+env:
+  REPO: ${{ inputs.GIT_REPO || 'vezham/v0xFE-apps-platforms' }}
+  BRANCH: ${{ inputs.GIT_BRANCH || 'timeline' }}
+  CI_DIR: ../../../v/bin/ci
+  ENTRY_POINT: ./apps_platforms/academy/__mocks__/
+  # DX_APP_PATH: apps_platforms/academy
+  DX_APP_NAME: academy-mock
+  # NX_APP_NAME: academy
+
+jobs:
+  build_and_deploy:
+    strategy:
+      matrix:
+        node-version: [20]
+        pnpm-version: [9.6.0]
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: ${{ env.ENTRY_POINT }}
+    steps:
+      - name: checkout | ${{ env.REPO }}@${{ env.BRANCH }}
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.REPO }}
+          ref: ${{ env.BRANCH }}
+
+      - name: setup | short-sha
+        uses: benjlevesque/short-sha@v3.0
+        id: short-sha
+
+      - name: setup | $SHA
+        run: |
+          echo 'SHA=${{ steps.short-sha.outputs.sha }}' >> $GITHUB_ENV
+
+      - name: setup | gen DX_APP_URL
+        id: gen-dx-app-url
+        run: |
+          echo "DX_APP_URL=${{ env.DX_APP_NAME }}-${{ env.BRANCH }}-${{ env.SHA }}-${{ github.actor }}-mock.ui.dx.tva.v0x.in" >> $GITHUB_ENV
+
+      # wjdlz/NOTE: setup | pnpm
+
+      - name: setup | .env vars
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+          directory: ${{ env.ENTRY_POINT }}
+          # envkey_V_IS_PREVIEW: ${{ inputs.IS_PREVIEW }}
+          # envkey_V_IS_DEBUG: ${{ inputs.IS_DEBUG }}
+          # envkey_V_IS_BETA: ${{ inputs.IS_BETA }}
+          envkey_V_APP_NAME: ${{ inputs.APP_NAME }}
+          # envkey_V_MOCK_DATA_PATH: ${{ inputs.MOCK_DATA_PATH }}
+
+      # wjdlz/NOTE: setup | build, logs
+
+      - name: cloud-setup | vercel
+        run: bash ${{ env.CI_DIR }}/vercel.sh
+
+      - name: cloud-cli | vercel
+        uses: BetaHuhn/deploy-to-vercel-action@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          WORKING_DIRECTORY: ${{ env.ENTRY_POINT }}
+          ALIAS_DOMAINS: |
+            ${{ env.DX_APP_URL }}
+
+      - name: deployer | create commit comment
+        uses: peter-evans/commit-comment@v1
+        with:
+          body: |
+            🚀 Build deployed successfully to the following URLs
+            - [Preview](https://${{ env.DX_APP_URL }})
+            - [Live Demo](https://${{ env.DX_APP_URL }})

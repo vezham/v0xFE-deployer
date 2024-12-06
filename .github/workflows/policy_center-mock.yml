@@ -1,0 +1,23 @@
+name: policy_center-mock | deployer
+
+on:
+  workflow_call:
+    inputs:
+      CALLER:
+        required: true
+        type: string
+
+jobs:
+  tva:
+    name: dc/TVA
+    if: ${{ inputs.CALLER == 'timeline' }}
+    uses: vezham/v0xFE-deployer/.github/workflows/policy_center-mock.helper.yml@timeline
+    secrets:
+      VERCEL_ORG_ID: ${{ secrets.POLICY_CENTER_MOCK_TVA_VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.POLICY_CENTER_MOCK_TVA_VERCEL_PROJECT_ID }}
+      VERCEL_TOKEN: ${{ secrets.POLICY_CENTER_MOCK_TVA_VERCEL_TOKEN }}
+    with:
+      GIT_BRANCH: ${{ inputs.CALLER }}
+      IS_DEBUG: true
+      IS_BETA: true
+      APP_NAME: policy_center-mock

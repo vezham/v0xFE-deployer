@@ -1,4 +1,4 @@
-name: playground-mock | helper
+name: one-mock | helper
 
 on:
   workflow_call:
@@ -30,31 +30,34 @@ on:
         default: false
       APP_NAME:
         type: string
-    # wjdlz | NOTE: custom-fields
+      # wjdlz/NOTE: custom-fields
 
-    #   MOCK_DATA_PATH:
-    #     type: string
+      # MOCK_DATA_PATH:
+      #   type: string
 
 env:
-  REPO: ${{ inputs.GIT_REPO || 'vezham/vezham-frontend' }}
-  BRANCH: ${{ inputs.GIT_BRANCH || 'deploy/dev' }}
-  ENTRY_POINT: ./apps_internals/playground/__mocks__/
-  DX_APP_NAME: playground-mock
+  REPO: ${{ inputs.GIT_REPO || 'vezham/v0xFE-apps-suites' }}
+  BRANCH: ${{ inputs.GIT_BRANCH || 'timeline' }}
+  CI_DIR: ../../../v/bin/ci
+  ENTRY_POINT: ./apps_suites/one/__mocks__/
+  # DX_APP_PATH: apps_suites/one
+  DX_APP_NAME: one-mock
+  # NX_APP_NAME: one
 
 jobs:
   build_and_deploy:
     strategy:
       matrix:
-        node-version: [18]
-        pnpm-version: [8]
+        node-version: [20]
+        pnpm-version: [9.6.0]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
     defaults:
       run:
         working-directory: ${{ env.ENTRY_POINT }}
     steps:
-      - name: checkout | ${{ env.REPO }} | ${{ env.BRANCH }}
-        uses: actions/checkout@v3
+      - name: checkout | ${{ env.REPO }}@${{ env.BRANCH }}
+        uses: actions/checkout@v4
         with:
           repository: ${{ env.REPO }}
           ref: ${{ env.BRANCH }}
@@ -67,12 +70,12 @@ jobs:
         run: |
           echo 'SHA=${{ steps.short-sha.outputs.sha }}' >> $GITHUB_ENV
 
-      - name: setup | run_if
-        id: run_if
+      - name: setup | gen DX_APP_URL
+        id: gen-dx-app-url
         run: |
-          echo "DX_APP_URL=${{ env.DX_APP_NAME }}-${{ env.BRANCH }}-${{ env.SHA }}-${{ github.actor }}.ui.dx.tva.v0x.in" >> $GITHUB_ENV
+          echo "DX_APP_URL=${{ env.DX_APP_NAME }}-${{ env.BRANCH }}-${{ env.SHA }}-${{ github.actor }}-mock.ui.dx.tva.v0x.in" >> $GITHUB_ENV
 
-      # wjdlz | FEAT: setup | pnpm
+      # wjdlz/NOTE: setup | pnpm
 
       - name: setup | .env vars
         uses: SpicyPizza/create-envfile@v1.3
@@ -84,12 +87,12 @@ jobs:
           envkey_V_APP_NAME: ${{ inputs.APP_NAME }}
           # envkey_V_MOCK_DATA_PATH: ${{ inputs.MOCK_DATA_PATH }}
 
-      # wjdlz | FEAT: cloud | build, logs
+      # wjdlz/NOTE: setup | build, logs
 
       - name: cloud-setup | vercel
-        run: bash ../../../v/bin/vercel.sh
+        run: bash ${{ env.CI_DIR }}/vercel.sh
 
-      - name: vercel | cloud CLI
+      - name: cloud-cli | vercel
         uses: BetaHuhn/deploy-to-vercel-action@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -104,5 +107,6 @@ jobs:
         uses: peter-evans/commit-comment@v1
         with:
           body: |
-            Build deployed successfully to the following URLs
-            - https://${{ env.DX_APP_URL }}
+            🚀 Build deployed successfully to the following URLs
+            - [Preview](https://${{ env.DX_APP_URL }})
+            - [Live Demo](https://${{ env.DX_APP_URL }})

@@ -1,0 +1,69 @@
+name: accounts | deployer
+
+on:
+  workflow_call:
+    inputs:
+      CALLER:
+        required: true
+        type: string
+
+jobs:
+  tva:
+    name: dc/TVA
+    if: ${{ inputs.CALLER == 'timeline' }}
+    uses: vezham/v0xFE-deployer/.github/workflows/accounts.helper.yml@timeline
+    secrets:
+      GCP_PROJECT_ID: ${{ secrets.ACCOUNTS_TVA_GCP_PROJECT_ID }}
+      GCP_SA_KEY: ${{ secrets.ACCOUNTS_TVA_GCP_SA_KEY }}
+    with:
+      GIT_BRANCH: ${{ inputs.CALLER }}
+      IS_DEBUG: true
+      IS_BETA: true
+      APP_NAME: accounts
+      
+  dev:
+    name: dc/dev
+    if: ${{ inputs.CALLER == 'deploy/dev' || inputs.CALLER == 'scheduler' }}
+    uses: vezham/v0xFE-deployer/.github/workflows/accounts.helper.yml@timeline
+    secrets:
+      GCP_PROJECT_ID: ${{ secrets.ACCOUNTS_DEV_GCP_PROJECT_ID }}
+      GCP_SA_KEY: ${{ secrets.ACCOUNTS_DEV_GCP_SA_KEY }}
+    with:
+      GIT_BRANCH: deploy/dev
+      IS_DEBUG: true
+      IS_BETA: true
+      APP_NAME: accounts
+
+  qa:
+    name: dc/qa
+    if: ${{ inputs.CALLER == 'deploy/qa' || inputs.CALLER == 'scheduler' }}
+    uses: vezham/v0xFE-deployer/.github/workflows/accounts.helper.yml@timeline
+    secrets:
+      GCP_PROJECT_ID: ${{ secrets.ACCOUNTS_QA_GCP_PROJECT_ID }}
+      GCP_SA_KEY: ${{ secrets.ACCOUNTS_QA_GCP_SA_KEY }}
+    with:
+      GIT_BRANCH: deploy/qa
+      IS_BETA: true
+      APP_NAME: accounts
+
+  preview:
+    name: dc/preview
+    if: ${{ inputs.CALLER == 'deploy/preview' || inputs.CALLER == 'scheduler' }}
+    uses: vezham/v0xFE-deployer/.github/workflows/accounts.helper.yml@timeline
+    secrets:
+      GCP_PROJECT_ID: ${{ secrets.ACCOUNTS_PREVIEW_GCP_PROJECT_ID }}
+      GCP_SA_KEY: ${{ secrets.ACCOUNTS_PREVIEW_GCP_SA_KEY }}
+    with:
+      GIT_BRANCH: deploy/preview
+      APP_NAME: accounts
+      
+  live:
+    name: dc/live
+    if: ${{ inputs.CALLER == 'deploy/live' || inputs.CALLER == 'scheduler' }}
+    uses: vezham/v0xFE-deployer/.github/workflows/accounts.helper.yml@timeline
+    secrets:
+      GCP_PROJECT_ID: ${{ secrets.ACCOUNTS_LIVE_GCP_PROJECT_ID }}
+      GCP_SA_KEY: ${{ secrets.ACCOUNTS_LIVE_GCP_SA_KEY }}
+    with:
+      GIT_BRANCH: deploy/live
+      APP_NAME: accounts
