@@ -3,8 +3,6 @@ name: static_cdn | helper
 on:
   workflow_call:
     secrets:
-      # GCP_PROJECT_ID:
-      #   required: true
       GCP_SA_KEY:
         required: true
     inputs:
@@ -33,7 +31,7 @@ on:
 env:
   REPO: ${{ inputs.GIT_REPO || 'vezham/v0xFE-apps-cdns' }}
   BRANCH: ${{ inputs.GIT_BRANCH || 'timeline' }}
-  CI_DIR: v/bin/ci
+  CI_DIR: ../../v/bin/ci
   ENTRY_POINT: ./apps_cdns/static_cdn
   DX_APP_PATH: apps_cdns/static_cdn
   DX_APP_NAME: static_cdn
@@ -47,79 +45,23 @@ jobs:
         pnpm-version: [9.6.0]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
-    # defaults:
-    #   run:
-    #     working-directory: ${{ env.ENTRY_POINT }}
+    defaults:
+      run:
+        working-directory: ${{ env.ENTRY_POINT }}
     steps:
       - name: checkout | ${{ env.REPO }}@${{ env.BRANCH }}
         uses: actions/checkout@v4
         with:
           repository: ${{ env.REPO }}
           ref: ${{ env.BRANCH }}
-
-      - name: logs | post dir
-        run: pwd
-
-      - name: logs | ls
-        run: ls
         
-      - name: Extract credentials
-        id: credentials-step
-        run: |
-          # Save token to temporary file
-          echo '${{ secrets.GCP_SA_KEY }}' > token.json
-          
-          # Extract credentials
-          .github/scripts/utils/extract-credentials.sh token.json "$GITHUB_OUTPUT"
-          
-          # Clean up
-          rm token.json
-
-      # - name: Mask credentials
-      #   run: |
-      #     .github/scripts/mask-credentials.sh \
-      #       "${{ steps.credentials-step.outputs.GCP_PROJECT_ID }}" \
-      #       "${{ steps.credentials-step.outputs.VERCEL_TOKEN }}" \
-      #       "${{ steps.credentials-step.outputs.VERCEL_ORG_ID }}" \
-      #       "${{ steps.credentials-step.outputs.VERCEL_PROJECT_ID }}"
-
-      - name: Set environment variables
-        env:
-          APP_NAME: ${{ inputs.app-name }}
-          GCP_PROJECT_ID: ${{ steps.credentials-step.outputs.GCP_PROJECT_ID }}
-          VERCEL_TOKEN: ${{ steps.credentials-step.outputs.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ steps.credentials-step.outputs.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ steps.credentials-step.outputs.VERCEL_PROJECT_ID }}
-        run: |
-          {
-            echo "APP_NAME=$APP_NAME"
-            echo "GCP_PROJECT_ID=$GCP_PROJECT_ID"
-            echo "VERCEL_TOKEN=$VERCEL_TOKEN"
-            echo "VERCEL_ORG_ID=$VERCEL_ORG_ID"
-            echo "VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID"
-          } >> $GITHUB_ENV
-          
-      - name: setup | short-sha
-        uses: benjlevesque/short-sha@v3.0
-        id: short-sha
-
-      - name: setup | $SHA
-        run: |
-          echo 'SHA=${{ steps.short-sha.outputs.sha }}' >> $GITHUB_ENV
-
-      - name: setup | gen DX_APP_URL
-        id: gen-dx-app-url
-        # echo "DX_APP_URL=${{ env.DX_APP_NAME }}-${{ env.BRANCH }}-${{ env.SHA }}-${{ github.actor }}.ui.dx.tva.v0x.in" >> $GITHUB_ENV
-        run: |
-          echo "DX_APP_URL=${{ env.DX_APP_NAME }}-${{ env.BRANCH }}-${{ env.SHA }}" >> $GITHUB_ENV
-
       # - name: Extract credentials
-      #   id: credentials-step
+      #   id: fetch-credentials
       #   run: |
-      #     # Save token to temporary file
+      #     # wjdlz/NOTE: save token to temporary file
       #     echo '${{ secrets.GCP_SA_KEY }}' > token.json
           
-      #     # Extract credentials
+      #     # wjdlz/NOTE: extract credentials & mask
       #     .github/scripts/utils/extract-credentials.sh token.json "$GITHUB_OUTPUT"
           
       #     # Clean up
@@ -128,37 +70,54 @@ jobs:
       # - name: Mask credentials
       #   run: |
       #     .github/scripts/mask-credentials.sh \
-      #       "${{ steps.credentials-step.outputs.GCP_PROJECT_ID }}" \
-      #       "${{ steps.credentials-step.outputs.VERCEL_TOKEN }}" \
-      #       "${{ steps.credentials-step.outputs.VERCEL_ORG_ID }}" \
-      #       "${{ steps.credentials-step.outputs.VERCEL_PROJECT_ID }}"
+      #       "${{ steps.fetch-credentials.outputs.GCP_PROJECT_ID }}" \
+      #       "${{ steps.fetch-credentials.outputs.VERCEL_TOKEN }}" \
+      #       "${{ steps.fetch-credentials.outputs.VERCEL_ORG_ID }}" \
+      #       "${{ steps.fetch-credentials.outputs.VERCEL_PROJECT_ID }}"
+          
+      # wjdlz/TODO: ci-setup | fetch-credentials - via vezham CI host
 
-      # - name: Set environment variables
-      #   env:
-      #     APP_NAME: ${{ inputs.app-name }}
-      #     GCP_PROJECT_ID: ${{ steps.credentials-step.outputs.GCP_PROJECT_ID }}
-      #     VERCEL_TOKEN: ${{ steps.credentials-step.outputs.VERCEL_TOKEN }}
-      #     VERCEL_ORG_ID: ${{ steps.credentials-step.outputs.VERCEL_ORG_ID }}
-      #     VERCEL_PROJECT_ID: ${{ steps.credentials-step.outputs.VERCEL_PROJECT_ID }}
-      #   run: |
-      #     {
-      #       echo "APP_NAME=$APP_NAME"
-      #       echo "GCP_PROJECT_ID=$GCP_PROJECT_ID"
-      #       echo "VERCEL_TOKEN=$VERCEL_TOKEN"
-      #       echo "VERCEL_ORG_ID=$VERCEL_ORG_ID"
-      #       echo "VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID"
-      #     } >> $GITHUB_ENV
+      - name: ci-setup | extract $ENV_TOKENS
+        id: extract-credentials
+        run: |
+          # wjdlz/NOTE: save token to temporary file
+          echo '${{ secrets.GCP_SA_KEY }}' > token.json
           
-      # - name: setup | mask $ENV_TOKENS
-      #   id: mask-env-tokens
-      #   run: |
-      #     echo "::add-mask::${{ fromJSON(secrets.GCP_SA_KEY)['project_id'] }}"
+          # wjdlz/NOTE: extract & mask credentials
+          bash ${{ env.CI_DIR }}/scripts/utils/extract-credentials.sh token.json "$GITHUB_OUTPUT"
           
-      # - name: setup | gen $ENV_TOKENS
-      #   id: gen-env-tokens
-      #   run: |
-      #     echo "GCP_PROJECT_ID=${{ fromJSON(secrets.GCP_SA_KEY)['project_id'] }}" >> $GITHUB_ENV
-          
+          # wjdlz/NOTE: clean up
+          rm token.json
+
+      - name: ci-setup | gen $ENV_TOKENS
+        id: gen-env-tokens
+        env:
+          GCP_PROJECT_ID: ${{ steps.extract-credentials.outputs.GCP_PROJECT_ID }}
+          VERCEL_TOKEN: ${{ steps.extract-credentials.outputs.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ steps.extract-credentials.outputs.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ steps.extract-credentials.outputs.VERCEL_PROJECT_ID }}
+        run: |
+          {
+            echo "GCP_PROJECT_ID=$GCP_PROJECT_ID"
+            echo "VERCEL_TOKEN=$VERCEL_TOKEN"
+            echo "VERCEL_ORG_ID=$VERCEL_ORG_ID"
+            echo "VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID"
+          } >> $GITHUB_ENV
+
+      - name: ci-setup | short-sha
+        uses: benjlevesque/short-sha@v3.0
+        id: short-sha
+
+      - name: ci-setup | $SHA
+        run: |
+          echo 'SHA=${{ steps.short-sha.outputs.sha }}' >> $GITHUB_ENV
+
+      - name: ci-setup | gen DX_APP_URL
+        id: gen-dx-app-url
+        # echo "DX_APP_URL=${{ env.DX_APP_NAME }}-${{ env.BRANCH }}-${{ env.SHA }}-${{ github.actor }}.ui.dx.tva.v0x.in" >> $GITHUB_ENV
+        run: |
+          echo "DX_APP_URL=${{ env.DX_APP_NAME }}-${{ env.BRANCH }}-${{ env.SHA }}" >> $GITHUB_ENV
+
       - name: setup | pnpm
         uses: pnpm/action-setup@v4
         with:
@@ -172,7 +131,6 @@ jobs:
           cache-dependency-path: '**/pnpm-lock.yaml'
 
       - name: setup | pnpm install
-        # run: pnpm install --ignore-scripts
         run: pnpm install --frozen-lockfile --ignore-scripts
 
       - name: setup | .env vars
@@ -195,7 +153,7 @@ jobs:
           path: ~/.npm/_logs
 
       - name: cloud-setup | firebase
-        run: bash ${{ env.CI_DIR }}/firebase.sh ${{ env.DX_APP_PATH }} .
+        run: bash ${{ env.CI_DIR }}/firebase.sh ${{ env.DX_APP_PATH }}
 
       - name: cloud-cli | gcp/preview
         uses: FirebaseExtended/action-hosting-deploy@v0
@@ -207,7 +165,7 @@ jobs:
           projectId: ${{ env.GCP_PROJECT_ID }}
           firebaseServiceAccount: ${{ secrets.GCP_SA_KEY }}
           # entryPoint: ${{ env.ENTRY_POINT }}
-          
+
       - name: setup | fetch preview url
         uses: mad9000/actions-find-and-replace-string@5
         id: gcp-preview-url
@@ -215,7 +173,7 @@ jobs:
           source: ${{ steps.gcp-preview.outputs.details_url }}
           find: '***'
           replace: ${{ env.GCP_PROJECT_ID }}
-        
+
       - name: cloud-cli | gcp/live
         uses: FirebaseExtended/action-hosting-deploy@v0
         id: gcp
