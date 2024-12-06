@@ -54,20 +54,18 @@ jobs:
         with:
           repository: ${{ env.REPO }}
           ref: ${{ env.BRANCH }}
-
-      - name: ca | install
-        uses: vezham/v0xFE-deployer/.github/common-actions/install/action.yml@timeline
         
       # wjdlz/TODO: ci-setup | fetch-credentials - via vezham CI host
 
       - name: ci-setup | extract $ENV_TOKENS
         id: extract-credentials
+        shell: bash
         run: |
           # wjdlz/NOTE: save token to temporary file
           echo '${{ secrets.GCP_SA_KEY }}' > token.json
           
           # wjdlz/NOTE: extract & mask credentials
-          bash ${{ env.CI_DIR }}/firebase/extract-credentials.sh token.json "$GITHUB_OUTPUT"
+          ${{ env.CI_DIR }}/firebase/extract-credentials.sh token.json "$GITHUB_OUTPUT"
           
           # wjdlz/NOTE: clean up
           rm token.json
@@ -95,20 +93,20 @@ jobs:
         run: |
           echo "DX_APP_URL=${{ env.DX_APP_NAME }}-${{ env.BRANCH }}-${{ env.SHA }}" >> $GITHUB_ENV
 
-      # - name: setup | pnpm
-      #   uses: pnpm/action-setup@v4
-      #   with:
-      #     version: ${{ matrix.pnpm-version }}
+      - name: setup | pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ matrix.pnpm-version }}
 
-      # - name: setup | node env
-      #   uses: actions/setup-node@v4
-      #   with:
-      #     node-version: ${{ matrix.node-version }}
-      #     cache: 'pnpm'
-      #     cache-dependency-path: '**/pnpm-lock.yaml'
+      - name: setup | node env
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+          cache-dependency-path: '**/pnpm-lock.yaml'
 
-      # - name: setup | pnpm install
-      #   run: pnpm install --frozen-lockfile --ignore-scripts
+      - name: setup | pnpm install
+        run: pnpm install --frozen-lockfile --ignore-scripts
 
       - name: setup | .env vars
         uses: SpicyPizza/create-envfile@v1.3
@@ -130,7 +128,8 @@ jobs:
           path: ~/.npm/_logs
 
       - name: cloud-setup | firebase
-        run: bash ${{ env.CI_DIR }}/firebase/main.sh ${{ env.DX_APP_PATH }}
+        shell: bash
+        run: ${{ env.CI_DIR }}/firebase/main.sh ${{ env.DX_APP_PATH }}
 
       - name: cloud-cli | gcp/preview
         uses: FirebaseExtended/action-hosting-deploy@v0
