@@ -3,8 +3,8 @@ name: static_cdn | helper
 on:
   workflow_call:
     secrets:
-      GCP_PROJECT_ID:
-        required: true
+      # GCP_PROJECT_ID:
+      #   required: true
       GCP_SA_KEY:
         required: true
     inputs:
@@ -75,7 +75,7 @@ jobs:
         id: gen-env-tokens
         run: |
           GCP_PROJECT_ID=${{ fromJSON(secrets.GCP_SA_KEY)['project_id'] }}
-          echo "::add-mask::$GCP_PROJECT_ID"
+          echo "::add-mask::${{ $GCP_PROJECT_ID }}"
           echo "GCP_PROJECT_ID=$GCP_PROJECT_ID" >> $GITHUB_ENV
           
       - name: setup | pnpm
