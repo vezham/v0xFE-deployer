@@ -47,9 +47,9 @@ jobs:
         pnpm-version: [9.6.0]
         os: [ubuntu-latest]
     runs-on: ${{ matrix.os }}
-    defaults:
-      run:
-        working-directory: ${{ env.ENTRY_POINT }}
+    # defaults:
+    #   run:
+    #     working-directory: ${{ env.ENTRY_POINT }}
     steps:
       - name: checkout | ${{ env.REPO }}@${{ env.BRANCH }}
         uses: actions/checkout@v4
