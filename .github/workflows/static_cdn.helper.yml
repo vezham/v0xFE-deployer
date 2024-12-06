@@ -88,8 +88,8 @@ jobs:
           
       - name: Mask credentials
         run: |
-          chmod +x ./scripts/mask-credentials.sh
-          ./scripts/mask-credentials.sh \
+          chmod +x ./mask-credentials.sh
+          ./mask-credentials.sh \
             "${{ steps.credentials-step.outputs.GCP_PROJECT_ID }}" \
             "${{ steps.credentials-step.outputs.VERCEL_TOKEN }}" \
             "${{ steps.credentials-step.outputs.VERCEL_ORG_ID }}" \
