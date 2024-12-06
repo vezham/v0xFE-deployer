@@ -108,7 +108,7 @@ jobs:
       #   run: pnpm install --frozen-lockfile --ignore-scripts
 
       - name: ca | install
-        uses: vezham/v0xFE-deployer/.github/workflows/ca-installyml@timeline
+        uses: vezham/v0xFE-deployer/.github/common-actions/install/action.yml@timeline
         
       - name: setup | .env vars
         uses: SpicyPizza/create-envfile@v1.3
