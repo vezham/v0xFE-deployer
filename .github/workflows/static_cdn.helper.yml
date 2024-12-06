@@ -71,6 +71,9 @@ jobs:
         run: |
           echo "DX_APP_URL=${{ env.DX_APP_NAME }}-${{ env.BRANCH }}-${{ env.SHA }}" >> $GITHUB_ENV
 
+      - name: Create scripts directory
+        run: mkdir -p scripts/utils
+        
       - name: Set execute permissions
         run: |
           find ./scripts -type f -name "*.sh" -exec chmod +x {} \;
