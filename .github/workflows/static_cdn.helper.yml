@@ -51,6 +51,12 @@ jobs:
     #   run:
     #     working-directory: ${{ env.ENTRY_POINT }}
     steps:
+      - name: logs | post dir
+        run: pwd
+
+      - name: logs | ls
+        run: ls
+        
       - name: Extract credentials
         id: credentials-step
         run: |
