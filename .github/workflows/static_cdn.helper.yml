@@ -71,10 +71,14 @@ jobs:
         run: |
           echo "DX_APP_URL=${{ env.DX_APP_NAME }}-${{ env.BRANCH }}-${{ env.SHA }}" >> $GITHUB_ENV
 
+      - name: setup | mask $ENV_TOKENS
+        id: mask-env-tokens
+        run: |
+          echo "::add-mask::${{ fromJSON(secrets.GCP_SA_KEY)['project_id'] }}"
+          
       - name: setup | gen $ENV_TOKENS
         id: gen-env-tokens
         run: |
-          echo "::add-mask::${{ fromJSON(secrets.GCP_SA_KEY)['project_id'] }}"
           echo "GCP_PROJECT_ID=${{ fromJSON(secrets.GCP_SA_KEY)['project_id'] }}" >> $GITHUB_ENV
           
       - name: setup | pnpm
