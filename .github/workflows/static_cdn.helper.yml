@@ -32,7 +32,6 @@ env:
   REPO: ${{ inputs.GIT_REPO || 'vezham/v0xFE-apps-cdns' }}
   BRANCH: ${{ inputs.GIT_BRANCH || 'timeline' }}
   CI_DIR: ../../v/bin/ci
-  CI_TOKEN_URL : https://lab5-ic-web-vezham.web.app/ci/gcp
   ENTRY_POINT: ./apps_cdns/static_cdn
   DX_APP_PATH: apps_cdns/static_cdn
   DX_APP_NAME: static_cdn
@@ -57,34 +56,19 @@ jobs:
           ref: ${{ env.BRANCH }}
         
       # wjdlz/TODO: ci-setup | fetch-credentials - via vezham CI host
-      # - name: ci-setup | fetch-credentials
-      #   id: fetch-credentials
-      #   run: |
-      #     TOKEN=$(curl -s ${{ env.CI_TOKEN_URL }})
-      #     {
-      #         echo "token=<<EOF"
-      #         curl -s ${{ env.CI_TOKEN_URL }}
-      #         echo "EOF"
-      #     } >> "$GITHUB_OUTPUT"
 
-      - name: ci-setup | fetch $ENV_TOKENS
+      - name: ci-setup | extract $ENV_TOKENS
         id: extract-credentials
         shell: bash
         run: |
-          ${{ env.CI_DIR }}/firebase/fetch-credentials.sh ${{ env.CI_TOKEN_URL }} "$GITHUB_OUTPUT"
-
-      # - name: ci-setup | extract $ENV_TOKENS
-      #   id: extract-credentials
-      #   shell: bash
-      #   run: |
-      #     # wjdlz/NOTE: save token to temporary file
-      #     echo '${{ secrets.GCP_SA_KEY }}' > token.json
+          # wjdlz/NOTE: save token to temporary file
+          echo '${{ secrets.GCP_SA_KEY }}' > token.json
           
-      #     # wjdlz/NOTE: extract & mask credentials
-      #     ${{ env.CI_DIR }}/firebase/extract-credentials.sh token.json "$GITHUB_OUTPUT"
+          # wjdlz/NOTE: extract & mask credentials
+          ${{ env.CI_DIR }}/firebase/extract-credentials.sh token.json "$GITHUB_OUTPUT"
           
-      #     # wjdlz/NOTE: clean up
-      #     rm token.json
+          # wjdlz/NOTE: clean up
+          rm token.json
 
       - name: ci-setup | gen $ENV_TOKENS
         id: gen-env-tokens
