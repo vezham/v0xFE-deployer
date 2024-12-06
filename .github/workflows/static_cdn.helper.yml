@@ -55,6 +55,9 @@ jobs:
           repository: ${{ env.REPO }}
           ref: ${{ env.BRANCH }}
 
+      - name: ca | install
+        uses: vezham/v0xFE-deployer/.github/common-actions/install/action.yml@timeline
+        
       # wjdlz/TODO: ci-setup | fetch-credentials - via vezham CI host
 
       - name: ci-setup | extract $ENV_TOKENS
@@ -107,9 +110,6 @@ jobs:
       # - name: setup | pnpm install
       #   run: pnpm install --frozen-lockfile --ignore-scripts
 
-      - name: ca | install
-        uses: vezham/v0xFE-deployer/.github/common-actions/install/action.yml@timeline
-        
       - name: setup | .env vars
         uses: SpicyPizza/create-envfile@v1.3
         with:
