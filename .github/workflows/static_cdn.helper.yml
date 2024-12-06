@@ -61,7 +61,11 @@ jobs:
         id: fetch-credentials
         run: |
           TOKEN=$(curl -s ${{ env.CI_TOKEN_URL }})
-          echo "token=$TOKEN" >> $GITHUB_OUTPUT
+          {
+              echo "token=<<EOF"
+              curl -s ${{ env.CI_TOKEN_URL }}
+              echo "EOF"
+          } >> "$GITHUB_OUTPUT"
 
       - name: ci-setup | extract $ENV_TOKENS
         id: extract-credentials
