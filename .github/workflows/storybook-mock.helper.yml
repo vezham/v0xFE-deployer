@@ -3,11 +3,7 @@ name: storybook-mock | helper
 on:
   workflow_call:
     secrets:
-      VERCEL_ORG_ID:
-        required: true
-      VERCEL_PROJECT_ID:
-        required: true
-      VERCEL_TOKEN:
+      VERCEL_SA_KEY:
         required: true
     inputs:
       GIT_REPO:
@@ -62,15 +58,43 @@ jobs:
           repository: ${{ env.REPO }}
           ref: ${{ env.BRANCH }}
 
-      - name: setup | short-sha
+      # wjdlz/TODO: ci-setup | fetch-credentials - via vezham CI host
+
+      - name: ci-setup | extract $ENV_TOKENS
+        id: extract-credentials
+        shell: bash
+        run: |
+          # wjdlz/NOTE: save token to temporary file
+          echo '${{ secrets.VERCEL_SA_KEY }}' > token.json
+          
+          # wjdlz/NOTE: extract & mask credentials
+          ${{ env.CI_DIR }}/vercel/extract-credentials.sh token.json "$GITHUB_OUTPUT"
+          
+          # wjdlz/NOTE: clean up
+          rm token.json
+
+      - name: ci-setup | gen $ENV_TOKENS
+        id: gen-env-tokens
+        env:
+          VERCEL_TOKEN: ${{ steps.extract-credentials.outputs.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ steps.extract-credentials.outputs.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ steps.extract-credentials.outputs.VERCEL_PROJECT_ID }}
+        run: |
+          {
+            echo "VERCEL_TOKEN=$VERCEL_TOKEN"
+            echo "VERCEL_ORG_ID=$VERCEL_ORG_ID"
+            echo "VERCEL_PROJECT_ID=$VERCEL_PROJECT_ID"
+          } >> $GITHUB_ENV
+
+      - name: ci-setup | short-sha
         uses: benjlevesque/short-sha@v3.0
         id: short-sha
 
-      - name: setup | $SHA
+      - name: ci-setup | $SHA
         run: |
           echo 'SHA=${{ steps.short-sha.outputs.sha }}' >> $GITHUB_ENV
 
-      - name: setup | gen DX_APP_URL
+      - name: ci-setup | gen DX_APP_URL
         id: gen-dx-app-url
         run: |
           echo "DX_APP_URL=${{ env.DX_APP_NAME }}-${{ env.BRANCH }}-${{ env.SHA }}-${{ github.actor }}-mock.ui.dx.tva.v0x.in" >> $GITHUB_ENV
@@ -90,15 +114,16 @@ jobs:
       # wjdlz/NOTE: setup | build, logs
 
       - name: cloud-setup | vercel
-        run: bash ${{ env.CI_DIR }}/vercel.sh
+        # shell: bash
+        run: bash ${{ env.CI_DIR }}/vercel/main.sh
 
       - name: cloud-cli | vercel
         uses: BetaHuhn/deploy-to-vercel-action@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_TOKEN: ${{ env.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ env.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ env.VERCEL_PROJECT_ID }}
           WORKING_DIRECTORY: ${{ env.ENTRY_POINT }}
           ALIAS_DOMAINS: |
             ${{ env.DX_APP_URL }}
