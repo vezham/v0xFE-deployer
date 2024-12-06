@@ -75,13 +75,13 @@ jobs:
           # Clean up
           rm token.json
 
-      - name: Mask credentials
-        run: |
-          .github/scripts/mask-credentials.sh \
-            "${{ steps.credentials-step.outputs.GCP_PROJECT_ID }}" \
-            "${{ steps.credentials-step.outputs.VERCEL_TOKEN }}" \
-            "${{ steps.credentials-step.outputs.VERCEL_ORG_ID }}" \
-            "${{ steps.credentials-step.outputs.VERCEL_PROJECT_ID }}"
+      # - name: Mask credentials
+      #   run: |
+      #     .github/scripts/mask-credentials.sh \
+      #       "${{ steps.credentials-step.outputs.GCP_PROJECT_ID }}" \
+      #       "${{ steps.credentials-step.outputs.VERCEL_TOKEN }}" \
+      #       "${{ steps.credentials-step.outputs.VERCEL_ORG_ID }}" \
+      #       "${{ steps.credentials-step.outputs.VERCEL_PROJECT_ID }}"
 
       - name: Set environment variables
         env:
