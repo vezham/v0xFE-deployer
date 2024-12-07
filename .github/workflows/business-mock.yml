@@ -13,9 +13,7 @@ jobs:
     if: ${{ inputs.CALLER == 'timeline' }}
     uses: vezham/v0xFE-deployer/.github/workflows/business-mock.helper.yml@timeline
     secrets:
-      VERCEL_ORG_ID: ${{ secrets.BUSINESS_MOCK_TVA_VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ secrets.BUSINESS_MOCK_TVA_VERCEL_PROJECT_ID }}
-      VERCEL_TOKEN: ${{ secrets.BUSINESS_MOCK_TVA_VERCEL_TOKEN }}
+      VERCEL_SA_KEY: ${{ secrets.BUSINESS_MOCK_TVA_VERCEL_SA_KEY }}
     with:
       GIT_BRANCH: ${{ inputs.CALLER }}
       IS_DEBUG: true
