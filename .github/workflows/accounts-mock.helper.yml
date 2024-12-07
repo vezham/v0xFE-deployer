@@ -119,6 +119,8 @@ jobs:
 
       - name: cloud-cli | vercel
         uses: BetaHuhn/deploy-to-vercel-action@v1
+        # ALIAS_DOMAINS: |
+        #     ${{ env.DX_APP_URL }}
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           VERCEL_TOKEN: ${{ env.VERCEL_TOKEN }}
