@@ -6,6 +6,7 @@
       #   env:
       #     PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
       #     GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
+      #     # PROJECT_PATH: ${{ env.ENTRY_POINT }}
 
 
       # - name: ci-setup | extract $ENV_TOKENS
@@ -56,3 +57,23 @@
       #       "${{ steps.fetch-credentials.outputs.VERCEL_TOKEN }}" \
       #       "${{ steps.fetch-credentials.outputs.VERCEL_ORG_ID }}" \
       #       "${{ steps.fetch-credentials.outputs.VERCEL_PROJECT_ID }}"
+
+      # - name: logs | post dir
+      #   run: pwd
+
+      # - name: logs | ls
+      #   run: ls
+
+# ********* - pnpm cache
+            # - name: setup | pnpm cache directory path
+      #   id: pnpm-cache-dir-path
+      #   run: echo "dir=$(pnpm cache dir)" >> $GITHUB_OUTPUT
+
+      # - name: setup | pnpm cache
+      #   id: pnpm-cache # use this to check for `cache-hit` (`steps.pnpm-cache.outputs.cache-hit != 'true'`)
+      #   uses: actions/cache@v3
+      #   with:
+      #     path: ${{ steps.pnpm-cache-dir-path.outputs.dir }}
+      #     key: ${{ runner.os }}-pnpm-${{ matrix.node-version }}-${{ matrix.pnpm-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-pnpm-${{ matrix.node-version }}-${{ matrix.pnpm-version }}-

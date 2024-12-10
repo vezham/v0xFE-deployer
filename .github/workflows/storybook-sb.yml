@@ -14,6 +14,7 @@ jobs:
     uses: vezham/v0xFE-deployer/.github/workflows/storybook-sb.helper.yml@timeline
     secrets:
       GCP_SA_KEY: ${{ secrets.STORYBOOK_SB_TVA_GCP_SA_KEY }}
+      FIGMA_AT: ${{ secrets.STORYBOOK_SB_TVA_FIGMA_AT }}
     with:
       GIT_BRANCH: ${{ inputs.CALLER }}
       IS_DEBUG: true
@@ -26,6 +27,7 @@ jobs:
     uses: vezham/v0xFE-deployer/.github/workflows/storybook-sb.helper.yml@timeline
     secrets:
       GCP_SA_KEY: ${{ secrets.STORYBOOK_SB_DEV_GCP_SA_KEY }}
+      FIGMA_AT: ${{ secrets.STORYBOOK_SB_TVA_FIGMA_AT }}
     with:
       GIT_BRANCH: deploy/dev
       IS_DEBUG: true
@@ -38,6 +40,7 @@ jobs:
     uses: vezham/v0xFE-deployer/.github/workflows/storybook-sb.helper.yml@timeline
     secrets:
       GCP_SA_KEY: ${{ secrets.STORYBOOK_SB_QA_GCP_SA_KEY }}
+      FIGMA_AT: ${{ secrets.STORYBOOK_SB_TVA_FIGMA_AT }}
     with:
       GIT_BRANCH: deploy/qa
       IS_BETA: true
@@ -49,6 +52,7 @@ jobs:
     uses: vezham/v0xFE-deployer/.github/workflows/storybook-sb.helper.yml@timeline
     secrets:
       GCP_SA_KEY: ${{ secrets.STORYBOOK_SB_PREVIEW_GCP_SA_KEY }}
+      FIGMA_AT: ${{ secrets.STORYBOOK_SB_TVA_FIGMA_AT }}
     with:
       GIT_BRANCH: deploy/preview
       APP_NAME: storybook-sb
@@ -59,6 +63,7 @@ jobs:
     uses: vezham/v0xFE-deployer/.github/workflows/storybook-sb.helper.yml@timeline
     secrets:
       GCP_SA_KEY: ${{ secrets.STORYBOOK_SB_LIVE_GCP_SA_KEY }}
+      FIGMA_AT: ${{ secrets.STORYBOOK_SB_TVA_FIGMA_AT }}
     with:
       GIT_BRANCH: deploy/live
       APP_NAME: storybook-sb

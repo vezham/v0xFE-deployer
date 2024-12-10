@@ -19,6 +19,8 @@ jobs:
       IS_DEBUG: true
       IS_BETA: true
       APP_NAME: chat_widget
+      APP_API_URL: https://dev.api.vezham.com
+      WIDGET_URL: https://dev.widgets.vezham.com
       
   dev:
     name: dc/dev
@@ -31,6 +33,8 @@ jobs:
       IS_DEBUG: true
       IS_BETA: true
       APP_NAME: chat_widget
+      APP_API_URL: https://dev.api.vezham.com
+      WIDGET_URL: https://dev.widgets.vezham.com
 
   qa:
     name: dc/qa
@@ -42,6 +46,8 @@ jobs:
       GIT_BRANCH: deploy/qa
       IS_BETA: true
       APP_NAME: chat_widget
+      APP_API_URL: https://qa.api.vezham.com
+      WIDGET_URL: https://qa.widgets.vezham.com
 
   preview:
     name: dc/preview
@@ -52,9 +58,21 @@ jobs:
     with:
       GIT_BRANCH: deploy/preview
       APP_NAME: chat_widget
+      APP_API_URL: https://dev.api.vezham.com
+      WIDGET_URL: https://preview.widgets.vezham.com
       
-  live:
-    name: dc/live
+  # live:
+  #   name: dc/live
+  #   if: ${{ inputs.CALLER == 'deploy/live' || inputs.CALLER == 'scheduler' }}
+  #   uses: vezham/v0xFE-deployer/.github/workflows/chat_widget.helper.yml@timeline
+  #   secrets:
+  #     GCP_SA_KEY: ${{ secrets.CHAT_WIDGET_LIVE_GCP_SA_KEY }}
+  #   with:
+  #     GIT_BRANCH: deploy/live
+  #     APP_NAME: chat_widget
+  
+  live-us:
+    name: dc/live-us
     if: ${{ inputs.CALLER == 'deploy/live' || inputs.CALLER == 'scheduler' }}
     uses: vezham/v0xFE-deployer/.github/workflows/chat_widget.helper.yml@timeline
     secrets:
@@ -62,3 +80,41 @@ jobs:
     with:
       GIT_BRANCH: deploy/live
       APP_NAME: chat_widget
+      APP_API_URL: https://us.api.vezham.com
+      WIDGET_URL: https://us.widgets.vezham.com
+  
+  live-eu:
+    name: dc/live-eu
+    if: ${{ inputs.CALLER == 'deploy/live' || inputs.CALLER == 'scheduler' }}
+    uses: vezham/v0xFE-deployer/.github/workflows/chat_widget.helper.yml@timeline
+    secrets:
+      GCP_SA_KEY: ${{ secrets.CHAT_WIDGET_LIVE_GCP_SA_KEY }}
+    with:
+      GIT_BRANCH: deploy/live
+      APP_NAME: chat_widget
+      APP_API_URL: https://eu.api.vezham.com
+      WIDGET_URL: https://eu.widgets.vezham.com
+  
+  live-in:
+    name: dc/live-in
+    if: ${{ inputs.CALLER == 'deploy/live' || inputs.CALLER == 'scheduler' }}
+    uses: vezham/v0xFE-deployer/.github/workflows/chat_widget.helper.yml@timeline
+    secrets:
+      GCP_SA_KEY: ${{ secrets.CHAT_WIDGET_LIVE_GCP_SA_KEY }}
+    with:
+      GIT_BRANCH: deploy/live
+      APP_NAME: chat_widget
+      APP_API_URL: https://in.api.vezham.com
+      WIDGET_URL: https://in.widgets.vezham.com
+
+  live-au:
+    name: dc/live-au
+    if: ${{ inputs.CALLER == 'deploy/live' || inputs.CALLER == 'scheduler' }}
+    uses: vezham/v0xFE-deployer/.github/workflows/chat_widget.helper.yml@timeline
+    secrets:
+      GCP_SA_KEY: ${{ secrets.CHAT_WIDGET_LIVE_GCP_SA_KEY }}
+    with:
+      GIT_BRANCH: deploy/live
+      APP_NAME: chat_widget
+      APP_API_URL: https://au.api.vezham.com
+      WIDGET_URL: https://au.widgets.vezham.com

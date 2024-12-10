@@ -28,6 +28,24 @@ on:
         type: string
       # wjdlz/NOTE: custom-fields
 
+      APP_API_URL:
+        required: true
+        type: string
+      APP_IAM_URL:
+        type: string
+      APP_ACCOUNTS_URL:
+        type: string
+      APP_BUSINESS_URL:
+        type: string
+      APP_HQ_URL:
+        type: string
+      APP_IS_SANDBOX:
+        type: string
+      APP_SANDBOX_API_URL:
+        type: string
+      APP_DC_API_URL:
+        type: string
+
 env:
   REPO: ${{ inputs.GIT_REPO || 'vezham/v0xFE-apps-pods' }}
   BRANCH: ${{ inputs.GIT_BRANCH || 'timeline' }}
@@ -116,6 +134,14 @@ jobs:
           envkey_V_IS_DEBUG: ${{ inputs.IS_DEBUG }}
           envkey_V_IS_BETA: ${{ inputs.IS_BETA }}
           envkey_V_APP_NAME: ${{ inputs.APP_NAME }}
+          envkey_V_APP_API_URL: ${{ inputs.APP_API_URL }}
+          envkey_V_APP_IAM_URL: ${{ inputs.APP_IAM_URL }}
+          envkey_V_APP_ACCOUNTS_URL: ${{ inputs.APP_ACCOUNTS_URL }}
+          envkey_V_APP_BUSINESS_URL: ${{ inputs.APP_BUSINESS_URL }}
+          envkey_V_APP_HQ_URL: ${{ inputs.APP_HQ_URL }}
+          envkey_V_APP_IS_SANDBOX: ${{ inputs.APP_IS_SANDBOX }}
+          envkey_V_APP_SANDBOX_API_URL: ${{ inputs.APP_SANDBOX_API_URL }}
+          envkey_V_APP_DC_API_URL: ${{ inputs.APP_DC_API_URL }}
         
       - name: setup | build
         run: npm run build --name=${{ env.NX_APP_NAME }}

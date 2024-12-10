@@ -1,0 +1,74 @@
+name: sync branch | schedule
+
+on:
+  # schedule:
+  #   - cron: '0 23 * * 0,1,2,3,4,5,6'
+  workflow_dispatch:
+
+jobs:
+  sync_branch_schedule:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: checkout
+        uses: actions/checkout@master
+
+      - name: merge | dev.deploy -> qa.deploy
+        uses: devmasx/merge-branch@master
+        with:
+          type: now
+          from_branch: dev.deploy
+          target_branch: qa.deploy
+          github_token: ${{ github.token }}
+
+      # - name: merge | qa.deploy -> live.deploy
+      #   uses: devmasx/merge-branch@master
+      #   with:
+      #     type: now
+      #     from_branch: qa.deploy
+      #     target_branch: live.deploy
+      #     github_token: ${{ github.token }}
+
+      # - uses: gr2m/merge-schedule-action@v2
+      #   with:
+      #     # merge_method:: merge | squash | rebase // default: merge
+      #     merge_method: squash
+      #     # time_zone: | // default: UTC
+      #     time_zone: 'Asia/Kolkata'
+      #     # Require all pull request statuses to be successful before
+      #     # merging. Default is `false`.
+      #     require_statuses_success: 'false'
+      #     # Label to apply to the pull request if the merge fails. Default is
+      #     # `automerge-fail`.
+      #     automerge_fail_label: 'merge-schedule-failed'
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+# jobs:
+#   daily_build_schedule:
+#     strategy:
+#       matrix:
+#         os: [ubuntu-latest]
+#     runs-on: ${{ matrix.os }}
+#     steps:
+#       - name: checkout | dev.deploy
+#         uses: actions/checkout@v3
+#         with:
+#           # repository: vezham/frontend
+#           ref: dev.deploy
+#       - name: invoke | deployer
+#         uses: vezham/frontend/.github/workflows/accounts.dev.yml@dev.deploy
+#       - name: checkout | qa.deploy
+#         uses: actions/checkout@v3
+#         with:
+#           # repository: vezham/frontend
+#           path: qa.deploy
+#       - name: invoke | deployer
+#         uses: vezham/frontend/.github/workflows/accounts.qa.yml@qa.deploy
+#       # - name: checkout | live.deploy
+#       #   uses: actions/checkout@v3
+#       #   with:
+#       #     # repository: vezham/frontend
+#       #     path: live.deploy

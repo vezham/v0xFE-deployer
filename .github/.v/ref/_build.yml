@@ -1,0 +1,191 @@
+name: build | testing
+
+on:
+  workflow_call:
+    secrets:
+      GCP_PROJECT_ID:
+        required: false
+      FIREBASE_SA_KEY:
+        required: false
+      AWS_ACCESS_KEY_ID:
+        required: false
+      AWS_SECRET_ACCESS_KEY:
+        required: false
+      AWS_S3_BUCKET:
+        required: false
+      AWS_S3_REGION:
+        required: false
+      AWS_CF_DID:
+        required: false
+    inputs:
+      GIT_REPO:
+        required: false
+        type: string
+      GIT_BRANCH:
+        required: false
+        type: string
+      HOST_GCP:
+        type: boolean
+        required: false
+        default: false
+      HOST_AWS:
+        type: boolean
+        required: false
+        default: false
+      REACT_APP_NAME:
+        type: string
+      REACT_APP_API_URL:
+        required: false
+        type: string
+      REACT_APP_IAM_URL:
+        required: false
+        type: string
+      REACT_APP_ACCOUNTS_URL:
+        required: false
+        type: string
+      REACT_APP_BUSINESS_URL:
+        required: false
+        type: string
+      REACT_APP_HQ_URL:
+        required: false
+        type: string
+      REACT_APP_IS_SANDBOX:
+        required: false
+        type: string
+      REACT_APP_SANDBOX_API_URL:
+        required: false
+        type: string
+      REACT_APP_DC_API_URL:
+        required: false
+        type: string
+      IS_BETA:
+        type: boolean
+        required: false
+        default: false
+
+env:
+  REPO: ${{ inputs.GIT_REPO || 'vezham/frontend' }}
+  BRANCH: ${{ inputs.GIT_BRANCH || 'dev.deploy' }}
+  ENTRY_POINT: ./apps/business
+  AWS_REGION: ${{ secrets.AWS_S3_REGION || 'us-east-1' }}
+
+jobs:
+  build_and_deploy:
+    strategy:
+      matrix:
+        node-version: [14]
+        os: [ubuntu-latest]
+        # os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: checkout | ${{ env.REPO }} | ${{ env.BRANCH }}
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ env.REPO }}
+          ref: ${{ env.BRANCH }}
+
+      - name: setup | node env
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: setup | yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+
+      - name: setup | yarn cache
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-${{ matrix.node-version }}-
+
+      # - name: setup | .env vars
+      #   uses: SpicyPizza/create-envfile@v1.3
+      #   with:
+      #     directory: ${{ env.ENTRY_POINT }}
+      #     envkey_IS_BETA: ${{ inputs.IS_BETA }}
+      #     envkey_REACT_APP_NAME: ${{ inputs.REACT_APP_NAME }}
+      #     envkey_REACT_APP_API_URL: ${{ inputs.REACT_APP_API_URL }}
+      #     envkey_REACT_APP_IAM_URL: ${{ inputs.REACT_APP_IAM_URL }}
+      #     envkey_REACT_APP_ACCOUNTS_URL: ${{ inputs.REACT_APP_ACCOUNTS_URL }}
+      #     envkey_REACT_APP_BUSINESS_URL: ${{ inputs.REACT_APP_BUSINESS_URL }}
+      #     envkey_REACT_APP_HQ_URL: ${{ inputs.REACT_APP_HQ_URL }}
+      #     envkey_REACT_APP_IS_SANDBOX: ${{ inputs.REACT_APP_IS_SANDBOX }}
+      #     envkey_REACT_APP_SANDBOX_API_URL: ${{ inputs.REACT_APP_SANDBOX_API_URL }}
+      #     envkey_REACT_APP_DC_API_URL: ${{ inputs.REACT_APP_DC_API_URL }}
+
+      - name: setup | yarn
+        run: yarn install
+
+      - name: cloud | build
+        working-directory: ${{ env.ENTRY_POINT }}
+        run: yarn build
+
+      - name: logs | archive npm failure logs
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: npm-logs
+          path: ~/.npm/_logs
+
+      # - name: GCP | cloud CLI
+      #   if: ${{ inputs.HOST_GCP }}
+      #   uses: FirebaseExtended/action-hosting-deploy@v0
+      #   with:
+      #     channelId: live
+      #     repoToken: ${{ env.GITHUB_TOKEN }}
+      #     projectId: ${{ secrets.GCP_PROJECT_ID }}
+      #     firebaseServiceAccount: ${{ secrets.FIREBASE_SA_KEY }}
+      #     entryPoint: ${{ env.ENTRY_POINT }}
+
+      # - name: GCP | cloud CLI
+      #   if: ${{ inputs.HOST_GCP }}
+      #   uses: w9jds/firebase-action@v12.9.0
+      #   with:
+      #     args: deploy --only hosting
+      #   env:
+      #     GCP_SA_KEY: ${{ secrets.FIREBASE_SA_KEY }}
+      #     PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+      #     PROJECT_PATH: ${{ env.ENTRY_POINT }}
+
+      # - name: AWS | cloud CLI
+      #   if: ${{ inputs.HOST_AWS }}
+      #   uses: jakejarvis/s3-sync-action@master # kersvers/s3-sync-with-cloudfront-invalidation@v1.0.0
+      #   with:
+      #     args: --follow-symlinks --delete
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     AWS_REGION: ${{ env.AWS_REGION }}
+      #     AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+      #     SOURCE_DIR: ${{ env.ENTRY_POINT }}/build
+      #     DISTRIBUTION_ID: ${{ secrets.AWS_CF_DID }}
+
+      # - name: AWS - CF Invalidations | cloud CLI
+      #   if: ${{ inputs.HOST_AWS }}
+      #   uses: chetan/invalidate-cloudfront-action@v2
+      #   env:
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     AWS_REGION: ${{ env.AWS_REGION }}
+      #     DISTRIBUTION: ${{ secrets.AWS_CF_DID }}
+      #     PATHS: '/*'
+
+
+      # - name: gcp | cloud CLI
+      #   uses: FirebaseExtended/action-hosting-deploy@v0
+      #   with:
+      #     channelId: live
+      #     repoToken: ${{ env.GITHUB_TOKEN }}
+      #     projectId: ${{ secrets.GCP_PROJECT_ID }}
+      #     firebaseServiceAccount: ${{ secrets.FIREBASE_SA_KEY }}
+      #     entryPoint: ${{ env.ENTRY_POINT }}
+
+      # - name: setup | debug
+      # - run: pwd
+      #   working-directory: ${{ env.ENTRY_POINT }}
+      # - run: ls
+      #   working-directory: ${{ env.ENTRY_POINT }}

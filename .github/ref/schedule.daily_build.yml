@@ -1,0 +1,58 @@
+name: daily build | schedule
+
+on:
+  schedule:
+    - cron: '30 23 * * 0,3,5'
+    # - cron: '0 */1 * * 0,1,2,3,4,5,6'
+    # - cron: '*/15 * * * 0,1,2,3,4,5,6'
+  # workflow_dispatch:
+
+jobs:
+  iam:
+    name: scheduler | iam
+    uses: vezham/v0xFE-deployer/.github/workflows/iam.yml@timeline
+    secrets: inherit
+    with:
+      CALLER: scheduler
+
+  accounts:
+    name: scheduler | accounts
+    uses: vezham/v0xFE-deployer/.github/workflows/accounts.yml@timeline
+    secrets: inherit
+    with:
+      CALLER: scheduler
+
+  business:
+    name: scheduler | business
+    uses: vezham/v0xFE-deployer/.github/workflows/business.yml@timeline
+    secrets: inherit
+    with:
+      CALLER: scheduler
+
+  hq:
+    name: scheduler | hq
+    uses: vezham/v0xFE-deployer/.github/workflows/hq.yml@timeline
+    secrets: inherit
+    with:
+      CALLER: scheduler
+
+  cloud_cdn:
+    name: scheduler | cloud_cdn
+    uses: vezham/v0xFE-deployer/.github/workflows/cloud_cdn.yml@timeline
+    secrets: inherit
+    with:
+      CALLER: scheduler
+
+  widgets:
+    name: scheduler | widgets
+    uses: vezham/v0xFE-deployer/.github/workflows/widgets.yml@timeline
+    secrets: inherit
+    with:
+      CALLER: scheduler
+
+  storybook:
+    name: scheduler | storybook
+    uses: vezham/v0xFE-deployer/.github/workflows/storybook.yml@timeline
+    secrets: inherit
+    with:
+      CALLER: scheduler
