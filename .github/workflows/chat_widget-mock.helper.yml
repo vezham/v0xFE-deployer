@@ -97,7 +97,7 @@ jobs:
       - name: ci-setup | gen DX_APP_URL
         id: gen-dx-app-url
         run: |
-          echo "DX_APP_URL=${{ env.DX_APP_NAME }}-${{ env.BRANCH }}-${{ env.SHA }}-${{ github.actor }}-mock.ui.dx.tva.v0x.in" >> $GITHUB_ENV
+          echo "DX_APP_URL=${{ env.DX_APP_NAME }}-${{ env.BRANCH }}-${{ env.SHA }}-${{ github.actor }}.ui.dx.tva.v0x.in" >> $GITHUB_ENV
 
       # wjdlz/NOTE: setup | pnpm
 
@@ -125,13 +125,13 @@ jobs:
           VERCEL_ORG_ID: ${{ env.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ env.VERCEL_PROJECT_ID }}
           WORKING_DIRECTORY: ${{ env.ENTRY_POINT }}
-          ALIAS_DOMAINS: |
-            ${{ env.DX_APP_URL }}
+          # ALIAS_DOMAINS: |
+          #   ${{ env.DX_APP_URL }}
 
       - name: deployer | create commit comment
         uses: peter-evans/commit-comment@v1
         with:
           body: |
-            🚀 Build deployed successfully to the following URLs
+            🚀 ${{ env.DX_APP_NAME }} Build deployed successfully to the following URLs
             - [Preview](https://${{ env.DX_APP_URL }})
             - [Live Demo](https://${{ env.DX_APP_URL }})

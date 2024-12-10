@@ -117,8 +117,14 @@ jobs:
           envkey_V_IS_BETA: ${{ inputs.IS_BETA }}
           envkey_V_APP_NAME: ${{ inputs.APP_NAME }}
         
+      - name: setup | prebuild
+        continue-on-error: true
+        run: |
+          pnpm v:prebuild:storybook
+            
       - name: setup | build
-        run: npm run build --name=${{ env.NX_APP_NAME }}
+        # run: npm run build --name=${{ env.NX_APP_NAME }}
+        run: pnpm build:storybook-nc
 
       - name: logs | archive npm failure logs
         if: failure()
@@ -168,6 +174,6 @@ jobs:
         # - https://${{ env.DX_APP_URL }}
         with:
           body: |
-            🚀 Build deployed successfully to the following URLs
+            🚀 ${{ env.DX_APP_NAME }} Build deployed successfully to the following URLs
             - [Preview](${{ steps.gcp-preview-url.outputs.value }}) - ${{ steps.gcp-preview.outputs.expire_time }}
             - [Live Demo](https://${{ env.GCP_PROJECT_ID }}.web.app)
