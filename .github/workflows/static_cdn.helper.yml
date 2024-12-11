@@ -54,6 +54,9 @@ jobs:
         with:
           repository: ${{ env.REPO }}
           ref: ${{ env.BRANCH }}
+
+      - name: poc | Install
+        uses: vezham/v0xFE-deployer/.github/workflows/actions/install/action.yml@timeline
         
       # wjdlz/TODO: ci-setup | fetch-credentials - via vezham CI host
 
