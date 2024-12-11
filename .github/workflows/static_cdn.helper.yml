@@ -49,9 +49,6 @@ jobs:
       run:
         working-directory: ${{ env.ENTRY_POINT }}
     steps:
-      - name: poc | Install
-        uses: vezham/v0xFE-deployer/.github/workflows/actions-install/action.yml@timeline
-        
       - name: checkout | ${{ env.REPO }}@${{ env.BRANCH }}
         uses: actions/checkout@v4
         with:
