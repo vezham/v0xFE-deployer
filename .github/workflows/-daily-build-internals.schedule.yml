@@ -1,0 +1,28 @@
+name: internals/daily-build | schedule
+
+on:
+  schedule:
+    - cron: '30 23 * * 0,3,5'
+
+jobs:
+  # v0xFE-apps-internals
+  playground:
+    name: scheduler | playground
+    uses: vezham/v0xFE-deployer/.github/workflows/playground.yml@timeline
+    secrets: inherit
+    with:
+      CALLER: scheduler
+  
+  storybook-sb:
+    name: scheduler | storybook-sb
+    uses: vezham/v0xFE-deployer/.github/workflows/storybook-sb.yml@timeline
+    secrets: inherit
+    with:
+      CALLER: scheduler
+      
+  storybook:
+    name: scheduler | storybook
+    uses: vezham/v0xFE-deployer/.github/workflows/storybook.yml@timeline
+    secrets: inherit
+    with:
+      CALLER: scheduler

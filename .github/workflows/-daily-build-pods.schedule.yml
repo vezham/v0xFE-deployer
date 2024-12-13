@@ -1,0 +1,28 @@
+name: pods/daily-build | schedule
+
+on:
+  schedule:
+    - cron: '30 23 * * 0,3,5'
+
+jobs:
+  # v0xFE-apps-pods
+  accounts:
+    name: scheduler | accounts
+    uses: vezham/v0xFE-deployer/.github/workflows/accounts.yml@timeline
+    secrets: inherit
+    with:
+      CALLER: scheduler
+
+  business:
+    name: scheduler | business
+    uses: vezham/v0xFE-deployer/.github/workflows/business.yml@timeline
+    secrets: inherit
+    with:
+      CALLER: scheduler
+  
+  iam:
+    name: scheduler | iam
+    uses: vezham/v0xFE-deployer/.github/workflows/iam.yml@timeline
+    secrets: inherit
+    with:
+      CALLER: scheduler

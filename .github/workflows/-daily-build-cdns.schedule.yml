@@ -1,0 +1,14 @@
+name: cdns/daily-build | schedule
+
+on:
+  schedule:
+    - cron: '30 23 * * 0,3,5'
+
+jobs:
+  # v0xFE-apps-cdns
+  static_cdn:
+    name: scheduler | static_cdn
+    uses: vezham/v0xFE-deployer/.github/workflows/static_cdn.yml@timeline
+    secrets: inherit
+    with:
+      CALLER: scheduler

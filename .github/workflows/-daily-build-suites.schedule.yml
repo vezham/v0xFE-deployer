@@ -1,0 +1,21 @@
+name: suites/daily-build | schedule
+
+on:
+  schedule:
+    - cron: '30 23 * * 0,3,5'
+
+jobs:
+  # v0xFE-apps-suites
+  hq:
+    name: scheduler | hq
+    uses: vezham/v0xFE-deployer/.github/workflows/hq.yml@timeline
+    secrets: inherit
+    with:
+      CALLER: scheduler
+
+  one:
+    name: scheduler | one
+    uses: vezham/v0xFE-deployer/.github/workflows/one.yml@timeline
+    secrets: inherit
+    with:
+      CALLER: scheduler
