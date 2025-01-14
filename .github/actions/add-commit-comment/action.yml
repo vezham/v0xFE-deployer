@@ -1,0 +1,16 @@
+name: Create commit-comment
+description: Create commit-comment
+
+runs:
+  using: composite
+  steps:
+    - name: deployer | create commit comment
+      uses: peter-evans/commit-comment@v1
+      # - https://${{ env.DX_APP_URL }}
+      with:
+        body: |
+          🚀 ${{ env.DX_APP_NAME }} Build deployed successfully to the following URLs
+          - https://${{ env.DX_APP_URL }}
+
+        # - [Preview](${{ steps.gcp-preview-url.outputs.value }}) - ${{ steps.gcp-preview.outputs.expire_time }}
+        # - [Live Demo](https://${{ env.GCP_PROJECT_ID }}.web.app)

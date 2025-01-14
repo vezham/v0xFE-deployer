@@ -1,0 +1,17 @@
+name: Setup SHA
+description: Sets up $SHA
+
+runs:
+  using: composite
+  steps:
+    - name: ci-setup | SHA
+        uses: ./.github/actions/setup-sha
+
+    - name: ci-setup | short-sha
+      id: short-sha
+      uses: benjlevesque/short-sha@v3.0
+
+    - name: ci-setup | $SHA
+      shell: bash
+      run: |
+        echo 'SHA=${{ steps.short-sha.outputs.sha }}' >> $GITHUB_ENV
