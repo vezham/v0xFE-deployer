@@ -16,28 +16,22 @@ runs:
     - name: setup | app-icon
       uses: vezham/v0xFE-deployer/.github/apps-desktop-actions/setup-icons@timeline
       env:
-        # APP_ICON_PATH: ${{ secrets.APP_ICON_PATH }}
-        APP_ICON_PATH: https://static.cdn.vezham.com/icons/favicon.png
+        APP_ICON_PATH: ${{ secrets.APP_ICON_PATH }} # https://static.cdn.vezham.com/icons/favicon.png 
     
-    # - name: cli | package
-    #   shell: bash
-    #   run: |
-    #     pnpm package
-
-    - name: cli | build
+    - name: cli | package
       shell: bash
       run: |
-        pnpm make
+        pnpm package
 
-    - name: logs | post dir
+    # - name: cli | build
+    #   shell: bash
+    #   run: |
+    #     pnpm make
+
+    - name: logs | dir
       shell: bash
       run: |
         pwd
-        ls
-
-    - name: logs | ls
-      shell: bash
-      run: |
         cd build
         pwd
         ls
