@@ -5,7 +5,7 @@ runs:
   using: composite
   steps:
     - name: ci-setup | SHA
-        uses: vezham/v0xFE-deployer/.github/actions/setup-sha@timeline
+      uses: vezham/v0xFE-deployer/.github/actions/setup-sha@timeline
     
     - name: ci-setup | gen DX_APP_URL
       id: gen-dx-app-url
