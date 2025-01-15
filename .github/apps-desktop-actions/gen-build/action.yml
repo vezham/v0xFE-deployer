@@ -9,10 +9,6 @@ runs:
       run: |
         pnpm package
 
-    - name: cli | package - no shell
-      run: |
-        pnpm package
-    
     # - name: cli | build
     #   run: |
     #     pnpm make
