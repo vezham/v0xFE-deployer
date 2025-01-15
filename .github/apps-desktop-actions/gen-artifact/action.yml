@@ -14,19 +14,21 @@ runs:
           zip -r ../${{ matrix.artifact_name }}.zip ${{ matrix.artifact_glob }}
         fi
       
-    - name: logs | dir
-      shell: bash
-      run: |
-        pwd
-        ls
-    
     - name: ci-setup | Upload artifacts
+      id: artifact-upload
       uses: actions/upload-artifact@v4
       with:
         name: ${{ matrix.artifact_name }}
         path: ${{ matrix.artifact_name }}.zip
         if-no-files-found: error
+        # retention-days: 90
       
+    - name: ci-setup | $DX_APP # id, url, digest
+      shell: bash
+      run: |
+        echo 'DX_APP_NAME=${{ matrix.artifact_name ( ${{ steps.artifact-upload.outputs.artifact-id }} ) }}' >> $GITHUB_ENV
+        echo 'DX_APP_URL=${{ steps.artifact-upload.outputs.artifact-url }}' >> $GITHUB_ENV
+    
     - name: logs | dir
       shell: bash
       run: |

@@ -64,8 +64,10 @@ jobs:
       - name: action | gen-artifact
         uses: vezham/v0xFE-deployer/.github/apps-desktop-actions/gen-artifact@timeline
 
+      - name: action | create commit comment
+        uses: vezham/v0xFE-deployer/.github/actions/add-commit-comment@timeline
+      
       - name: Create Release
-        if: runner.os == 'Linux'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -86,71 +88,3 @@ jobs:
             --draft=false \
             --prerelease=false \
             "${assets[@]}"
-
-      # ------------------
-      # - name: action | create commit comment
-      #   uses: vezham/v0xFE-deployer/.github/actions/add-commit-comment@timeline
-
-      # POC --- EOT......
-      # - uses: ./.github/actions/setup-certificates
-      #   with:
-      #     platform: ${{ runner.os }}
-      #   env:
-      #     APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
-      #     APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
-      #     APPLE_ID: ${{ secrets.APPLE_ID }}
-      #     APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
-      #     APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-      #     WINDOWS_PFX: ${{ secrets.WINDOWS_PFX }}
-      #     WINDOWS_PFX_PASSWORD: ${{ secrets.WINDOWS_PFX_PASSWORD }}
-
-      # - name: Build and publish
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #     APPLE_ID: ${{ secrets.APPLE_ID }}
-      #     APPLE_ID_PASSWORD: ${{ secrets.APPLE_ID_PASSWORD }}
-      #     APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-      #     WINDOWS_PFX_PASSWORD: ${{ secrets.WINDOWS_PFX_PASSWORD }}
-      #   run: |
-      #     pnpm run make
-      #     pnpm run publish
-
-      # - name: Create artifact archive
-      #   shell: bash
-      #   run: |
-      #     cd out
-      #     if [ "${{ runner.os }}" == "Windows" ]; then
-      #       7z a ../${{ matrix.artifact_name }}.zip ${{ matrix.artifact_glob }}
-      #     else
-      #       zip -r ../${{ matrix.artifact_name }}.zip ${{ matrix.artifact_glob }}
-      #     fi
-
-      # - name: Upload artifacts
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: ${{ matrix.artifact_name }}
-      #     path: ${{ matrix.artifact_name }}.zip
-      #     if-no-files-found: error
-
-      # - name: Create Release
-      #   if: runner.os == 'Linux'
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   run: |
-      #     # Download artifacts from other platforms
-      #     mkdir -p artifacts
-      #     gh run download --dir artifacts --pattern '*.zip'
-
-      #     # Create release with all artifacts
-      #     assets=()
-      #     for zip in artifacts/*.zip *.zip; do
-      #       if [ -f "$zip" ]; then
-      #         assets+=("$zip")
-      #       fi
-      #     done
-
-      #     gh release create "${{ github.ref_name }}" \
-      #       --title "Release ${{ github.ref_name }}" \
-      #       --draft=false \
-      #       --prerelease=false \
-      #       "${assets[@]}"
