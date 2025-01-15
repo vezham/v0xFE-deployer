@@ -25,5 +25,6 @@ runs:
     #     pnpm package
 
     - name: cli | build
+      shell: bash
       run: |
         pnpm make
