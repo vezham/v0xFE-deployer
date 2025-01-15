@@ -4,6 +4,10 @@ description: Downloads and prepares app icons in required formats
 runs:
   using: composite
   steps:
+    - name: os | Create images directory
+      shell: bash
+      run: echo ${{ runner.os }}
+    
     - name: setup | Create images directory
       shell: bash
       run: mkdir -p images
@@ -33,15 +37,15 @@ runs:
         cp "images/temp_icon.png" "images/icon.png"
         rm "images/temp_icon.png"
 
-    - name: logs | post dir
-      shell: bash
-      run: |
-        pwd
-        ls
+    # - name: logs | post dir
+    #   shell: bash
+    #   run: |
+    #     pwd
+    #     ls
 
-    - name: logs | ls
-      shell: bash
-      run: |
-        cd images
-        pwd
-        ls
+    # - name: logs | ls
+    #   shell: bash
+    #   run: |
+    #     cd images
+    #     pwd
+    #     ls
