@@ -31,13 +31,16 @@ jobs:
         include:
           - os: ubuntu-latest
             artifact_name: linux-artifacts
-            artifact_glob: 'make/**/*.{deb,rpm,AppImage}'
+            # artifact_glob: 'make/**/*.{deb,rpm,AppImage}'
+            artifact_glob: 'build/**/*-linux-x64'
           - os: macos-latest
             artifact_name: macos-artifacts
-            artifact_glob: 'make/**/*.dmg'
+            # artifact_glob: 'make/**/*.dmg'
+            artifact_glob: 'build/**/*-darwin-arm64'
           - os: windows-latest
             artifact_name: windows-artifacts
-            artifact_glob: 'make/**/*.exe'
+            # artifact_glob: 'make/**/*.exe'
+            artifact_glob: 'build/**/*-win32-x64'
     runs-on: ${{ matrix.os }}
     permissions:
       contents: write
@@ -58,10 +61,37 @@ jobs:
       - name: action | gen-build
         uses: vezham/v0xFE-deployer/.github/apps-desktop-actions/gen-build@timeline
 
-      # POC --- EOT......
+      - name: action | gen-artifact
+        uses: vezham/v0xFE-deployer/.github/apps-desktop-actions/gen-artifact@timeline
+
+      - name: Create Release
+        if: runner.os == 'Linux'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Download artifacts from other platforms
+          mkdir -p artifacts
+          gh run download --dir artifacts --pattern '*.zip'
+
+          # Create release with all artifacts
+          assets=()
+          for zip in artifacts/*.zip *.zip; do
+            if [ -f "$zip" ]; then
+              assets+=("$zip")
+            fi
+          done
+
+          gh release create "${{ github.ref_name }}" \
+            --title "Release ${{ github.ref_name }}" \
+            --draft=false \
+            --prerelease=false \
+            "${assets[@]}"
+
+      # ------------------
       # - name: action | create commit comment
       #   uses: vezham/v0xFE-deployer/.github/actions/add-commit-comment@timeline
 
+      # POC --- EOT......
       # - uses: ./.github/actions/setup-certificates
       #   with:
       #     platform: ${{ runner.os }}

@@ -1,0 +1,42 @@
+name: Gen Artifact
+description: Gen Artifact for the apps Build
+
+runs:
+  using: composite
+  steps:
+    - name: ci-setup | Create artifact archive
+      shell: bash
+      run: |
+        cd build
+        if [ "${{ runner.os }}" == "Windows" ]; then
+          7z a ../${{ matrix.artifact_name }}.zip ${{ matrix.artifact_glob }}
+        else
+          zip -r ../${{ matrix.artifact_name }}.zip ${{ matrix.artifact_glob }}
+        fi
+      
+    - name: ci-setup | Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{ matrix.artifact_name }}
+        path: ${{ matrix.artifact_name }}.zip
+        if-no-files-found: error
+      
+    - name: cli | package
+      shell: bash
+      run: |
+        pnpm package
+
+    # - name: cli | build & publish
+    #   shell: bash
+    #   run: |
+    #     pnpm run make
+    #     pnpm run publish
+    #     pnpm run publish --no-git-checks
+
+    # - name: logs | dir
+    #   shell: bash
+    #   run: |
+    #     pwd
+    #     cd build
+    #     pwd
+    #     ls

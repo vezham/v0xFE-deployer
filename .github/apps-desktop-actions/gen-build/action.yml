@@ -1,11 +1,6 @@
 name: Gen Build
 description: Gen Build for the apps
 
-inputs:
-  platform:
-    description: 'Platform to build for'
-    required: true
-
 runs:
   using: composite
   steps:
@@ -19,20 +14,17 @@ runs:
       run: |
         pnpm package
 
-    # - name: cli | build
+    # - name: cli | build & publish
     #   shell: bash
     #   run: |
-    #     pnpm make
-
-    # - name: cli | publish
-    #   shell: bash
-    #   run: |
+    #     pnpm run make
+    #     pnpm run publish
     #     pnpm run publish --no-git-checks
 
-    - name: logs | dir
-      shell: bash
-      run: |
-        pwd
-        cd build
-        pwd
-        ls
+    # - name: logs | dir
+    #   shell: bash
+    #   run: |
+    #     pwd
+    #     cd build
+    #     pwd
+    #     ls
