@@ -4,36 +4,22 @@ description: Gen Artifact for the apps Build
 runs:
   using: composite
   steps:
-    - name: logs | dir
-      shell: bash
-      run: |
-        pwd
-        cd build
-        pwd
-        ls
-    
-    - name: logs | dir
-      shell: bash
-      run: |
-        pwd
-    
     - name: ci-setup | Create artifact archive
       shell: bash
       run: |
+        cd build
         if [ "${{ runner.os }}" == "Windows" ]; then
-          7z a ${{ matrix.artifact_name }}.zip ${{ matrix.artifact_glob }}
+          7z a ../${{ matrix.artifact_name }}.zip ${{ matrix.artifact_glob }}
         else
-          zip -r ${{ matrix.artifact_name }}.zip ${{ matrix.artifact_glob }}
+          zip -r ../${{ matrix.artifact_name }}.zip ${{ matrix.artifact_glob }}
         fi
       
     - name: logs | dir
       shell: bash
       run: |
         pwd
-        cd build
-        pwd
         ls
-        
+    
     - name: ci-setup | Upload artifacts
       uses: actions/upload-artifact@v4
       with:
@@ -41,22 +27,8 @@ runs:
         path: ${{ matrix.artifact_name }}.zip
         if-no-files-found: error
       
-    - name: cli | package
+    - name: logs | dir
       shell: bash
       run: |
-        pnpm package
-
-    # - name: cli | build & publish
-    #   shell: bash
-    #   run: |
-    #     pnpm run make
-    #     pnpm run publish
-    #     pnpm run publish --no-git-checks
-
-    # - name: logs | dir
-    #   shell: bash
-    #   run: |
-    #     pwd
-    #     cd build
-    #     pwd
-    #     ls
+        pwd
+        ls
