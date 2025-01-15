@@ -1,15 +1,15 @@
 name: Setup Certificates
 description: Sets up code signing certificates for macOS and Windows
 
-inputs:
-  platform:
-    description: 'Platform to setup certificates for'
-    required: true
-
 runs:
   using: composite
   steps:
     - name: Setup certificates
+      env:
+        APPLE_CERTIFICATE: ${{ env.APPLE_CERTIFICATE }}
+        APPLE_CERTIFICATE_PASSWORD: ${{ env.APPLE_CERTIFICATE_PASSWORD }}
+        WINDOWS_PFX: ${{ env.WINDOWS_PFX }}
+        WINDOWS_PFX_PASSWORD: ${{ env.WINDOWS_PFX_PASSWORD }}
       shell: bash
       run: |
         if [ "${{ inputs.platform }}" == "macOS" ]; then
@@ -22,11 +22,6 @@ runs:
         elif [ "${{ inputs.platform }}" == "Windows" ]; then
           echo "$WINDOWS_PFX" | base64 --decode > windows-certificate.pfx
         fi
-      env:
-        APPLE_CERTIFICATE: ${{ env.APPLE_CERTIFICATE }}
-        APPLE_CERTIFICATE_PASSWORD: ${{ env.APPLE_CERTIFICATE_PASSWORD }}
-        WINDOWS_PFX: ${{ env.WINDOWS_PFX }}
-        WINDOWS_PFX_PASSWORD: ${{ env.WINDOWS_PFX_PASSWORD }}
 
     - name: Cleanup certificates
       if: always()
