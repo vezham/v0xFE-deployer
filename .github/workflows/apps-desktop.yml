@@ -63,9 +63,9 @@ jobs:
         run: |
           pnpm package
           
-      - name: cli | build
-        run: |
-          pnpm make
+      # - name: cli | build
+      #   run: |
+      #     pnpm make
 
       # - uses: ./.github/actions/setup-certificates
       #   with:
