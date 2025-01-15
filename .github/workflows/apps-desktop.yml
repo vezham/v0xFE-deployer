@@ -51,24 +51,15 @@ jobs:
       - name: action | node & pnpm
         uses: vezham/v0xFE-deployer/.github/actions/setup-install@timeline
 
-      # POC --- EOT......
-
       - name: action | gen DX_APP_URL
         uses: vezham/v0xFE-deployer/.github/actions/gen-dx-app-url@timeline
-
-      # - name: action | create commit comment
-      #   uses: vezham/v0xFE-deployer/.github/actions/add-commit-comment@timeline
 
       - name: action | gen-build
         uses: vezham/v0xFE-deployer/.github/apps-desktop-actions/gen-build@timeline
 
-      # - name: cli | package
-      #   run: |
-      #     pnpm package
-          
-      # - name: cli | build
-      #   run: |
-      #     pnpm make
+      # POC --- EOT......
+      # - name: action | create commit comment
+      #   uses: vezham/v0xFE-deployer/.github/actions/add-commit-comment@timeline
 
       # - uses: ./.github/actions/setup-certificates
       #   with:
@@ -81,14 +72,6 @@ jobs:
       #     APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
       #     WINDOWS_PFX: ${{ secrets.WINDOWS_PFX }}
       #     WINDOWS_PFX_PASSWORD: ${{ secrets.WINDOWS_PFX_PASSWORD }}
-
-      # - name: Setup ImageMagick
-      #   if: runner.os == 'Windows'
-      #   uses: mfinelli/setup-imagemagick@v3
-
-      # - uses: ./.github/actions/setup-icons
-      #   env:
-      #     APP_ICON_PATH: ${{ secrets.APP_ICON_PATH }}
 
       # - name: Build and publish
       #   env:

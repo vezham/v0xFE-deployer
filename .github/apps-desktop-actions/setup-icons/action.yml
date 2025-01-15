@@ -4,11 +4,11 @@ description: Downloads and prepares app icons in required formats
 runs:
   using: composite
   steps:
-    - name: Create images directory
+    - name: setup | Create images directory
       shell: bash
       run: mkdir -p images
 
-    - name: Download and prepare icons
+    - name: setup | Download and prepare icons
       shell: bash
       run: |
         # Download icon from cloud storage
@@ -32,3 +32,16 @@ runs:
         # Keep PNG version for all platforms
         cp "images/temp_icon.png" "images/icon.png"
         rm "images/temp_icon.png"
+
+    - name: logs | post dir
+      shell: bash
+      run: |
+        pwd
+        ls
+
+    - name: logs | ls
+      shell: bash
+      run: |
+        cd images
+        pwd
+        ls
