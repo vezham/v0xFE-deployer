@@ -1,5 +1,6 @@
 name: Setup App Icons
 description: Downloads and prepares app icons in required formats
+# Linux, macOS, 
 
 runs:
   using: composite

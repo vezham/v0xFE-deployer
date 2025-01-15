@@ -21,6 +21,7 @@ jobs:
   build_and_deploy:
     name: build & deploy
     strategy:
+      fail-fast: false
       matrix:
         # os: [ubuntu-latest, macos-latest, windows-latest]
         # os: [macos-latest, windows-latest]
