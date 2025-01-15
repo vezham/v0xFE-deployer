@@ -28,3 +28,16 @@ runs:
       shell: bash
       run: |
         pnpm make
+
+    - name: logs | post dir
+      shell: bash
+      run: |
+        pwd
+        ls
+
+    - name: logs | ls
+      shell: bash
+      run: |
+        cd build
+        pwd
+        ls
