@@ -16,7 +16,7 @@ runs:
     - name: setup | app-icon
       uses: vezham/v0xFE-deployer/.github/apps-desktop-actions/setup-icons@timeline
       env:
-        APP_ICON_PATH: ${{ secrets.APP_ICON_PATH }} # https://static.cdn.vezham.com/icons/favicon.png 
+        APP_ICON_PATH: ${{ env.APP_ICON_PATH }} # https://static.cdn.vezham.com/icons/favicon.png 
     
     - name: cli | package
       shell: bash
