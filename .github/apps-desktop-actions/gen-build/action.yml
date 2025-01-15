@@ -9,9 +9,9 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: setup | app-icon - ImageMagick
-      if: runner.os == 'Windows'
-      uses: mfinelli/setup-imagemagick@v3
+    # - name: setup | app-icon - ImageMagick
+    #   if: runner.os == 'Windows'
+    #   uses: mfinelli/setup-imagemagick@v3
 
     - name: setup | app-icon
       uses: vezham/v0xFE-deployer/.github/apps-desktop-actions/setup-icons@timeline
