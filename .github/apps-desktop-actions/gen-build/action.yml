@@ -28,6 +28,11 @@ runs:
     #   run: |
     #     pnpm make
 
+    - name: cli | publish
+      shell: bash
+      run: |
+        pnpm publish
+
     - name: logs | dir
       shell: bash
       run: |
