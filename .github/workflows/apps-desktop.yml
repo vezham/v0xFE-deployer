@@ -22,7 +22,8 @@ jobs:
     name: build & deploy
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        # os: [ubuntu-latest, macos-latest, windows-latest]
+        os: [macos-latest, windows-latest]
         node-version: [20]
         pnpm-version: [9.6.0]
         include:
