@@ -32,15 +32,15 @@ jobs:
           - os: ubuntu-latest
             artifact_name: linux-artifacts
             # artifact_glob: 'make/**/*.{deb,rpm,AppImage}'
-            artifact_glob: 'build/**/*-linux-x64'
+            artifact_glob: 'build/*-linux-x64'
           - os: macos-latest
             artifact_name: macos-artifacts
             # artifact_glob: 'make/**/*.dmg'
-            artifact_glob: 'build/**/*-darwin-arm64'
+            artifact_glob: 'build/*-darwin-arm64'
           - os: windows-latest
             artifact_name: windows-artifacts
             # artifact_glob: 'make/**/*.exe'
-            artifact_glob: 'build/**/*-win32-x64'
+            artifact_glob: 'build/*-win32-x64'
     runs-on: ${{ matrix.os }}
     permissions:
       contents: write
