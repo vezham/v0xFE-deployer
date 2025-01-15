@@ -4,6 +4,19 @@ description: Gen Artifact for the apps Build
 runs:
   using: composite
   steps:
+    - name: logs | dir
+      shell: bash
+      run: |
+        pwd
+        cd images
+        pwd
+        ls
+    
+    - name: logs | dir
+      shell: bash
+      run: |
+        pwd
+    
     - name: ci-setup | Create artifact archive
       shell: bash
       run: |
