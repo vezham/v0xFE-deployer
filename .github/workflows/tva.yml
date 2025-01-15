@@ -27,13 +27,13 @@ jobs:
         pnpm-version: [9.6.0]
     runs-on: ${{ matrix.os }}
     # runs-on: ubuntu-latest
-    # defaults:
-    #   run:
-    #     working-directory: ${{ env.ENTRY_POINT }}
     permissions:
       contents: write
       # actions: read
       # checks: write
+    # defaults:
+    #   run:
+    #     working-directory: ${{ env.ENTRY_POINT }}
 
     steps:
       - name: checkout | ${{ env.REPO }}@${{ env.BRANCH }}
