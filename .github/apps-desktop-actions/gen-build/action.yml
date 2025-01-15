@@ -19,11 +19,11 @@ runs:
         # APP_ICON_PATH: ${{ secrets.APP_ICON_PATH }}
         APP_ICON_PATH: https://static.cdn.vezham.com/icons/favicon.png
     
-    - name: cli | package
-      shell: bash
-      run: |
-        pnpm package
-
-    # - name: cli | build
+    # - name: cli | package
+    #   shell: bash
     #   run: |
-    #     pnpm make
+    #     pnpm package
+
+    - name: cli | build
+      run: |
+        pnpm make
