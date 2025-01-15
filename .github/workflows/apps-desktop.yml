@@ -57,9 +57,13 @@ jobs:
       # - name: action | create commit comment
       #   uses: vezham/v0xFE-deployer/.github/actions/add-commit-comment@timeline
 
+      - name: cli | package
+        run: |
+          pnpm package
+          
       - name: cli | build
         run: |
-          pnpm run make
+          pnpm make
 
       # - uses: ./.github/actions/setup-certificates
       #   with:
