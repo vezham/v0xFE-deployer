@@ -26,7 +26,7 @@ runs:
     - name: ci-setup | $DX_APP # id, url, digest
       shell: bash
       run: |
-        echo 'DX_APP_NAME=${{ matrix.artifact_name ( ${{ steps.artifact-upload.outputs.artifact-id }} ) }}' >> $GITHUB_ENV
+        echo 'DX_APP_NAME=${{ matrix.artifact_name }}' >> $GITHUB_ENV
         echo 'DX_APP_URL=${{ steps.artifact-upload.outputs.artifact-url }}' >> $GITHUB_ENV
     
     - name: logs | dir
