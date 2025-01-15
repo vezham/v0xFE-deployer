@@ -3,16 +3,12 @@ description: Gen Build for the apps
 
 inputs:
   platform:
-    description: 'Platform to setup certificates for'
+    description: 'Platform to build for'
     required: true
 
 runs:
   using: composite
   steps:
-    # - name: setup | app-icon - ImageMagick
-    #   if: runner.os == 'Windows'
-    #   uses: mfinelli/setup-imagemagick@v3
-
     - name: setup | app-icon
       uses: vezham/v0xFE-deployer/.github/apps-desktop-actions/setup-icons@timeline
       env:
@@ -28,10 +24,10 @@ runs:
     #   run: |
     #     pnpm make
 
-    - name: cli | publish
-      shell: bash
-      run: |
-        pnpm run publish --no-git-checks
+    # - name: cli | publish
+    #   shell: bash
+    #   run: |
+    #     pnpm run publish --no-git-checks
 
     - name: logs | dir
       shell: bash

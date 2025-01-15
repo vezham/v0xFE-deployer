@@ -1,13 +1,16 @@
 name: Setup App Icons
 description: Downloads and prepares app icons in required formats
-# Linux, macOS, Windows
 
 runs:
   using: composite
   steps:
     - name: os | Create images directory
       shell: bash
-      run: echo ${{ runner.os }}
+      run: echo ${{ runner.os }} # Linux, macOS, Windows
+    
+    # - name: setup | app-icon - ImageMagick
+    #   if: runner.os == 'Windows'
+    #   uses: mfinelli/setup-imagemagick@v3
     
     # - name: setup | Create images directory
     #   shell: bash
@@ -38,15 +41,10 @@ runs:
     #     cp "images/temp_icon.png" "images/icon.png"
     #     rm "images/temp_icon.png"
 
-    # - name: logs | post dir
+    # - name: logs | dir
     #   shell: bash
     #   run: |
     #     pwd
-    #     ls
-
-    # - name: logs | ls
-    #   shell: bash
-    #   run: |
     #     cd images
     #     pwd
     #     ls
