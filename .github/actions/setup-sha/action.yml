@@ -4,9 +4,6 @@ description: Sets up $SHA
 runs:
   using: composite
   steps:
-    - name: ci-setup | SHA
-        uses: ./.github/actions/setup-sha
-
     - name: ci-setup | short-sha
       id: short-sha
       uses: benjlevesque/short-sha@v3.0

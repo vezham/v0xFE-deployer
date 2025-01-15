@@ -4,6 +4,9 @@ description: Gen $DX_APP_URL
 runs:
   using: composite
   steps:
+    - name: ci-setup | SHA
+        uses: ./.github/actions/setup-sha
+    
     - name: ci-setup | gen DX_APP_URL
       id: gen-dx-app-url
       shell: bash
