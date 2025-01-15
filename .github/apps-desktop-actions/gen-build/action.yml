@@ -31,7 +31,7 @@ runs:
     - name: cli | publish
       shell: bash
       run: |
-        pnpm publish
+        pnpm publish --no-git-checks
 
     - name: logs | dir
       shell: bash
