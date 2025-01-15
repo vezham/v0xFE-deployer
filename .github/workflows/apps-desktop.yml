@@ -54,12 +54,12 @@ jobs:
       - name: action | gen DX_APP_URL
         uses: vezham/v0xFE-deployer/.github/actions/gen-dx-app-url@timeline
 
-      - name: action | create commit comment
-        uses: vezham/v0xFE-deployer/.github/actions/add-commit-comment@timeline
+      # - name: action | create commit comment
+      #   uses: vezham/v0xFE-deployer/.github/actions/add-commit-comment@timeline
 
-      # - name: cli | build
-      #   run: |
-      #     pnpm run make
+      - name: cli | build
+        run: |
+          pnpm run make
 
       # - uses: ./.github/actions/setup-certificates
       #   with:
