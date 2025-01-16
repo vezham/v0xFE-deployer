@@ -1,4 +1,4 @@
-name: platforms/daily-build | schedule
+name: daily-build/platforms | schedule
 
 on:
   schedule:

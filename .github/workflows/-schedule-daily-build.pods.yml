@@ -1,4 +1,4 @@
-name: pods/daily-build | schedule
+name: daily-build/pods | schedule
 
 on:
   schedule:

@@ -1,4 +1,4 @@
-name: cdns/daily-build | schedule
+name: daily-build/cdns | schedule
 
 on:
   schedule:

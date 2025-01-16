@@ -1,4 +1,4 @@
-name: widgets/daily-build | schedule
+name: daily-build/widgets | schedule
 
 on:
   schedule:

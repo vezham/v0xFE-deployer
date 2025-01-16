@@ -1,4 +1,4 @@
-name: suites/daily-build | schedule
+name: daily-build/suites | schedule
 
 on:
   schedule:

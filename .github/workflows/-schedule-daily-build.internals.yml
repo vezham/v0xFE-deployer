@@ -1,4 +1,4 @@
-name: internals/daily-build | schedule
+name: daily-build/internals | schedule
 
 on:
   schedule:
