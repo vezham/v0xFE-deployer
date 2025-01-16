@@ -1,0 +1,74 @@
+name: CI Helper
+description: CI Helper to Gen Build for the suites/apps
+
+inputs:
+  GIT_REPO:
+    required: false
+    type: string
+  GIT_BRANCH:
+    required: false
+    type: string
+  IS_PREVIEW:
+    required: false
+    type: boolean
+    default: false
+  IS_DEBUG:
+    required: false
+    type: boolean
+    default: false
+  IS_BETA:
+    required: false
+    type: boolean
+    default: false
+  APP_NAME:
+    type: string
+  # wjdlz/NOTE: custom-fields
+
+  V_CONFIG_APP:
+    required: true
+    type: string
+  V_CONFIG_AUTHOR:
+    required: true
+    type: string
+  V_CONFIG_ICON:
+    required: true
+    type: string
+  V_APP_URL:
+    required: true
+    type: string
+  V_APP_MENU:
+    required: true
+    type: string
+
+env:
+  REPO: ${{ inputs.GIT_REPO || 'vezham/v0xFE-apps-desktop' }}
+  BRANCH: ${{ inputs.GIT_BRANCH || 'timeline' }}
+  CI_DIR: ./v/bin/ci
+  # ENTRY_POINT: ./
+  # DX_APP_PATH:
+  # DX_APP_NAME:
+  # NX_APP_NAME:
+
+runs:
+  using: composite
+  steps:
+    - name: checkout | ${{ env.REPO }}@${{ env.BRANCH }}
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.REPO }}
+          ref: ${{ env.BRANCH }}
+          
+    - name: action | node & pnpm
+      uses: vezham/v0xFE-deployer/.github/actions/setup-install@timeline
+
+    - name: action | gen DX_APP_URL
+      uses: vezham/v0xFE-deployer/.github/actions/gen-dx-app-url@timeline
+
+    - name: action | gen-build
+      uses: vezham/v0xFE-deployer/.github/apps-desktop-actions/gen-build@timeline
+
+    - name: action | gen-artifact
+      uses: vezham/v0xFE-deployer/.github/apps-desktop-actions/gen-artifact@timeline
+
+    # - name: action | create commit comment
+    #   uses: vezham/v0xFE-deployer/.github/actions/add-commit-comment@timeline

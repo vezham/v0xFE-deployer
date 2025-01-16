@@ -11,7 +11,7 @@ jobs:
   suites-one:
     name: suites/One
     if: ${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || startsWith(inputs.CALLER, 'ci@suites-one') }} #  && contains( inputs.CALLER, 'suites-one' )
-    uses: vezham/v0xFE-deployer/.github/workflows/apps-desktop.helper.yml@timeline
+    uses: vezham/v0xFE-deployer/.github/workflows/apps-desktop.dc.yml@timeline
     with:
       GIT_BRANCH: timeline
       IS_DEBUG: true

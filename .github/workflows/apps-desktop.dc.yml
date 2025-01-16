@@ -1,0 +1,91 @@
+name: apps-desktop | DC
+
+on:
+  workflow_call:
+    inputs:
+      GIT_REPO:
+        required: false
+        type: string
+      GIT_BRANCH:
+        required: false
+        type: string
+      IS_PREVIEW:
+        required: false
+        type: boolean
+        default: false
+      IS_DEBUG:
+        required: false
+        type: boolean
+        default: false
+      IS_BETA:
+        required: false
+        type: boolean
+        default: false
+      APP_NAME:
+        type: string
+      # wjdlz/NOTE: custom-fields
+
+      V_CONFIG_APP:
+        required: true
+        type: string
+      V_CONFIG_AUTHOR:
+        required: true
+        type: string
+      V_CONFIG_ICON:
+        required: true
+        type: string
+      V_APP_URL:
+        required: true
+        type: string
+      V_APP_MENU:
+        required: true
+        type: string
+
+jobs:
+  build_and_deploy:
+    name: build & deploy
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node-version: [20]
+        pnpm-version: [9.6.0]
+        include:
+          - os: ubuntu-latest
+            artifact_name: linux-artifacts
+            # artifact_glob: 'make/**/*.{deb,rpm,AppImage}'
+            artifact_glob: '*-linux-x64'
+          - os: macos-latest
+            artifact_name: macos-artifacts
+            # artifact_glob: 'make/**/*.dmg'
+            # artifact_glob: '*-darwin-arm64'
+            artifact_glob: 'make/zip/darwin/arm64/*.zip'
+          - os: windows-latest
+            artifact_name: windows-artifacts
+            # artifact_glob: 'make/**/*.exe'
+            artifact_glob: '*-win32-x64'
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write
+
+    steps:
+      # - name: checkout | ${{ env.REPO }}@${{ env.BRANCH }}
+      #   uses: actions/checkout@v4
+      #   with:
+      #     repository: ${{ env.REPO }}
+      #     ref: ${{ env.BRANCH }}
+
+      - name: action | ci-helper
+        uses: vezham/v0xFE-deployer/.github/apps-desktop-actions/ci-helper@timeline
+        with:
+          GIT_REPO: timeline
+          GIT_BRANCH: timeline
+          IS_DEBUG: true
+          IS_BETA: true
+          APP_NAME: vezham-one
+          V_CONFIG_APP: '{"name":"Vezham One","category":"public.app-category.productivity","app_version":"1.0.5","build_version":"25","pkg_bundle_id":"com.vezham","app_bundle_id":"suites.one","env":"prod","status":"stable"}'
+          V_CONFIG_AUTHOR: '{"copyright":"✌️ Vezham © 2025","info":{"v0xauthor":"v0xfe-desktop-apps"}}'
+          V_CONFIG_ICON: '{"host":"https://static.cdn.vezham.com","path":"/suites/one/icons"}'
+          V_APP_URL: '{"__type":"prod","local":"http://localhost:3000","preview":"http://localhost:8080","prod":"https://lab5-ic-web-vezham--policy-center-timeline-61b5bb1-vgfywiin.web.app"}'
+          # V_APP_URL: {"__type":"prod","prod":"https://one.suites.cloud.vezham.com"}
+          V_APP_MENU: '{"help_center":"https://help.vezham.com/suites/one"}'
