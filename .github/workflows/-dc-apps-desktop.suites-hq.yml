@@ -1,0 +1,84 @@
+name: apps-desktop/suites-hq | DC
+
+on:
+  workflow_call:
+    inputs:
+      CALLER:
+        required: true
+        type: string
+
+jobs:
+  tva:
+    name: dc/TVA
+    if: ${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || startsWith(inputs.CALLER, 'ci/timeline@')  }}
+    uses: vezham/v0xFE-deployer/.github/workflows/apps-desktop.helper.yml@timeline
+    with:
+      GIT_BRANCH: timeline
+      IS_DEBUG: true
+      IS_BETA: true
+      APP_NAME: vezham-hq
+      CONFIG_APP: '{"name":"Vezham HQ","category":"public.app-category.business","app_version":"1.0.5","build_version":"25","pkg_bundle_id":"com.vezham","app_bundle_id":"suites.hq","env":"tva","status":"stable"}'
+      CONFIG_AUTHOR: '{"copyright":"✌️ Vezham © 2025","info":{"v0xauthor":"v0xfe-desktop-apps"}}'
+      CONFIG_ICON: '{"host":"https://static.cdn.vezham.com","path":"/suites/hq/icons"}'
+      APP_URL: '{"__type":"prod","local":"http://localhost:3000","preview":"http://localhost:8080","prod":"https://lab5-ic-web-vezham--policy-center-timeline-61b5bb1-vgfywiin.web.app"}'
+      # APP_URL: {"__type":"prod","prod":"https://hq.suites.cloud.vezham.com"}
+      APP_MENU: '{"help_center":"https://help.vezham.com/suites/hq"}'
+      
+  dev:
+    name: dc/dev
+    if: ${{ inputs.CALLER == 'deploy/dev' || inputs.CALLER == 'scheduler' || startsWith(inputs.CALLER, 'ci/dev@')  }}
+    uses: vezham/v0xFE-deployer/.github/workflows/apps-desktop.helper.yml@timeline
+    with:
+      GIT_BRANCH: deploy/dev
+      IS_DEBUG: true
+      IS_BETA: true
+      APP_NAME: vezham-hq
+      CONFIG_APP: '{"name":"Vezham HQ","category":"public.app-category.business","app_version":"1.0.5","build_version":"25","pkg_bundle_id":"com.vezham","app_bundle_id":"suites.hq","env":"dev","status":"unstable"}'
+      CONFIG_AUTHOR: '{"copyright":"✌️ Vezham © 2025","info":{"v0xauthor":"v0xfe-desktop-apps"}}'
+      CONFIG_ICON: '{"host":"https://static.cdn.vezham.com","path":"/suites/hq/icons"}'
+      APP_URL: '{"__type":"prod","local":"http://localhost:3000","preview":"http://localhost:8080","prod":"https://lab5-ic-web-vezham--policy-center-timeline-61b5bb1-vgfywiin.web.app"}'
+      # APP_URL: {"__type":"prod","prod":"https://hq.suites.cloud.vezham.com"}
+      APP_MENU: '{"help_center":"https://help.vezham.com/suites/hq"}'
+
+  qa:
+    name: dc/qa
+    if: ${{ inputs.CALLER == 'deploy/qa' || inputs.CALLER == 'scheduler' || startsWith(inputs.CALLER, 'ci/qa@')  }}
+    uses: vezham/v0xFE-deployer/.github/workflows/apps-desktop.helper.yml@timeline
+    with:
+      GIT_BRANCH: deploy/qa
+      IS_BETA: true
+      APP_NAME: vezham-hq
+      CONFIG_APP: '{"name":"Vezham HQ","category":"public.app-category.business","app_version":"1.0.5","build_version":"25","pkg_bundle_id":"com.vezham","app_bundle_id":"suites.hq","env":"qa","status":"alpha"}'
+      CONFIG_AUTHOR: '{"copyright":"✌️ Vezham © 2025","info":{"v0xauthor":"v0xfe-desktop-apps"}}'
+      CONFIG_ICON: '{"host":"https://static.cdn.vezham.com","path":"/suites/hq/icons"}'
+      APP_URL: '{"__type":"prod","local":"http://localhost:3000","preview":"http://localhost:8080","prod":"https://lab5-ic-web-vezham--policy-center-timeline-61b5bb1-vgfywiin.web.app"}'
+      # APP_URL: {"__type":"prod","prod":"https://hq.suites.cloud.vezham.com"}
+      APP_MENU: '{"help_center":"https://help.vezham.com/suites/hq"}'
+
+  preview:
+    name: dc/preview
+    if: ${{ inputs.CALLER == 'deploy/preview' || inputs.CALLER == 'scheduler' || startsWith(inputs.CALLER, 'ci/preview@')  }}
+    uses: vezham/v0xFE-deployer/.github/workflows/apps-desktop.helper.yml@timeline
+    with:
+      GIT_BRANCH: deploy/preview
+      APP_NAME: vezham-hq
+      CONFIG_APP: '{"name":"Vezham HQ","category":"public.app-category.business","app_version":"1.0.5","build_version":"25","pkg_bundle_id":"com.vezham","app_bundle_id":"suites.hq","env":"preview","status":"beta"}'
+      CONFIG_AUTHOR: '{"copyright":"✌️ Vezham © 2025","info":{"v0xauthor":"v0xfe-desktop-apps"}}'
+      CONFIG_ICON: '{"host":"https://static.cdn.vezham.com","path":"/suites/hq/icons"}'
+      APP_URL: '{"__type":"prod","local":"http://localhost:3000","preview":"http://localhost:8080","prod":"https://lab5-ic-web-vezham--policy-center-timeline-61b5bb1-vgfywiin.web.app"}'
+      # APP_URL: {"__type":"prod","prod":"https://hq.suites.cloud.vezham.com"}
+      APP_MENU: '{"help_center":"https://help.vezham.com/suites/hq"}'
+      
+  prod:
+    name: dc/prod
+    if: ${{ inputs.CALLER == 'deploy/prod' || inputs.CALLER == 'scheduler' || startsWith(inputs.CALLER, 'ci/prod@')  }}
+    uses: vezham/v0xFE-deployer/.github/workflows/apps-desktop.helper.yml@timeline
+    with:
+      GIT_BRANCH: deploy/prod
+      APP_NAME: vezham-hq
+      CONFIG_APP: '{"name":"Vezham HQ","category":"public.app-category.business","app_version":"1.0.5","build_version":"25","pkg_bundle_id":"com.vezham","app_bundle_id":"suites.hq","env":"prod","status":"stable"}'
+      CONFIG_AUTHOR: '{"copyright":"✌️ Vezham © 2025","info":{"v0xauthor":"v0xfe-desktop-apps"}}'
+      CONFIG_ICON: '{"host":"https://static.cdn.vezham.com","path":"/suites/hq/icons"}'
+      APP_URL: '{"__type":"prod","local":"http://localhost:3000","preview":"http://localhost:8080","prod":"https://lab5-ic-web-vezham--policy-center-timeline-61b5bb1-vgfywiin.web.app"}'
+      # APP_URL: {"__type":"prod","prod":"https://hq.suites.cloud.vezham.com"}
+      APP_MENU: '{"help_center":"https://help.vezham.com/suites/hq"}'

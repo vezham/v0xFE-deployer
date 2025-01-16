@@ -25,19 +25,19 @@ on:
         type: string
       # wjdlz/NOTE: custom-fields
 
-      V_CONFIG_APP:
+      CONFIG_APP:
         required: true
         type: string
-      V_CONFIG_AUTHOR:
+      CONFIG_AUTHOR:
         required: true
         type: string
-      V_CONFIG_ICON:
+      CONFIG_ICON:
         required: true
         type: string
-      V_APP_URL:
+      APP_URL:
         required: true
         type: string
-      V_APP_MENU:
+      APP_MENU:
         required: true
         type: string
 
@@ -45,14 +45,13 @@ env:
   REPO: ${{ inputs.GIT_REPO || 'vezham/v0xFE-apps-desktop' }}
   BRANCH: ${{ inputs.GIT_BRANCH || 'timeline' }}
   CI_DIR: ./v/bin/ci
-  # ENTRY_POINT: ./
+  ENTRY_POINT: ./
   # DX_APP_PATH:
   # DX_APP_NAME:
   # NX_APP_NAME:
 
 jobs:
   build_and_deploy:
-    name: build & deploy
     strategy:
       fail-fast: false
       matrix:
@@ -61,16 +60,16 @@ jobs:
         pnpm-version: [9.6.0]
         include:
           - os: ubuntu-latest
-            artifact_name: linux-artifacts
+            artifact_name:  ${{ inputs.APP_NAME }}-linux-artifacts
             # artifact_glob: 'make/**/*.{deb,rpm,AppImage}'
             artifact_glob: '*-linux-x64'
           - os: macos-latest
-            artifact_name: macos-artifacts
+            artifact_name: ${{ inputs.APP_NAME }}-macos-artifacts
             # artifact_glob: 'make/**/*.dmg'
             # artifact_glob: '*-darwin-arm64'
             artifact_glob: 'make/zip/darwin/arm64/*.zip'
           - os: windows-latest
-            artifact_name: windows-artifacts
+            artifact_name: ${{ inputs.APP_NAME }}-windows-artifacts
             # artifact_glob: 'make/**/*.exe'
             artifact_glob: '*-win32-x64'
     runs-on: ${{ matrix.os }}
@@ -78,18 +77,32 @@ jobs:
       contents: write
 
     steps:
-      - name: checkout | ${{ env.REPO }}@${{ env.BRANCH }}
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ env.REPO }}
-          ref: ${{ env.BRANCH }}
-
+      - name: action | checkout | ${{ env.REPO }}@${{ env.BRANCH }}
+      uses: vezham/v0xFE-deployer/.github/actions/setup-checkout@timeline
+      with:
+        GIT_REPO: ${{ env.REPO }}
+        GIT_BRANCH: ${{ env.BRANCH }}
+        
       - name: action | node & pnpm
         uses: vezham/v0xFE-deployer/.github/actions/setup-install@timeline
 
       - name: action | gen DX_APP_URL
         uses: vezham/v0xFE-deployer/.github/actions/gen-dx-app-url@timeline
 
+      - name: setup | .env vars
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+          directory: ${{ env.ENTRY_POINT }}
+          # envkey_V_IS_PREVIEW: ${{ inputs.IS_PREVIEW }}
+          envkey_V_IS_DEBUG: ${{ inputs.IS_DEBUG }}
+          # envkey_V_IS_BETA: ${{ inputs.IS_BETA }}
+          envkey_V_APP_NAME: ${{ inputs.APP_NAME }}
+          envkey_V_CONFIG_APP: ${{ inputs.CONFIG_APP }}
+          envkey_V_CONFIG_AUTHOR: ${{ inputs.CONFIG_AUTHOR }}
+          envkey_V_CONFIG_ICON: ${{ inputs.CONFIG_ICON }}
+          envkey_V_APP_URL: ${{ inputs.APP_URL }}
+          envkey_V_APP_MENU: ${{ inputs.APP_MENU }}
+          
       - name: action | gen-build
         uses: vezham/v0xFE-deployer/.github/apps-desktop-actions/gen-build@timeline
 
