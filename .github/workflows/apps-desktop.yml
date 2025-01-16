@@ -34,7 +34,8 @@ jobs:
           - os: macos-latest
             artifact_name: macos-artifacts
             # artifact_glob: 'make/**/*.dmg'
-            artifact_glob: '*-darwin-arm64'
+            # artifact_glob: '*-darwin-arm64'
+            artifact_glob: 'make/zip/darwin/arm64/*.zip'
           - os: windows-latest
             artifact_name: windows-artifacts
             # artifact_glob: 'make/**/*.exe'

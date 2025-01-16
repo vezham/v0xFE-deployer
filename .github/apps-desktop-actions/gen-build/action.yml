@@ -13,8 +13,13 @@ runs:
       shell: bash
       run: |
         pnpm package
-        pnpm run make
 
+    - name: cli | build & publish
+      if: runner.os == 'macOS'
+      shell: bash
+      run: |
+        pnpm run make
+    
     # - name: cli | build & publish
     #   shell: bash
     #   run: |
@@ -22,10 +27,10 @@ runs:
     #     pnpm run publish
     #     pnpm run publish --no-git-checks
 
-    # - name: logs | dir
-    #   shell: bash
-    #   run: |
-    #     pwd
-    #     cd build
-    #     pwd
-    #     ls
+    - name: logs | dir
+      shell: bash
+      run: |
+        pwd
+        cd build
+        pwd
+        ls
