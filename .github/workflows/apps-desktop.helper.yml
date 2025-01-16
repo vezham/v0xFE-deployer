@@ -25,6 +25,22 @@ on:
         type: string
       # wjdlz/NOTE: custom-fields
 
+      V_CONFIG_APP:
+        required: true
+        type: string
+      V_CONFIG_AUTHOR:
+        required: true
+        type: string
+      V_CONFIG_ICON:
+        required: true
+        type: string
+      V_APP_URL:
+        required: true
+        type: string
+      V_APP_MENU:
+        required: true
+        type: string
+
 env:
   REPO: ${{ inputs.GIT_REPO || 'vezham/v0xFE-apps-desktop' }}
   BRANCH: ${{ inputs.GIT_BRANCH || 'timeline' }}
