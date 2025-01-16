@@ -78,10 +78,10 @@ jobs:
 
     steps:
       - name: action | checkout | ${{ env.REPO }}@${{ env.BRANCH }}
-      uses: vezham/v0xFE-deployer/.github/actions/setup-checkout@timeline
-      with:
-        GIT_REPO: ${{ env.REPO }}
-        GIT_BRANCH: ${{ env.BRANCH }}
+        uses: vezham/v0xFE-deployer/.github/actions/setup-checkout@timeline
+        with:
+          GIT_REPO: ${{ env.REPO }}
+          GIT_BRANCH: ${{ env.BRANCH }}
         
       - name: action | node & pnpm
         uses: vezham/v0xFE-deployer/.github/actions/setup-install@timeline
