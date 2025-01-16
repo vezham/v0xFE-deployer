@@ -43,12 +43,12 @@ inputs:
 runs:
   using: composite
   steps:
-    # - name: checkout | ${{ env.REPO }}@${{ env.BRANCH }}
-    #     uses: actions/checkout@v4
-    #     with:
-    #       repository: ${{ env.REPO }}
-    #       ref: ${{ env.BRANCH }}
-          
+    - name: action | checkout | ${{ inputs.REPO }}@${{ inputs.BRANCH }}
+      uses: vezham/v0xFE-deployer/.github/actions/setup-checkout@timeline
+      with:
+        GIT_REPO: ${{ inputs.REPO }}
+        GIT_BRANCH: ${{ inputs.BRANCH }}
+
     - name: action | node & pnpm
       uses: vezham/v0xFE-deployer/.github/actions/setup-install@timeline
 

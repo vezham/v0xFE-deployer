@@ -78,17 +78,17 @@ jobs:
       contents: write
 
     steps:
-      - name: checkout | ${{ env.REPO }}@${{ env.BRANCH }}
-        uses: actions/checkout@v4
-        with:
-          repository: ${{ env.REPO }}
-          ref: ${{ env.BRANCH }}
+      # - name: checkout | ${{ env.REPO }}@${{ env.BRANCH }}
+      #   uses: actions/checkout@v4
+      #   with:
+      #     repository: ${{ env.REPO }}
+      #     ref: ${{ env.BRANCH }}
 
       - name: action | ci-helper
         uses: vezham/v0xFE-deployer/.github/apps-desktop-actions/ci-helper@timeline
         with:
-          GIT_REPO: timeline
-          GIT_BRANCH: timeline
+          GIT_REPO: ${{ env.REPO }}
+          GIT_BRANCH: ${{ env.BRANCH }}
           IS_DEBUG: true
           IS_BETA: true
           APP_NAME: vezham-one

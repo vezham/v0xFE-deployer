@@ -1,0 +1,19 @@
+name: Setup checkout
+description: Sets up repo & branch
+
+inputs:
+  GIT_REPO:
+    required: false
+    type: string
+  GIT_BRANCH:
+    required: false
+    type: string
+
+runs:
+  using: composite
+  steps:
+    - name: checkout | ${{ inputs.REPO }}@${{ inputs.BRANCH }}
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ inputs.REPO }}
+        ref: ${{ inputs.BRANCH }}
