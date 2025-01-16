@@ -62,5 +62,5 @@ jobs:
       - name: action | gen-artifact
         uses: vezham/v0xFE-deployer/.github/apps-desktop-actions/gen-artifact@timeline
 
-      - name: action | create commit comment
-        uses: vezham/v0xFE-deployer/.github/actions/add-commit-comment@timeline
+      # - name: action | create commit comment
+      #   uses: vezham/v0xFE-deployer/.github/actions/add-commit-comment@timeline

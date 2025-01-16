@@ -13,6 +13,7 @@ runs:
       shell: bash
       run: |
         pnpm package
+        pnpm run make
 
     # - name: cli | build & publish
     #   shell: bash
