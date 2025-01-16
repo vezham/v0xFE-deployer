@@ -19,6 +19,7 @@ runs:
       shell: bash
       run: |
         pnpm run make
+        pnpm run publish
     
     # - name: cli | build & publish
     #   shell: bash
