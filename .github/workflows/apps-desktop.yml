@@ -10,7 +10,7 @@ on:
 jobs:
   tva:
     name: dc/TVA
-    if: ${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' }}
+    if: ${{ inputs.CALLER == 'timeline' || startsWith( inputs.CALLER, 'ci@deployer' ) || inputs.CALLER == 'scheduler' }}
     uses: vezham/v0xFE-deployer/.github/workflows/apps-desktop.helper.yml@timeline
     with:
       GIT_BRANCH: ${{ inputs.CALLER }}
