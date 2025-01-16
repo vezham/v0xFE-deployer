@@ -1,0 +1,84 @@
+name: apps-desktop | helper
+
+on:
+  workflow_call:
+    inputs:
+      GIT_REPO:
+        required: false
+        type: string
+      GIT_BRANCH:
+        required: false
+        type: string
+      IS_PREVIEW:
+        required: false
+        type: boolean
+        default: false
+      IS_DEBUG:
+        required: false
+        type: boolean
+        default: false
+      IS_BETA:
+        required: false
+        type: boolean
+        default: false
+      APP_NAME:
+        type: string
+      # wjdlz/NOTE: custom-fields
+
+env:
+  REPO: ${{ inputs.GIT_REPO || 'vezham/v0xFE-apps-desktop' }}
+  BRANCH: ${{ inputs.GIT_BRANCH || 'timeline' }}
+  CI_DIR: ./v/bin/ci
+  # ENTRY_POINT: ./
+  # DX_APP_PATH:
+  # DX_APP_NAME:
+  # NX_APP_NAME:
+
+jobs:
+  build_and_deploy:
+    name: build & deploy
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node-version: [20]
+        pnpm-version: [9.6.0]
+        include:
+          - os: ubuntu-latest
+            artifact_name: linux-artifacts
+            # artifact_glob: 'make/**/*.{deb,rpm,AppImage}'
+            artifact_glob: '*-linux-x64'
+          - os: macos-latest
+            artifact_name: macos-artifacts
+            # artifact_glob: 'make/**/*.dmg'
+            # artifact_glob: '*-darwin-arm64'
+            artifact_glob: 'make/zip/darwin/arm64/*.zip'
+          - os: windows-latest
+            artifact_name: windows-artifacts
+            # artifact_glob: 'make/**/*.exe'
+            artifact_glob: '*-win32-x64'
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write
+
+    steps:
+      - name: checkout | ${{ env.REPO }}@${{ env.BRANCH }}
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ env.REPO }}
+          ref: ${{ env.BRANCH }}
+
+      - name: action | node & pnpm
+        uses: vezham/v0xFE-deployer/.github/actions/setup-install@timeline
+
+      - name: action | gen DX_APP_URL
+        uses: vezham/v0xFE-deployer/.github/actions/gen-dx-app-url@timeline
+
+      - name: action | gen-build
+        uses: vezham/v0xFE-deployer/.github/apps-desktop-actions/gen-build@timeline
+
+      - name: action | gen-artifact
+        uses: vezham/v0xFE-deployer/.github/apps-desktop-actions/gen-artifact@timeline
+
+      # - name: action | create commit comment
+      #   uses: vezham/v0xFE-deployer/.github/actions/add-commit-comment@timeline
