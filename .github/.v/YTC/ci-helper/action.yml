@@ -44,16 +44,16 @@ runs:
   using: composite
   steps:
     - name: action | checkout | ${{ inputs.REPO }}@${{ inputs.BRANCH }}
-      uses: vezham/v0xFE-deployer/.github/actions/setup-checkout@timeline
+      uses: vezham/v0xFE-deployer/.github/common-actions/setup-checkout@timeline
       with:
         GIT_REPO: ${{ inputs.REPO }}
         GIT_BRANCH: ${{ inputs.BRANCH }}
 
     - name: action | node & pnpm
-      uses: vezham/v0xFE-deployer/.github/actions/setup-install@timeline
+      uses: vezham/v0xFE-deployer/.github/common-actions/setup-install@timeline
 
     - name: action | gen DX_APP_URL
-      uses: vezham/v0xFE-deployer/.github/actions/gen-dx-app-url@timeline
+      uses: vezham/v0xFE-deployer/.github/common-actions/gen-dx-app-url@timeline
 
     - name: action | gen-build
       uses: vezham/v0xFE-deployer/.github/apps-desktop-actions/gen-build@timeline
@@ -62,4 +62,4 @@ runs:
       uses: vezham/v0xFE-deployer/.github/apps-desktop-actions/gen-artifact@timeline
 
     # - name: action | create commit comment
-    #   uses: vezham/v0xFE-deployer/.github/actions/add-commit-comment@timeline
+    #   uses: vezham/v0xFE-deployer/.github/common-actions/add-commit-comment@timeline

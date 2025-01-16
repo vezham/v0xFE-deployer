@@ -17,7 +17,7 @@ jobs:
       IS_DEBUG: true
       IS_BETA: true
       APP_NAME: vezham-hq
-      CONFIG_APP: '{"name":"Vezham HQ","category":"public.app-category.business","app_version":"1.0.5","build_version":"25","pkg_bundle_id":"com.vezham","app_bundle_id":"suites.hq","env":"tva","status":"stable"}'
+      CONFIG_APP: '{"name":"Vezham HQ","category":"public.app-category.business","app_version":"1.0.5","build_version":"v0x25","pkg_bundle_id":"com.vezham","app_bundle_id":"suites.hq","env":"tva","status":"stable"}'
       CONFIG_AUTHOR: '{"copyright":"✌️ Vezham © 2025","info":{"v0xauthor":"v0xfe-desktop-apps"}}'
       CONFIG_ICON: '{"host":"https://static.cdn.vezham.com","path":"/suites/hq/icons"}'
       APP_URL: '{"__type":"prod","local":"http://localhost:3000","preview":"http://localhost:8080","prod":"https://lab5-ic-web-vezham--policy-center-timeline-61b5bb1-vgfywiin.web.app"}'
@@ -33,7 +33,7 @@ jobs:
       IS_DEBUG: true
       IS_BETA: true
       APP_NAME: vezham-hq
-      CONFIG_APP: '{"name":"Vezham HQ","category":"public.app-category.business","app_version":"1.0.5","build_version":"25","pkg_bundle_id":"com.vezham","app_bundle_id":"suites.hq","env":"dev","status":"unstable"}'
+      CONFIG_APP: '{"name":"Vezham HQ","category":"public.app-category.business","app_version":"1.0.5","build_version":"v0x25","pkg_bundle_id":"com.vezham","app_bundle_id":"suites.hq","env":"dev","status":"unstable"}'
       CONFIG_AUTHOR: '{"copyright":"✌️ Vezham © 2025","info":{"v0xauthor":"v0xfe-desktop-apps"}}'
       CONFIG_ICON: '{"host":"https://static.cdn.vezham.com","path":"/suites/hq/icons"}'
       APP_URL: '{"__type":"prod","local":"http://localhost:3000","preview":"http://localhost:8080","prod":"https://lab5-ic-web-vezham--policy-center-timeline-61b5bb1-vgfywiin.web.app"}'
@@ -48,7 +48,7 @@ jobs:
       GIT_BRANCH: deploy/qa
       IS_BETA: true
       APP_NAME: vezham-hq
-      CONFIG_APP: '{"name":"Vezham HQ","category":"public.app-category.business","app_version":"1.0.5","build_version":"25","pkg_bundle_id":"com.vezham","app_bundle_id":"suites.hq","env":"qa","status":"alpha"}'
+      CONFIG_APP: '{"name":"Vezham HQ","category":"public.app-category.business","app_version":"1.0.5","build_version":"v0x25","pkg_bundle_id":"com.vezham","app_bundle_id":"suites.hq","env":"qa","status":"alpha"}'
       CONFIG_AUTHOR: '{"copyright":"✌️ Vezham © 2025","info":{"v0xauthor":"v0xfe-desktop-apps"}}'
       CONFIG_ICON: '{"host":"https://static.cdn.vezham.com","path":"/suites/hq/icons"}'
       APP_URL: '{"__type":"prod","local":"http://localhost:3000","preview":"http://localhost:8080","prod":"https://lab5-ic-web-vezham--policy-center-timeline-61b5bb1-vgfywiin.web.app"}'
@@ -62,7 +62,7 @@ jobs:
     with:
       GIT_BRANCH: deploy/preview
       APP_NAME: vezham-hq
-      CONFIG_APP: '{"name":"Vezham HQ","category":"public.app-category.business","app_version":"1.0.5","build_version":"25","pkg_bundle_id":"com.vezham","app_bundle_id":"suites.hq","env":"preview","status":"beta"}'
+      CONFIG_APP: '{"name":"Vezham HQ","category":"public.app-category.business","app_version":"1.0.5","build_version":"v0x25","pkg_bundle_id":"com.vezham","app_bundle_id":"suites.hq","env":"preview","status":"beta"}'
       CONFIG_AUTHOR: '{"copyright":"✌️ Vezham © 2025","info":{"v0xauthor":"v0xfe-desktop-apps"}}'
       CONFIG_ICON: '{"host":"https://static.cdn.vezham.com","path":"/suites/hq/icons"}'
       APP_URL: '{"__type":"prod","local":"http://localhost:3000","preview":"http://localhost:8080","prod":"https://lab5-ic-web-vezham--policy-center-timeline-61b5bb1-vgfywiin.web.app"}'
@@ -76,7 +76,7 @@ jobs:
     with:
       GIT_BRANCH: deploy/prod
       APP_NAME: vezham-hq
-      CONFIG_APP: '{"name":"Vezham HQ","category":"public.app-category.business","app_version":"1.0.5","build_version":"25","pkg_bundle_id":"com.vezham","app_bundle_id":"suites.hq","env":"prod","status":"stable"}'
+      CONFIG_APP: '{"name":"Vezham HQ","category":"public.app-category.business","app_version":"1.0.5","build_version":"v0x25","pkg_bundle_id":"com.vezham","app_bundle_id":"suites.hq","env":"prod","status":"stable"}'
       CONFIG_AUTHOR: '{"copyright":"✌️ Vezham © 2025","info":{"v0xauthor":"v0xfe-desktop-apps"}}'
       CONFIG_ICON: '{"host":"https://static.cdn.vezham.com","path":"/suites/hq/icons"}'
       APP_URL: '{"__type":"prod","local":"http://localhost:3000","preview":"http://localhost:8080","prod":"https://lab5-ic-web-vezham--policy-center-timeline-61b5bb1-vgfywiin.web.app"}'

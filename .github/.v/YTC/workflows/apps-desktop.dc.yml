@@ -92,7 +92,7 @@ jobs:
           IS_DEBUG: true
           IS_BETA: true
           APP_NAME: vezham-one
-          V_CONFIG_APP: '{"name":"Vezham One","category":"public.app-category.productivity","app_version":"1.0.5","build_version":"25","pkg_bundle_id":"com.vezham","app_bundle_id":"suites.one","env":"prod","status":"stable"}'
+          V_CONFIG_APP: '{"name":"Vezham One","category":"public.app-category.productivity","app_version":"1.0.5","build_version":"v0x25","pkg_bundle_id":"com.vezham","app_bundle_id":"suites.one","env":"prod","status":"stable"}'
           V_CONFIG_AUTHOR: '{"copyright":"✌️ Vezham © 2025","info":{"v0xauthor":"v0xfe-desktop-apps"}}'
           V_CONFIG_ICON: '{"host":"https://static.cdn.vezham.com","path":"/suites/one/icons"}'
           V_APP_URL: '{"__type":"prod","local":"http://localhost:3000","preview":"http://localhost:8080","prod":"https://lab5-ic-web-vezham--policy-center-timeline-61b5bb1-vgfywiin.web.app"}'

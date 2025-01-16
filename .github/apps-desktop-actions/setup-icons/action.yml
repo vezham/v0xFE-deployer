@@ -1,5 +1,6 @@
 name: Setup App Icons
 description: Downloads and prepares app icons in required formats
+# APP_ICON_PATH: ${{ env.APP_ICON_PATH }} # https://static.cdn.vezham.com/icons/favicon.png
 
 runs:
   using: composite
