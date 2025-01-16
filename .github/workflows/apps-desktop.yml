@@ -8,13 +8,50 @@ on:
         type: string
 
 jobs:
-  tva:
-    name: dc/TVA
-    if: ${{ inputs.CALLER == 'timeline' || startsWith( inputs.CALLER, 'ci@deployer' ) || inputs.CALLER == 'scheduler' }}
+  suites-one:
+    name: suites/One
+    if: ${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || startsWith(inputs.CALLER, 'ci@suites-one') }} #  && contains( inputs.CALLER, 'suites-one' )
     uses: vezham/v0xFE-deployer/.github/workflows/apps-desktop.helper.yml@timeline
     with:
-      GIT_BRANCH: ${{ inputs.CALLER }}
+      GIT_BRANCH: timeline
       IS_DEBUG: true
       IS_BETA: true
-      APP_NAME: accounts
-  
+      APP_NAME: vezham-one
+      V_CONFIG_APP: {"name":"Vezham One","category":"public.app-category.productivity","app_version":"1.0.5","build_version":"25","pkg_bundle_id":"com.vezham","app_bundle_id":"suites.one","env":"prod","status":"stable"}
+      V_CONFIG_AUTHOR: {"copyright":"✌️ Vezham © 2025","info":{"v0xauthor":"v0xfe-desktop-apps"}}
+      V_CONFIG_ICON: {"host":"https://static.cdn.vezham.com","path":"/suites/one/icons"}
+      V_APP_URL: {"__type":"prod","local":"http://localhost:3000","preview":"http://localhost:8080","prod":"https://lab5-ic-web-vezham--policy-center-timeline-61b5bb1-vgfywiin.web.app"}
+      # V_APP_URL: {"__type":"prod","prod":"https://one.suites.cloud.vezham.com"}
+      V_APP_MENU: {"help_center":"https://help.vezham.com/suites/one"}
+      
+  suites-hq:
+    name: suites/HQ
+    if: ${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || startsWith(inputs.CALLER, 'ci@suites-hq') }}
+    uses: vezham/v0xFE-deployer/.github/workflows/apps-desktop.helper.yml@timeline
+    with:
+      GIT_BRANCH: timeline
+      IS_DEBUG: true
+      IS_BETA: true
+      APP_NAME: vezham-hq
+      V_CONFIG_APP: {"name":"Vezham HQ","category":"public.app-category.business","app_version":"1.0.5","build_version":"25","pkg_bundle_id":"com.vezham","app_bundle_id":"suites.hq","env":"prod","status":"stable"}
+      V_CONFIG_AUTHOR: {"copyright":"✌️ Vezham © 2025","info":{"v0xauthor":"v0xfe-desktop-apps"}}
+      V_CONFIG_ICON: {"host":"https://static.cdn.vezham.com","path":"/suites/hq/icons"}
+      V_APP_URL: {"__type":"prod","local":"http://localhost:3000","preview":"http://localhost:8080","prod":"https://lab5-ic-web-vezham--policy-center-timeline-61b5bb1-vgfywiin.web.app"}
+      # V_APP_URL: {"__type":"prod","prod":"https://hq.suites.cloud.vezham.com"}
+      V_APP_MENU: {"help_center":"https://help.vezham.com/suites/hq"}
+      
+  apps-messenger:
+    name: apps/Messenger
+    if: ${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || startsWith(inputs.CALLER, 'ci@apps-messenger') }}
+    uses: vezham/v0xFE-deployer/.github/workflows/apps-desktop.helper.yml@timeline
+    with:
+      GIT_BRANCH: timeline
+      IS_DEBUG: true
+      IS_BETA: true
+      APP_NAME: vezham-messenger
+      V_CONFIG_APP: {"name":"Vezham Messenger","category":"public.app-category.social-networking","app_version":"1.0.5","build_version":"25","pkg_bundle_id":"com.vezham","app_bundle_id":"apps.messenger","env":"prod","status":"stable"}
+      V_CONFIG_AUTHOR: {"copyright":"✌️ Vezham © 2025","info":{"v0xauthor":"v0xfe-desktop-apps"}}
+      V_CONFIG_ICON: {"host":"https://static.cdn.vezham.com","path":"/apps/messenger/icons"}
+      V_APP_URL: {"__type":"prod","local":"http://localhost:3000","preview":"http://localhost:8080","prod":"https://lab5-ic-web-vezham--policy-center-timeline-61b5bb1-vgfywiin.web.app"}
+      # V_APP_URL: {"__type":"prod","prod":"https://messenger.apps.cloud.vezham.com"}
+      V_APP_MENU: {"help_center":"https://help.vezham.com/apps/messenger"}
