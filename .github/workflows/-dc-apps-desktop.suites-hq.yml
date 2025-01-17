@@ -9,8 +9,16 @@ on:
 
 jobs:
   tva:
-    name: dc/TVA
+    if: ${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || startsWith(inputs.CALLER, '@suites-hq') }}
+    runs-on: ubuntu-latest
+    steps:
+      - shell: bash
+        run: echo ${{ inputs.CALLER }}
+
+  timeline:
+    needs: tva
     if: ${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@timeline/ci')  }}
+    name: dc/timeline
     uses: vezham/v0xFE-deployer/.github/workflows/apps-desktop.helper.yml@timeline
     with:
       GIT_BRANCH: timeline
@@ -25,8 +33,9 @@ jobs:
       APP_MENU: '{"help_center":"https://help.vezham.com/suites/hq"}'
       
   dev:
-    name: dc/dev
+    needs: tva
     if: ${{ inputs.CALLER == 'deploy/dev' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@dev/ci')  }}
+    name: dc/dev
     uses: vezham/v0xFE-deployer/.github/workflows/apps-desktop.helper.yml@timeline
     with:
       GIT_BRANCH: deploy/dev
@@ -41,8 +50,9 @@ jobs:
       APP_MENU: '{"help_center":"https://help.vezham.com/suites/hq"}'
 
   qa:
-    name: dc/qa
+    needs: tva
     if: ${{ inputs.CALLER == 'deploy/qa' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@qa/ci')  }}
+    name: dc/qa
     uses: vezham/v0xFE-deployer/.github/workflows/apps-desktop.helper.yml@timeline
     with:
       GIT_BRANCH: deploy/qa
@@ -56,8 +66,9 @@ jobs:
       APP_MENU: '{"help_center":"https://help.vezham.com/suites/hq"}'
 
   preview:
-    name: dc/preview
+    needs: tva
     if: ${{ inputs.CALLER == 'deploy/preview' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@preview/ci')  }}
+    name: dc/preview
     uses: vezham/v0xFE-deployer/.github/workflows/apps-desktop.helper.yml@timeline
     with:
       GIT_BRANCH: deploy/preview
@@ -70,8 +81,9 @@ jobs:
       APP_MENU: '{"help_center":"https://help.vezham.com/suites/hq"}'
       
   prod:
-    name: dc/prod
+    needs: tva
     if: ${{ inputs.CALLER == 'deploy/prod' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@prod/ci')  }}
+    name: dc/prod
     uses: vezham/v0xFE-deployer/.github/workflows/apps-desktop.helper.yml@timeline
     with:
       GIT_BRANCH: deploy/prod

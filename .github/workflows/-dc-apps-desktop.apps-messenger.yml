@@ -13,9 +13,8 @@ jobs:
     name: TVA
     runs-on: ubuntu-latest
     steps:
-      - name: os 
-        shell: bash
-        run: echo ${{ runner.os }} # Linux, macOS, Windows
+      - shell: bash
+        run: echo ${{ inputs.CALLER }}
 
   timeline:
     needs: tva

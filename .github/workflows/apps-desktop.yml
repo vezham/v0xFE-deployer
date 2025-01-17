@@ -23,7 +23,7 @@ jobs:
       CALLER: ${{ inputs.CALLER }}
 
   apps-messenger:
-    if: ${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || startsWith(inputs.CALLER, '@apps-messenger') }}
+    # if: ${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || startsWith(inputs.CALLER, '@apps-messenger') }}
     name: apps/Messenger
     uses: vezham/v0xFE-deployer/.github/workflows/-dc-apps-desktop.apps-messenger.yml@timeline
     with:
