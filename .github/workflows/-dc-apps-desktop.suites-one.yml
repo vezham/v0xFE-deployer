@@ -23,11 +23,11 @@ jobs:
         id: filter
         run: |
           {
-            echo "timeline=${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@timeline/ci')  }}"
-            echo "dev=${{ inputs.CALLER == 'deploy/dev' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@dev/ci')  }}"
-            echo "qa=${{ inputs.CALLER == 'deploy/qa' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@qa/ci')  }}"
-            echo "preview=${{ inputs.CALLER == 'deploy/preview' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@preview/ci')  }}"
-            echo "prod=${{ inputs.CALLER == 'deploy/prod' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@prod/ci')  }}"
+            echo 'timeline=${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@timeline/ci')  }}'
+            echo 'dev=${{ inputs.CALLER == 'deploy/dev' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@dev/ci')  }}'
+            echo 'qa=${{ inputs.CALLER == 'deploy/qa' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@qa/ci')  }}'
+            echo 'preview=${{ inputs.CALLER == 'deploy/preview' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@preview/ci')  }}'
+            echo 'prod=${{ inputs.CALLER == 'deploy/prod' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@prod/ci')  }}'
           } >> $GITHUB_OUTPUT
           
   timeline:
