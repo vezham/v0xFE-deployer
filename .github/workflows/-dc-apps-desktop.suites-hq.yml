@@ -10,7 +10,7 @@ on:
 jobs:
   tva:
     if: ${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || startsWith(inputs.CALLER, '@suites-hq') }}
-    # name: suites/HQ
+    name: suites/HQ
     runs-on: ubuntu-latest
     outputs:
       timeline: ${{ steps.filter.outputs.timeline }}
