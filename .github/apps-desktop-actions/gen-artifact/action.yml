@@ -23,21 +23,23 @@ runs:
         if-no-files-found: error
         # retention-days: 90
     
-    - name: ci-setup | Upload artifacts make dir
-      if: runner.os == 'macOS'
-      id: artifact-upload-mac
-      uses: actions/upload-artifact@v4
-      with:
-        name: ${{ matrix.artifact_name }}-make
-        path: build/make
-        if-no-files-found: error
-        # retention-days: 90
+    # - name: ci-setup | Upload artifacts make dir
+    #   if: runner.os == 'macOS'
+    #   id: artifact-upload-mac
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: ${{ matrix.artifact_name }}-make
+    #     path: build/make
+    #     if-no-files-found: error
+    #     # retention-days: 90
       
     - name: ci-setup | $DX_APP # id, url, digest
       shell: bash
       run: |
-        echo 'DX_APP_NAME=${{ matrix.artifact_name }}' >> $GITHUB_ENV
-        echo 'DX_APP_URL=${{ steps.artifact-upload.outputs.artifact-url }}' >> $GITHUB_ENV
+        {
+          echo 'DX_APP_NAME=${{ matrix.artifact_name }}'
+          echo 'DX_APP_URL=${{ steps.artifact-upload.outputs.artifact-url }}'
+        } >> $GITHUB_ENV
     
     # - name: logs | dir
     #   shell: bash

@@ -66,8 +66,8 @@ jobs:
           - os: macos-latest
             artifact_name: ${{ inputs.APP_NAME }}-macos-artifacts
             # artifact_glob: 'make/**/*.dmg'
-            # artifact_glob: '*-darwin-arm64'
-            artifact_glob: 'make/zip/darwin/arm64/*.zip'
+            # artifact_glob: 'make/zip/darwin/arm64/*.zip'
+            artifact_glob: '*-darwin-arm64'
           - os: windows-latest
             artifact_name: ${{ inputs.APP_NAME }}-windows-artifacts
             # artifact_glob: 'make/**/*.exe'
@@ -97,6 +97,3 @@ jobs:
 
       - name: action | gen-artifact
         uses: vezham/v0xFE-deployer/.github/apps-desktop-actions/gen-artifact@timeline
-
-      # - name: action | create commit comment
-      #   uses: vezham/v0xFE-deployer/.github/common-actions/add-commit-comment@timeline
