@@ -21,7 +21,6 @@ jobs:
     steps:
       - name: filter | ${{ inputs.CALLER }}
         id: filter
-        shell: bash
         run: |
           {
             timeline=${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@timeline/ci')  }}
