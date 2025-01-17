@@ -22,13 +22,15 @@ jobs:
       - name: filter | ${{ inputs.CALLER }}
         id: filter
         shell: bash
-        run: 
-          echo "timeline=${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@timeline/ci')  }}" >> $GITHUB_OUTPUT
-          echo "dev=${{ inputs.CALLER == 'deploy/dev' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@dev/ci')  }}" >> $GITHUB_OUTPUT
-          echo "qa=${{ inputs.CALLER == 'deploy/qa' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@qa/ci')  }}" >> $GITHUB_OUTPUT
-          echo "preview=${{ inputs.CALLER == 'deploy/preview' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@preview/ci')  }}" >> $GITHUB_OUTPUT
-          echo "prod=${{ inputs.CALLER == 'deploy/prod' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@prod/ci')  }}" >> $GITHUB_OUTPUT
-
+        run: |
+          {
+            "timeline=${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@timeline/ci')  }}"
+            "dev=${{ inputs.CALLER == 'deploy/dev' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@dev/ci')  }}"
+            "qa=${{ inputs.CALLER == 'deploy/qa' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@qa/ci')  }}"
+            "preview=${{ inputs.CALLER == 'deploy/preview' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@preview/ci')  }}"
+            "prod=${{ inputs.CALLER == 'deploy/prod' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@prod/ci')  }}"
+          } >> $GITHUB_OUTPUT
+          
   timeline:
     needs: tva
     if: ${{ needs.tva.outputs.timeline == true || needs.tva.outputs.timeline == 'true' }}
