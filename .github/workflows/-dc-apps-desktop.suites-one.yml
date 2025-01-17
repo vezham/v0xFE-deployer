@@ -32,7 +32,7 @@ jobs:
           
   timeline:
     needs: tva
-    if: ${{ needs.tva.outputs.timeline == true }}
+    if: ${{ needs.tva.outputs.timeline == 'true' }}
     name: dc/timeline
     uses: vezham/v0xFE-deployer/.github/workflows/apps-desktop.helper.yml@timeline
     with:
