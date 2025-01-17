@@ -10,14 +10,35 @@ on:
 jobs:
   tva:
     if: ${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || startsWith(inputs.CALLER, '@suites-hq') }}
+    name: suites/HQ::TVA
     runs-on: ubuntu-latest
     steps:
       - shell: bash
         run: echo ${{ inputs.CALLER }}
+  
+  run_if:
+    needs: tva
+    runs-on: ubuntu-latest
+    outputs:
+      timeline: ${{ steps.filter.outputs.timeline }}
+      dev: ${{ steps.filter.outputs.dev }}
+      qa: ${{ steps.filter.outputs.qa }}
+      preview: ${{ steps.filter.outputs.preview }}
+      prod: ${{ steps.filter.outputs.prod }}
+    steps:
+      - name: filter | ${{ inputs.CALLER }}
+        id: filter
+        shell: bash
+        run: 
+          echo "timeline=${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@timeline/ci')  }}" >> $GITHUB_OUTPUT
+          echo "dev=${{ inputs.CALLER == 'deploy/dev' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@dev/ci')  }}" >> $GITHUB_OUTPUT
+          echo "qa=${{ inputs.CALLER == 'deploy/qa' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@qa/ci')  }}" >> $GITHUB_OUTPUT
+          echo "preview=${{ inputs.CALLER == 'deploy/preview' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@preview/ci')  }}" >> $GITHUB_OUTPUT
+          echo "prod=${{ inputs.CALLER == 'deploy/prod' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@prod/ci')  }}" >> $GITHUB_OUTPUT
 
   timeline:
-    needs: tva
-    if: ${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@timeline/ci')  }}
+    needs: run_if
+    if: ${{ needs.run_if.outputs.timeline == 'true' }}
     name: dc/timeline
     uses: vezham/v0xFE-deployer/.github/workflows/apps-desktop.helper.yml@timeline
     with:
@@ -33,8 +54,8 @@ jobs:
       APP_MENU: '{"help_center":"https://help.vezham.com/suites/hq"}'
       
   dev:
-    needs: tva
-    if: ${{ inputs.CALLER == 'deploy/dev' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@dev/ci')  }}
+    needs: run_if
+    if: ${{ needs.run_if.outputs.dev == 'true' }}
     name: dc/dev
     uses: vezham/v0xFE-deployer/.github/workflows/apps-desktop.helper.yml@timeline
     with:
@@ -50,8 +71,8 @@ jobs:
       APP_MENU: '{"help_center":"https://help.vezham.com/suites/hq"}'
 
   qa:
-    needs: tva
-    if: ${{ inputs.CALLER == 'deploy/qa' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@qa/ci')  }}
+    needs: run_if
+    if: ${{ needs.run_if.outputs.qa == 'true' }}
     name: dc/qa
     uses: vezham/v0xFE-deployer/.github/workflows/apps-desktop.helper.yml@timeline
     with:
@@ -66,8 +87,8 @@ jobs:
       APP_MENU: '{"help_center":"https://help.vezham.com/suites/hq"}'
 
   preview:
-    needs: tva
-    if: ${{ inputs.CALLER == 'deploy/preview' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@preview/ci')  }}
+    needs: run_if
+    if: ${{ needs.run_if.outputs.preview == 'true' }}
     name: dc/preview
     uses: vezham/v0xFE-deployer/.github/workflows/apps-desktop.helper.yml@timeline
     with:
@@ -81,8 +102,8 @@ jobs:
       APP_MENU: '{"help_center":"https://help.vezham.com/suites/hq"}'
       
   prod:
-    needs: tva
-    if: ${{ inputs.CALLER == 'deploy/prod' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@prod/ci')  }}
+    needs: run_if
+    if: ${{ needs.run_if.outputs.prod == 'true' }}
     name: dc/prod
     uses: vezham/v0xFE-deployer/.github/workflows/apps-desktop.helper.yml@timeline
     with:

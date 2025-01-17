@@ -10,7 +10,7 @@ on:
 jobs:
   tva:
     if: ${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || startsWith(inputs.CALLER, '@apps-messenger') }}
-    name: TVA
+    name: apps/Messenger::TVA
     runs-on: ubuntu-latest
     steps:
       - shell: bash
