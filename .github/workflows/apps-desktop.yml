@@ -10,7 +10,7 @@ on:
 jobs:
   suites-one:
     # if: ${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || startsWith(inputs.CALLER, '@suites-one') }}
-    name: suites/One
+    # name: suites/One
     uses: vezham/v0xFE-deployer/.github/workflows/-dc-apps-desktop.suites-one.yml@timeline
     with:
       CALLER: ${{ inputs.CALLER }}

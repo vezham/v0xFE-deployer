@@ -10,14 +10,7 @@ on:
 jobs:
   tva:
     if: ${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || startsWith(inputs.CALLER, '@suites-hq') }}
-    name: suites/HQ::TVA
-    runs-on: ubuntu-latest
-    steps:
-      - shell: bash
-        run: echo ${{ inputs.CALLER }}
-  
-  run_if:
-    needs: tva
+    # name: suites/HQ
     runs-on: ubuntu-latest
     outputs:
       timeline: ${{ steps.filter.outputs.timeline }}
@@ -37,8 +30,8 @@ jobs:
           echo "prod=${{ inputs.CALLER == 'deploy/prod' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@prod/ci')  }}" >> $GITHUB_OUTPUT
 
   timeline:
-    needs: run_if
-    if: ${{ needs.run_if.outputs.timeline == 'true' }}
+    needs: tva
+    if: ${{ needs.tva.outputs.timeline == 'true' }}
     name: dc/timeline
     uses: vezham/v0xFE-deployer/.github/workflows/apps-desktop.helper.yml@timeline
     with:
@@ -54,8 +47,8 @@ jobs:
       APP_MENU: '{"help_center":"https://help.vezham.com/suites/hq"}'
       
   dev:
-    needs: run_if
-    if: ${{ needs.run_if.outputs.dev == 'true' }}
+    needs: tva
+    if: ${{ needs.tva.outputs.dev == 'true' }}
     name: dc/dev
     uses: vezham/v0xFE-deployer/.github/workflows/apps-desktop.helper.yml@timeline
     with:
@@ -71,8 +64,8 @@ jobs:
       APP_MENU: '{"help_center":"https://help.vezham.com/suites/hq"}'
 
   qa:
-    needs: run_if
-    if: ${{ needs.run_if.outputs.qa == 'true' }}
+    needs: tva
+    if: ${{ needs.tva.outputs.qa == 'true' }}
     name: dc/qa
     uses: vezham/v0xFE-deployer/.github/workflows/apps-desktop.helper.yml@timeline
     with:
@@ -87,8 +80,8 @@ jobs:
       APP_MENU: '{"help_center":"https://help.vezham.com/suites/hq"}'
 
   preview:
-    needs: run_if
-    if: ${{ needs.run_if.outputs.preview == 'true' }}
+    needs: tva
+    if: ${{ needs.tva.outputs.preview == 'true' }}
     name: dc/preview
     uses: vezham/v0xFE-deployer/.github/workflows/apps-desktop.helper.yml@timeline
     with:
@@ -102,8 +95,8 @@ jobs:
       APP_MENU: '{"help_center":"https://help.vezham.com/suites/hq"}'
       
   prod:
-    needs: run_if
-    if: ${{ needs.run_if.outputs.prod == 'true' }}
+    needs: tva
+    if: ${{ needs.tva.outputs.prod == 'true' }}
     name: dc/prod
     uses: vezham/v0xFE-deployer/.github/workflows/apps-desktop.helper.yml@timeline
     with:
