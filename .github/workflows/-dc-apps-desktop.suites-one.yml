@@ -24,11 +24,11 @@ jobs:
         shell: bash
         run: |
           {
-            "timeline=${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@timeline/ci')  }}"
-            "dev=${{ inputs.CALLER == 'deploy/dev' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@dev/ci')  }}"
-            "qa=${{ inputs.CALLER == 'deploy/qa' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@qa/ci')  }}"
-            "preview=${{ inputs.CALLER == 'deploy/preview' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@preview/ci')  }}"
-            "prod=${{ inputs.CALLER == 'deploy/prod' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@prod/ci')  }}"
+            timeline=${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@timeline/ci')  }}
+            dev=${{ inputs.CALLER == 'deploy/dev' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@dev/ci')  }}
+            qa=${{ inputs.CALLER == 'deploy/qa' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@qa/ci')  }}
+            preview=${{ inputs.CALLER == 'deploy/preview' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@preview/ci')  }}
+            prod=${{ inputs.CALLER == 'deploy/prod' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@prod/ci')  }}
           } >> $GITHUB_OUTPUT
           
   timeline:
