@@ -10,21 +10,21 @@ on:
 jobs:
   suites-one:
     name: suites/One
-    if: ${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || startsWith(inputs.CALLER, 'ci@suites-one') }}
+    if: ${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || startsWith(inputs.CALLER, '@suites-one') }}
     uses: vezham/v0xFE-deployer/.github/workflows/-dc-apps-desktop.suites-one.yml@timeline
     with:
       CALLER: ${{ inputs.CALLER }}
   
   suites-hq:
     name: suites/HQ
-    if: ${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || startsWith(inputs.CALLER, 'ci@suites-hq') }}
+    if: ${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || startsWith(inputs.CALLER, '@suites-hq') }}
     uses: vezham/v0xFE-deployer/.github/workflows/-dc-apps-desktop.suites-hq.yml@timeline
     with:
       CALLER: ${{ inputs.CALLER }}
 
   apps-messenger:
     name: apps/Messenger
-    if: ${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || startsWith(inputs.CALLER, 'ci@apps-messenger') }}
+    if: ${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || startsWith(inputs.CALLER, '@apps-messenger') }}
     uses: vezham/v0xFE-deployer/.github/workflows/-dc-apps-desktop.apps-messenger.yml@timeline
     with:
       CALLER: ${{ inputs.CALLER }}
