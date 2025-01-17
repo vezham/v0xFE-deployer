@@ -19,7 +19,8 @@ jobs:
       preview: ${{ steps.filter.outputs.preview }}
       prod: ${{ steps.filter.outputs.prod }}
     steps:
-      - id: filter | ${{ inputs.CALLER }}
+      - name: filter | ${{ inputs.CALLER }}
+        id: filter
         shell: bash
         run: 
           echo "timeline=${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@timeline/ci')  }}" >> $GITHUB_OUTPUT
