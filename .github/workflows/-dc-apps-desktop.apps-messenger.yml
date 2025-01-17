@@ -9,7 +9,13 @@ on:
 
 jobs:
   tva:
-    name: dc/TVA
+    name: TVA
+    if: ${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || startsWith(inputs.CALLER, '@apps-messenger') }}
+    runs-on: ubuntu-latest
+  
+  timeline:
+    name: dc/timeline
+    needs: tva
     if: ${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' || endsWith(inputs.CALLER, '@timeline/ci')  }}
     uses: vezham/v0xFE-deployer/.github/workflows/apps-desktop.helper.yml@timeline
     with:
