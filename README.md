@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://vezham.com">
+  <a href="https://vezham.com" target="_blank" rel="noreferrer">
       <picture>
         <source media="(prefers-color-scheme: dark)" srcset="https://static.cdn.vezham.com/images/logo-white.png">
         <img src="https://static.cdn.vezham.com/images/logo-black.png" width="20%" alt="vezham">
