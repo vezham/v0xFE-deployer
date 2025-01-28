@@ -7,13 +7,13 @@ runs:
     - name: changesets/NPM | release - create release PR & Publish
       id: changesets
       uses: changesets/action@v1
-        with:
-          publish: pnpm run v:changeset:release
-          # version: pnpm run version
-          title: "ci(changesets): :package: version packages"
-          commit: "ci(changesets): version packages"
-          # setupGitUser: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          # NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      with:
+        publish: pnpm run v:changeset:release
+        # version: pnpm run version
+        title: "ci(changesets): :package: version packages"
+        commit: "ci(changesets): version packages"
+        # setupGitUser: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+        # NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
