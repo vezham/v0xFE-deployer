@@ -1,6 +1,14 @@
 name: changesets for release 
 description: Sets up Changesets for NPM release
 
+inputs:
+  GITHUB_TOKEN:
+    required: true
+    type: string
+  NPM_TOKEN:
+    required: true
+    type: string
+
 runs:
   using: composite
   steps:
@@ -14,6 +22,6 @@ runs:
         commit: "ci(changesets): version packages"
         # setupGitUser: false
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        # NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+        NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
+        # NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
