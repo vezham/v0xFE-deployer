@@ -35,7 +35,8 @@ runs:
       id: changesets
       uses: changesets/action@v1
       with:
-        publish: pnpm release
+        publish: npx --no-install retry-cli@latest --times 3 --delay 10000 -- pnpm publish --access public
+        # publish: pnpm release
         title: "ci(changesets): :package: version packages"
         commit: "ci(changesets): version packages"
         setupGitUser: false
@@ -44,16 +45,16 @@ runs:
         NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
 
-    - name: Create canary release
-      if: steps.build.outcome == 'success' && steps.changesets.outputs.published != 'true'
-      shell: bash
-      run: |
-        git checkout canary
-        pnpm version:canary
-        pnpm release:canary
-      env:
-        NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
-        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+    # - name: Create canary release
+    #   if: steps.build.outcome == 'success' && steps.changesets.outputs.published != 'true'
+    #   shell: bash
+    #   run: |
+    #     git checkout canary
+    #     pnpm version:canary
+    #     pnpm release:canary
+    #   env:
+    #     NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
+    #     GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
     
     # - name: changesets/NPM | release - create release PR & Publish
     #   id: changesets
