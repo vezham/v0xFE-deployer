@@ -24,4 +24,4 @@ runs:
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
         NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
-        # NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
+        NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
