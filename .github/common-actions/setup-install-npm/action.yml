@@ -32,11 +32,11 @@ runs:
       env:
         NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
 
-    - name: setup | Git User (Deployer)
-      shell: bash
-      run: |
-        git config --global user.email "vigneshwaran@vezham.com"
-        git config --global user.name "v0x"
+    # - name: setup | Git User (Deployer)
+    #   shell: bash
+    #   run: |
+    #     git config --global user.email "vigneshwaran@vezham.com"
+    #     git config --global user.name "v0x"
 
     # - name: npm | whoami
     #   shell: bash
