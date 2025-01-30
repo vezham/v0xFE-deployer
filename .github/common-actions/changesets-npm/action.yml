@@ -15,6 +15,7 @@ runs:
     - name: npm | whoami
       shell: bash
       run: |
+        npm login
         npm whoami
     
     - name: changesets/NPM | release - create release PR & Publish
