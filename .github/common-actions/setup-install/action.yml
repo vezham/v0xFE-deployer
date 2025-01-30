@@ -16,7 +16,7 @@ runs:
         version: ${{ matrix.pnpm-version }}
 
     - name: setup | node env
-      if: ${{ !inputs.HOST_NPM }}
+      if: ${{ inputs.HOST_NPM == 'false'  }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
@@ -24,7 +24,7 @@ runs:
         cache-dependency-path: '**/pnpm-lock.yaml'
 
     - name: setup | node env - NPM
-      if: ${{ inputs.HOST_NPM }}
+      if: ${{ inputs.HOST_NPM == 'true' }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
@@ -40,14 +40,14 @@ runs:
     #     git config --global user.name "Deployer Vezham"
 
     - name: setup | Git User (Deployer - NPM)
-      if: ${{ inputs.HOST_NPM }}
+      if: ${{ inputs.HOST_NPM == 'true' }}
       shell: bash
       run: |
         git config --global user.email "vigneshwaran@vezham.com"
         git config --global user.name "v0x"
 
     - name: npm | whoami
-      if: ${{ inputs.HOST_NPM }}
+      if: ${{ inputs.HOST_NPM == 'true' }}
       shell: bash
       run: |
         npm whoami
