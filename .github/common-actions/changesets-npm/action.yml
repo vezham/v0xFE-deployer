@@ -18,17 +18,53 @@ runs:
         npm whoami
       env:
         NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
+
+    - name: build
+      id: build
+      continue-on-error: false
+      shell: bash
+      run: |
+        pnpm build || {
+          echo "build failed with exit code $?"
+          exit 1
+        }
     
-    - name: changesets/NPM | release - create release PR & Publish
+    - name: Create Release Pull Request or Publish to NPM
+      # Run only if the build is successful
+      if: steps.build.outcome == 'success'
       id: changesets
       uses: changesets/action@v1
       with:
-        publish: pnpm run v:changeset:release
-        # version: pnpm run version
+        publish: pnpm release
         title: "ci(changesets): :package: version packages"
         commit: "ci(changesets): version packages"
         setupGitUser: false
       env:
-        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
-        NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
         NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
+        NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+
+    - name: Create canary release
+      if: steps.build.outcome == 'success' && steps.changesets.outputs.published != 'true'
+      timeout-minutes: 15
+      run: |
+        git checkout canary
+        pnpm version:canary
+        pnpm release:canary
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+    
+    # - name: changesets/NPM | release - create release PR & Publish
+    #   id: changesets
+    #   uses: changesets/action@v1
+    #   with:
+    #     publish: pnpm run v:changeset:release
+    #     # version: pnpm run version
+    #     title: "ci(changesets): :package: version packages"
+    #     commit: "ci(changesets): version packages"
+    #     setupGitUser: false
+    #   env:
+    #     GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+    #     NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
+    #     NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
