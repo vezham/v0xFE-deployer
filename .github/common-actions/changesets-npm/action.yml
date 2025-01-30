@@ -27,7 +27,7 @@ runs:
         # version: pnpm run version
         title: "ci(changesets): :package: version packages"
         commit: "ci(changesets): version packages"
-        # setupGitUser: false
+        setupGitUser: false
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
         NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
