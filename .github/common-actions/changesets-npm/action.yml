@@ -35,8 +35,9 @@ runs:
       id: changesets
       uses: changesets/action@v1
       with:
-        publish: npx --yes retry-cli@latest -n 3 -t 10000 -- pnpm publish --access public
         # publish: pnpm release
+        # publish: npm whoami && npx --yes retry-cli@latest -n 3 -t 10000 -- pnpm publish --access public
+        publish: npm whoami && changeset publish
         title: "ci(changesets): :package: version packages"
         commit: "ci(changesets): version packages"
         setupGitUser: false
