@@ -46,11 +46,11 @@ runs:
         git config --global user.email "vigneshwaran@vezham.com"
         git config --global user.name "v0x"
 
-    - name: npm | whoami
-      if: ${{ inputs.HOST_NPM == 'true' }}
-      shell: bash
-      run: |
-        npm whoami
+    # - name: npm | whoami
+    #   if: ${{ inputs.HOST_NPM == 'true' }}
+    #   shell: bash
+    #   run: |
+    #     npm whoami
 
     - name: setup | pnpm install
       shell: bash
