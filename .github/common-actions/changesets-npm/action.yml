@@ -12,6 +12,11 @@ inputs:
 runs:
   using: composite
   steps:
+    - name: npm | whoami
+      shell: bash
+      run: |
+        npm whoami
+    
     - name: changesets/NPM | release - create release PR & Publish
       id: changesets
       uses: changesets/action@v1
