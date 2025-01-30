@@ -2,9 +2,6 @@ name: Setup Node.js and pnpm
 description: Sets up Node.js and pnpm with caching
 
 inputs:
-  # GITHUB_TOKEN:
-  #   required: true
-  #   type: string
   NPM_TOKEN:
     required: true
     type: string
@@ -29,6 +26,12 @@ runs:
         registry-url: "https://registry.npmjs.org"
         cache: 'pnpm'
         cache-dependency-path: '**/pnpm-lock.yaml'
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
+
+    - name: npm | Check NPM Auth
+      shell: bash
+      run: npm whoami
       env:
         NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
 
