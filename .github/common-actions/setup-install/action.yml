@@ -50,7 +50,6 @@ runs:
       if: ${{ inputs.HOST_NPM }}
       shell: bash
       run: |
-        npm login
         npm whoami
 
     - name: setup | pnpm install
