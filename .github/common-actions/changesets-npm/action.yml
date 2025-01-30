@@ -46,6 +46,7 @@ runs:
 
     - name: Create canary release
       if: steps.build.outcome == 'success' && steps.changesets.outputs.published != 'true'
+      shell: bash
       run: |
         git checkout canary
         pnpm version:canary
