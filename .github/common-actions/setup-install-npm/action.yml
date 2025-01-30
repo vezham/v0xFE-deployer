@@ -44,7 +44,6 @@ runs:
     - name: npm | whoami
       shell: bash
       run: |
-        npm login --scope @vezham
         npm whoami
       env:
         NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
