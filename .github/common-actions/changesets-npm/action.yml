@@ -24,7 +24,7 @@ runs:
       continue-on-error: false
       shell: bash
       run: |
-        pnpm build || {
+        pnpm build:fast || {
           echo "build failed with exit code $?"
           exit 1
         }
@@ -35,7 +35,7 @@ runs:
       id: changesets
       uses: changesets/action@v1
       with:
-        publish: npx --no-install retry-cli@latest --times 3 --delay 10000 -- pnpm publish --access public
+        publish: npx --yes retry-cli@latest --times 3 --delay 10000 -- pnpm publish --access public
         # publish: pnpm release
         title: "ci(changesets): :package: version packages"
         commit: "ci(changesets): version packages"
