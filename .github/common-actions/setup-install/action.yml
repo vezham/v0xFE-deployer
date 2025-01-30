@@ -1,6 +1,12 @@
 name: Setup Node.js and pnpm
 description: Sets up Node.js and pnpm with caching
 
+inputs:
+  HOST_NPM:
+    type: boolean
+    required: false
+    default: false
+
 runs:
   using: composite
   steps:
@@ -10,9 +16,20 @@ runs:
         version: ${{ matrix.pnpm-version }}
 
     - name: setup | node env
+      if: ${{ !inputs.HOST_NPM }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
+        cache: 'pnpm'
+        cache-dependency-path: '**/pnpm-lock.yaml'
+
+    - name: setup | node env - NPM
+      if: ${{ inputs.HOST_NPM }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        node-version-file: ".nvmrc"
+        registry-url: "https://registry.npmjs.org"
         cache: 'pnpm'
         cache-dependency-path: '**/pnpm-lock.yaml'
 
@@ -21,6 +38,20 @@ runs:
     #   run: |
     #     git config --global user.email "deployer@vezham.com"
     #     git config --global user.name "Deployer Vezham"
+
+    - name: setup | Git User (Deployer - NPM)
+      if: ${{ inputs.HOST_NPM }}
+      shell: bash
+      run: |
+        git config --global user.email "vigneshwaran@vezham.com"
+        git config --global user.name "v0x"
+
+    - name: npm | whoami
+      if: ${{ inputs.HOST_NPM }}
+      shell: bash
+      run: |
+        npm login
+        npm whoami
 
     - name: setup | pnpm install
       shell: bash
