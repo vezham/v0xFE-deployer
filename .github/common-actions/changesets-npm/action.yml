@@ -16,18 +16,20 @@ runs:
       shell: bash
       run: |
         npm whoami
+        npm adduser
+        npm login --scope=@vezham
       env:
         NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
 
-    - name: build
-      id: build
-      continue-on-error: false
-      shell: bash
-      run: |
-        pnpm build:fast || {
-          echo "build failed with exit code $?"
-          exit 1
-        }
+    # - name: build
+    #   id: build
+    #   continue-on-error: false
+    #   shell: bash
+    #   run: |
+    #     pnpm build:fast || {
+    #       echo "build failed with exit code $?"
+    #       exit 1
+    #     }
     
     # - name: Create Release Pull Request or Publish to NPM
     #   # Run only if the build is successful
