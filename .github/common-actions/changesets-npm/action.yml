@@ -16,8 +16,6 @@ runs:
       shell: bash
       run: |
         npm whoami
-        npm adduser
-        npm login --scope=@vezham
       env:
         NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
 
