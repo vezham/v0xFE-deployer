@@ -1,0 +1,16 @@
+name: Log Setup
+description: Log the setup for debugging
+
+runs:
+  using: composite
+  steps:
+    - name: ci-setup | SHA
+      uses: vezham/v0xFE-deployer/.github/actions/common-actions/setup-sha@timeline
+    
+    - name: logs | dir
+      shell: bash
+      run: |
+        echo "ca-log-setup"
+        echo $SHA
+        pwd
+        ls

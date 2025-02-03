@@ -1,0 +1,57 @@
+name: Setup Node.js and pnpm
+description: Sets up Node.js and pnpm with caching
+
+inputs:
+  NPM_TOKEN:
+    required: true
+    type: string
+
+runs:
+  using: composite
+  steps:
+    - name: setup | pnpm
+      uses: pnpm/action-setup@v4
+      with:
+        version: ${{ matrix.pnpm-version }}
+
+    # - name: "Create .npmrc"
+    #   run: |
+    #     echo "registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
+        
+    - name: setup | node env
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        node-version-file: ".nvmrc"
+        registry-url: "https://registry.npmjs.org"
+        cache: 'pnpm'
+        cache-dependency-path: '**/pnpm-lock.yaml'
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
+
+    - name: npm | Check NPM Auth
+      shell: bash
+      run: npm whoami
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
+
+    - name: setup | Git User (Deployer)
+      shell: bash
+      run: |
+        git config --global user.email "vigneshwaran@vezham.com"
+        git config --global user.name "vigneshwaran-vtpl"
+
+    - name: npm | whoami
+      shell: bash
+      run: |
+        npm whoami
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
+
+    - name: setup | pnpm install
+      shell: bash
+      run: pnpm install --frozen-lockfile --ignore-scripts
+
+    - name: setup | pnpm version check
+      shell: bash
+      run: pnpm --version
