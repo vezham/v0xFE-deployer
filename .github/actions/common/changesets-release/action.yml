@@ -1,0 +1,75 @@
+name: changesets for release 
+description: Sets up Changesets for NPM release
+
+inputs:
+  GITHUB_TOKEN:
+    required: true
+    type: string
+  NPM_TOKEN:
+    required: true
+    type: string
+
+runs:
+  using: composite
+  steps:
+    - name: ci-setup | SHA
+      uses: vezham/v0xFE-deployer/.github/actions/common/log-setup@timeline
+    
+    - name: npm | whoami
+      shell: bash
+      run: |
+        npm whoami
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
+
+    # - name: build
+    #   id: build
+    #   continue-on-error: false
+    #   shell: bash
+    #   run: |
+    #     pnpm build:fast || {
+    #       echo "build failed with exit code $?"
+    #       exit 1
+    #     }
+    
+    # - name: Create Release Pull Request or Publish to NPM
+    #   # Run only if the build is successful
+    #   if: steps.build.outcome == 'success'
+    #   id: changesets
+    #   uses: changesets/action@v1
+    #   with:
+    #     # publish: pnpm release
+    #     # publish: npm whoami && npx --yes retry-cli@latest -n 3 -t 10000 -- pnpm publish --access public
+    #     publish: npm whoami && changeset publish
+    #     title: "ci(changesets): :package: version packages"
+    #     commit: "ci(changesets): version packages"
+    #     setupGitUser: false
+    #   env:
+    #     NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
+    #     NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
+    #     GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+
+    # - name: Create canary release
+    #   if: steps.build.outcome == 'success' && steps.changesets.outputs.published != 'true'
+    #   shell: bash
+    #   run: |
+    #     git checkout canary
+    #     pnpm version:canary
+    #     pnpm release:canary
+    #   env:
+    #     NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
+    #     GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+    
+    # - name: changesets/NPM | release - create release PR & Publish
+    #   id: changesets
+    #   uses: changesets/action@v1
+    #   with:
+    #     publish: pnpm run v:changeset:release
+    #     # version: pnpm run version
+    #     title: "ci(changesets): :package: version packages"
+    #     commit: "ci(changesets): version packages"
+    #     setupGitUser: false
+    #   env:
+    #     GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+    #     NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
+    #     NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
