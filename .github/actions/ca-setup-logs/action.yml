@@ -1,0 +1,12 @@
+name: ca-setup-logs
+description: ca-setup-logs
+
+runs:
+  using: composite
+  steps:
+    - name: logs | dir
+      shell: bash
+      run: |
+        echo "ca-setup-logs"
+        pwd
+        ls

@@ -1,0 +1,12 @@
+name: setup-logs
+description: setup-logs
+
+runs:
+  using: composite
+  steps:
+    - name: logs | dir
+      shell: bash
+      run: |
+        echo "setup-logs"
+        pwd
+        ls
