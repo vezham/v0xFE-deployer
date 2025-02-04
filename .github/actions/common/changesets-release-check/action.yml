@@ -23,10 +23,10 @@ runs:
       shell: bash
       run: |
         # Batch the check script
-        bash ${{ github.action_path }}/get-release-packages.sh
+        bash ${{ github.action_path }}/bin/main.sh
         
         # Make the check script executable
-        chmod +x ${{ github.action_path }}/check-releases.js
+        chmod +x ${{ github.action_path }}/scripts/index.js
         
         # Run the check script
-        node ${{ github.action_path }}/check-releases.js
+        node ${{ github.action_path }}/scripts/index.js
