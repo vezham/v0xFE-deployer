@@ -1,0 +1,32 @@
+name: Release Check
+description: Check for packages that need to be released using changesets
+
+outputs:
+  publish:
+    description: 'Path to publish script or false if no releases needed'
+  packages:
+    description: 'List of packages to be released'
+
+runs:
+  using: composite
+  steps:
+    - name: ci-setup | Install jq
+      shell: bash
+      run: |
+        if ! command -v jq &> /dev/null; then
+          sudo apt-get update
+          sudo apt-get install -y jq
+        fi
+
+    - name: ci-setup | Check for releases
+      id: check
+      shell: bash
+      run: |
+        # Batch the check script
+        bash ${{ github.action_path }}/get-release-packages.sh
+        
+        # Make the check script executable
+        chmod +x ${{ github.action_path }}/check-releases.js
+        
+        # Run the check script
+        node ${{ github.action_path }}/check-releases.js

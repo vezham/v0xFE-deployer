@@ -22,6 +22,41 @@ runs:
       env:
         NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
 
+    - name: ci-setup | SHA
+      id: release-check
+      uses: vezham/v0xFE-deployer/.github/actions/common/changesets-release-check@timeline
+
+    - name: Create Release Pull Request or Publish
+      id: changesets
+      uses: changesets/action@v1
+      with:
+        publish: ${{ steps.release-check.outputs.publish }}
+        title: "Release packages"
+        commit: "chore: release packages"
+      env:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+        NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
+
+    - name: Create Git Tags for Published Packages
+      if: steps.changesets.outputs.published == 'true'
+      run: |
+        # Get list of published packages and their versions
+        published_packages=$(npm list --json | jq -r '.dependencies | to_entries[] | "\(.key)@\(.value.version)"')
+        
+        # Create and push tags for each package
+        echo "$published_packages" | while read -r pkg_ver; do
+          pkg_name=$(echo "$pkg_ver" | cut -d@ -f1)
+          version=$(echo "$pkg_ver" | cut -d@ -f2)
+          
+          # Create annotated tag
+          git tag -a "${pkg_name}@${version}" -m "Release ${pkg_name} version ${version}"
+          git push origin "${pkg_name}@${version}"
+          
+          echo "Created and pushed tag: ${pkg_name}@${version}"
+        done
+      env:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+
     # - name: build
     #   id: build
     #   continue-on-error: false
