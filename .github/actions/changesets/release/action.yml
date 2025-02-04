@@ -1,0 +1,62 @@
+name: changesets for release 
+description: Sets up Changesets for NPM release
+
+inputs:
+  GITHUB_TOKEN:
+    required: true
+    type: string
+  NPM_TOKEN:
+    required: true
+    type: string
+
+runs:
+  using: composite
+  steps:
+    - name: ci-setup | LOG
+      uses: vezham/v0xFE-deployer/.github/actions/common/log-setup@timeline
+    
+    - name: npm | whoami
+      shell: bash
+      run: |
+        npm whoami
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
+
+    - name: build
+      id: build
+      continue-on-error: false
+      shell: bash
+      run: |
+        pnpm build:fast || {
+          echo "build failed with exit code $?"
+          exit 1
+        }
+        
+    - name: changesets | checklist-status
+      id: checklist-status
+      uses: vezham/v0xFE-deployer/.github/actions/changesets/checklist-status@timeline
+      env:
+        NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
+
+    - name: changesets | [NPM] release - create release PR & Publish
+      id: changesets
+      uses: changesets/action@v1
+      with:
+        # publish: pnpm changeset publish | pnpm v:changeset:release | ${{ steps.release-check.outputs.publish }}
+        # version: pnpm changeset version # pnpm version
+        # publish: echo "wjdlz/NOTE | INIT checklist-publish"
+        commit: "ci(changesets): version packages"
+        title: "ci(changesets): :package: release packages"
+        # setupGitUser: false
+      env:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
+        NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
+        NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
+
+    - name: changesets | checklist-release
+      # if: steps.changesets.outputs.hasChangesets == 'false'
+      if: steps.changesets.outputs.published == 'true'
+      # id: checklist-release #changed
+      uses: vezham/v0xFE-deployer/.github/actions/changesets/checklist-release@timeline
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
