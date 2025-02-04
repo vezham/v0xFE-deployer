@@ -54,7 +54,8 @@ create_publish_script() {
 main() {
   check_dependencies
 
-  packages=$(npx changeset status --json | jq -r '.releases[] | select(.type != "none") | .name' | tr '\n' ' ')
+  # packages=$(npx changeset status --json | jq -r '.releases[] | select(.type != "none") | .name' | tr '\n' ' ')
+  packages=$(npx changeset status --json)
   echo $packages
   
   # Get packages to release
