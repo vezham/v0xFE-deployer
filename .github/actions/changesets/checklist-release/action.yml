@@ -22,10 +22,8 @@ runs:
         # Run the check script
         node ${{ github.action_path }}/scripts/index.js
 
-        pnpm changeset status
-
-      # Batch the check script
-      # bash ${{ github.action_path }}/bin/main.sh
+        # Batch the check script
+        bash ${{ github.action_path }}/bin/main.sh
 
       # ------------------
 
