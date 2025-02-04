@@ -53,11 +53,14 @@ create_publish_script() {
 
 main() {
   check_dependencies
+
+  packages=$(npx changeset status --json | jq -r '.releases[] | select(.type != "none") | .name' | tr '\n' ' ')
+  echo $packages
   
   # Get packages to release
-  packages=$(get_release_packages)
+  # packages=$(get_release_packages)
 
-  echo $packages
+  # echo $packages
   
   # if [ -n "$packages" ]; then
   #   # Create and set up publish script
