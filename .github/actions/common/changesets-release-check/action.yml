@@ -28,15 +28,17 @@ runs:
           sudo apt-get install -y jq
         fi
 
-    # - name: ci-setup | Check for releases
-    #   id: check
-    #   shell: bash
-    #   run: |
-    #     # Batch the check script
-    #     bash ${{ github.action_path }}/bin/main.sh
+    - name: ci-setup | Check for releases
+      id: check
+      shell: bash
+      run: |
+        # Make the check script executable
+        chmod +x ${{ github.action_path }}/scripts/index.js
         
-    #     # Make the check script executable
-    #     chmod +x ${{ github.action_path }}/scripts/index.js
-        
-    #     # Run the check script
-    #     node ${{ github.action_path }}/scripts/index.js
+        # Run the check script
+        node ${{ github.action_path }}/scripts/index.js
+
+        pnpm changeset status
+
+      # Batch the check script
+      # bash ${{ github.action_path }}/bin/main.sh
