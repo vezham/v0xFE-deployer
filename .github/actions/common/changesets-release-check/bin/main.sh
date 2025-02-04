@@ -75,3 +75,16 @@ main() {
 }
 
 main
+
+# Get list of packages that have changes from changeset
+echo "Getting list of changed packages..."
+changed_packages=$(npx changeset status --output=json | jq -r '.releases[].name')
+
+if [ -z "$changed_packages" ]; then
+    echo "No packages have changes to publish"
+    exit 0
+fi
+
+# Count total packages to publish
+total_packages=$(echo "$changed_packages" | wc -l)
+echo "Found $total_packages packages to publish"
