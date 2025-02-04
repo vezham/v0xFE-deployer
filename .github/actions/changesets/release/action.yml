@@ -22,16 +22,6 @@ runs:
       env:
         NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
 
-    - name: build
-      id: build
-      continue-on-error: false
-      shell: bash
-      run: |
-        pnpm build:fast || {
-          echo "build failed with exit code $?"
-          exit 1
-        }
-        
     - name: changesets | checklist-status
       id: checklist-status
       uses: vezham/v0xFE-deployer/.github/actions/changesets/checklist-status@timeline
