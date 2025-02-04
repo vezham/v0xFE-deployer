@@ -14,10 +14,6 @@ runs:
       with:
         version: ${{ matrix.pnpm-version }}
 
-    # - name: "Create .npmrc"
-    #   run: |
-    #     echo "registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
-        
     - name: setup | node env
       uses: actions/setup-node@v4
       with:
@@ -29,9 +25,15 @@ runs:
       env:
         NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
 
+    # - name: npm | Create .npmrc
+    #   shell: bash
+    #   run: |
+    #     echo "registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
+    
     - name: npm | Check NPM Auth
       shell: bash
-      run: npm whoami
+      run: |
+        npm whoami
       env:
         NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
 
@@ -40,13 +42,6 @@ runs:
       run: |
         git config --global user.email "vigneshwaran@vezham.com"
         git config --global user.name "vigneshwaran-vtpl"
-
-    - name: npm | whoami
-      shell: bash
-      run: |
-        npm whoami
-      env:
-        NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
 
     - name: setup | pnpm install
       shell: bash
