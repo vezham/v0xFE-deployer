@@ -34,7 +34,7 @@ runs:
       with:
         # publish: pnpm changeset publish | pnpm v:changeset:release | ${{ steps.release-check.outputs.publish }}
         # version: pnpm changeset version # pnpm version
-        # publish: echo "wjdlz/NOTE | INIT checklist-publish"
+        publish: echo "wjdlz/NOTE | INIT checklist-publish"
         commit: "ci(changesets): version packages"
         title: "ci(changesets): :package: release packages"
         # setupGitUser: false
@@ -48,5 +48,13 @@ runs:
       if: steps.changesets.outputs.published == 'true'
       # id: checklist-release #changed
       uses: vezham/v0xFE-deployer/.github/actions/changesets/checklist-release@timeline
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
+
+    - name: npm | whoami
+      if: steps.changesets.outputs.hasChangesets == 'false'
+      shell: bash
+      run: |
+        npm whoami
       env:
         NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
