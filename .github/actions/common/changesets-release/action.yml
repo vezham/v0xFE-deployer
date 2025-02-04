@@ -39,6 +39,7 @@ runs:
 
     - name: Create Git Tags for Published Packages
       if: steps.changesets.outputs.published == 'true'
+      shell: bash
       run: |
         # Get list of published packages and their versions
         published_packages=$(npm list --json | jq -r '.dependencies | to_entries[] | "\(.key)@\(.value.version)"')
