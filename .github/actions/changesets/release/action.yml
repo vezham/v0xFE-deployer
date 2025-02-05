@@ -22,19 +22,19 @@ runs:
       env:
         NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
 
-    - name: changesets | checklist-status
+    - name: checklist-status
       id: checklist-status
       uses: vezham/v0xFE-deployer/.github/actions/changesets/checklist-status@timeline
       env:
         NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
 
-    - name: changesets | [NPM] release - create release PR & Publish
-      id: changesets
+    - name: checklist-pr | [NPM] create release PR
+      if: github.event_name != 'pull_request'
+      # id: changesets
       uses: changesets/action@v1
       with:
-        # publish: pnpm changeset publish | pnpm v:changeset:release | ${{ steps.release-check.outputs.publish }}
-        # version: pnpm changeset version # pnpm version
-        publish: echo "wjdlz/NOTE | INIT checklist-publish"
+        # publish: pnpm changeset publish | ${{ steps.release-check.outputs.publish }} | echo "wjdlz/NOTE | INIT checklist-publish"
+        version: pnpm changeset version
         commit: "ci(changesets): version packages"
         title: "ci(changesets): :package: release packages"
         # setupGitUser: false
@@ -43,18 +43,33 @@ runs:
         NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
         NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
 
-    - name: changesets | checklist-release
-      # if: steps.changesets.outputs.hasChangesets == 'false'
-      if: steps.changesets.outputs.published == 'true'
-      # id: checklist-release #changed
+    - name: checklist-release | [NPM] publish
+      if: |
+        github.event_name == 'pull_request' &&
+        github.event.pull_request.merged == true &&
+        github.event.pull_request.title == 'ci(changesets): :package: release packages'
+      # id: checklist-release # changed
       uses: vezham/v0xFE-deployer/.github/actions/changesets/checklist-release@timeline
       env:
         NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
+    
+    # --------------
+    # - name: checklist-release
+    #   # if: steps.changesets.outputs.hasChangesets == 'false'
+    #   if: steps.changesets.outputs.published == 'true'
+    #   # id: checklist-release #changed
+    #   uses: vezham/v0xFE-deployer/.github/actions/changesets/checklist-release@timeline
+    #   env:
+    #     NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
 
-    - name: npm | whoami
-      if: steps.changesets.outputs.hasChangesets == 'false'
-      shell: bash
-      run: |
-        npm whoami
-      env:
-        NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
+    # - name: checklist-release
+    #   if: steps.changesets.outputs.hasChangesets == 'false'
+    #   if: |
+    #     github.event_name == 'pull_request' &&
+    #     github.event.pull_request.merged == true &&
+    #     github.event.pull_request.title == 'ci(changesets): :package: release packages'
+    #   shell: bash
+    #   run: |
+    #     npm whoami
+    #   env:
+    #     NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
