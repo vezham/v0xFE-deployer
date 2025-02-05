@@ -58,6 +58,57 @@ runs:
         echo "hasChangesets: ${{steps.changesets.outputs.hasChangesets}}"
       env:
         NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
+
+    - name: Get Package Info
+      id: package-info
+      run: |
+        # Get the list of all modified package.json files from the PR
+        FILES=$(git diff --name-only HEAD^ HEAD | grep "package.json" || true)
+        
+        if [ -z "$FILES" ]; then
+          echo "No package.json files were modified"
+          exit 0
+        fi
+        
+        # Extract package info from modified package.json files
+        PACKAGES=""
+        for file in $FILES; do
+          # Skip root package.json and any package.json not in a workspace
+          if [ "$file" = "package.json" ]; then
+            continue
+          fi
+          
+          # Check if this package.json is in a workspace
+          IS_IN_WORKSPACE=false
+          while IFS= read -r workspace_pattern; do
+            # Remove quotes and trim whitespace from workspace pattern
+            workspace_pattern=$(echo "$workspace_pattern" | tr -d '"' | tr -d ',' | xargs)
+            # Convert glob pattern to regex
+            regex_pattern=$(echo "$workspace_pattern" | sed 's/\*\*/.*/' | sed 's/\*/[^\/]*/')
+            if [[ "$file" =~ ^${regex_pattern}/package\.json$ ]]; then
+              IS_IN_WORKSPACE=true
+              break
+            fi
+          done < <(jq -r '.workspaces[]' package.json)
+          
+          if [ "$IS_IN_WORKSPACE" = false ]; then
+            continue
+          fi
+          
+          # Get package info if it's a workspace package
+          if [ -f "$file" ]; then
+            PKG_NAME=$(jq -r '.name' "$file")
+            PKG_VERSION=$(jq -r '.version' "$file")
+            if [ "$PKG_NAME" != "null" ] && [ "$PKG_VERSION" != "null" ] && [ ! -z "$PKG_NAME" ] && [ ! -z "$PKG_VERSION" ]; then
+              PACKAGES="${PACKAGES}${PKG_NAME}@${PKG_VERSION}\n"
+            fi
+          fi
+        done
+        
+        # Save the package info
+        echo "packages<<EOF" >> $GITHUB_OUTPUT
+        echo -e "$PACKAGES" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
         
     # - name: checklist-release | [NPM] publish
     #   if: |
