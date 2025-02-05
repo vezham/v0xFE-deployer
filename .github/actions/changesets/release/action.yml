@@ -25,9 +25,9 @@ runs:
     - name: npm | INFO
       shell: bash
       run: |
-        echo github.event_name
-        echo github.pull_request.merged
-        echo github.pull_request.title
+        echo ${{ github.event_name }}
+        echo ${{ github.pull_request.merged }}
+        echo ${{ github.pull_request.title }}
 
     - name: checklist-status
       uses: vezham/v0xFE-deployer/.github/actions/changesets/checklist-status@timeline
