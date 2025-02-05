@@ -79,12 +79,13 @@ runs:
             continue
           fi
           
-          # Get package info
+          # Get package info and directory
           if [ -f "$file" ]; then
             PKG_NAME=$(jq -r '.name' "$file")
             PKG_VERSION=$(jq -r '.version' "$file")
+            PKG_DIR=$(dirname "$file")
             if [ "$PKG_NAME" != "null" ] && [ "$PKG_VERSION" != "null" ] && [ ! -z "$PKG_NAME" ] && [ ! -z "$PKG_VERSION" ]; then
-              PACKAGES="${PACKAGES}${PKG_NAME}@${PKG_VERSION}\n"
+              PACKAGES="${PACKAGES}${PKG_NAME}@${PKG_VERSION}@${PKG_DIR}\n"
             fi
           fi
         done
@@ -106,15 +107,8 @@ runs:
         echo "${{ steps.package-info.outputs.packages }}" | while read -r package_info; do
           [ -z "$package_info" ] && continue
           
-          package_name=$(echo "$package_info" | cut -d@ -f1)
-          new_version=$(echo "$package_info" | cut -d@ -f2)
-          
-          # Find the package directory by searching for the package.json with matching name
-          package_dir=$(find . -type f -name "package.json" -exec sh -c '
-            if [ "$(jq -r .name "{}")" = "$1" ]; then
-              dirname "{}"
-            fi
-          ' sh "$package_name" \;)
+          # Split package info into name, version, and directory
+          IFS='@' read -r package_name new_version package_dir <<< "$package_info"
           
           if [ -d "$package_dir" ]; then
             echo "Publishing $package_name@$new_version from $package_dir"
@@ -132,7 +126,7 @@ runs:
               sleep 10
             fi
           else
-            echo "Could not find directory for package $package_name"
+            echo "Could not find directory $package_dir for package $package_name"
             exit 1
           fi
         done
