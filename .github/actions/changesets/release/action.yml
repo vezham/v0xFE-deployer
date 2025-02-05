@@ -85,7 +85,7 @@ runs:
             PKG_VERSION=$(jq -r '.version' "$file")
             PKG_DIR=$(dirname "$file")
             if [ "$PKG_NAME" != "null" ] && [ "$PKG_VERSION" != "null" ] && [ ! -z "$PKG_NAME" ] && [ ! -z "$PKG_VERSION" ]; then
-              PACKAGES="${PACKAGES}${PKG_NAME}@${PKG_VERSION}@${PKG_DIR}\n"
+              PACKAGES="${PACKAGES}${PKG_NAME}::${PKG_VERSION}::${PKG_DIR}\n"
             fi
           fi
         done
@@ -108,7 +108,7 @@ runs:
           [ -z "$package_info" ] && continue
           
           # Split package info into name, version, and directory
-          IFS='@' read -r package_name new_version package_dir <<< "$package_info"
+          IFS='::' read -r package_name new_version package_dir <<< "$package_info"
           
           if [ -d "$package_dir" ]; then
             echo "Publishing $package_name@$new_version from $package_dir"
