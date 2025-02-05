@@ -25,9 +25,9 @@ runs:
     - name: npm | INFO
       shell: bash
       run: |
-        echo ${{ github.event_name }}
-        echo ${{ github.pull_request.merged }}
-        echo ${{ github.pull_request.title }}
+        echo "event_name: ${{ github.event_name }}"
+        echo "PR_merged: ${{ github.pull_request.merged }}"
+        echo "PR_title: ${{ github.pull_request.title }}"
 
     - name: checklist-status
       uses: vezham/v0xFE-deployer/.github/actions/changesets/checklist-status@timeline
@@ -53,9 +53,9 @@ runs:
     - name: npm | INFO
       shell: bash
       run: |
-        echo ${{steps.changesets.outputs.published}}
-        echo ${{steps.changesets.outputs.publishedPackages}}
-        echo ${{steps.changesets.outputs.hasChangesets}}
+        echo "published: ${{steps.changesets.outputs.published}}"
+        echo "pkg: ${{steps.changesets.outputs.publishedPackages}}"
+        echo "hasChangesets: ${{steps.changesets.outputs.hasChangesets}}"
       env:
         NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
         
