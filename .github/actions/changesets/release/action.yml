@@ -61,6 +61,7 @@ runs:
 
     - name: Get Package Info
       id: package-info
+      shell: bash
       run: |
         # Get the list of all modified package.json files from the PR
         FILES=$(git diff --name-only HEAD^ HEAD | grep "package.json" || true)
@@ -109,6 +110,11 @@ runs:
         echo "packages<<EOF" >> $GITHUB_OUTPUT
         echo -e "$PACKAGES" >> $GITHUB_OUTPUT
         echo "EOF" >> $GITHUB_OUTPUT
+
+    - name: npm | INFO
+      shell: bash
+      run: |
+        echo "info: ${{steps.package-info.outputs.packages}}"
         
     # - name: checklist-release | [NPM] publish
     #   if: |
