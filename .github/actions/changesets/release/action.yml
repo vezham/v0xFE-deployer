@@ -98,6 +98,47 @@ runs:
       shell: bash
       run: |
         echo "info: ${{steps.package-info.outputs.packages}}"
+
+    - name: Publish Packages
+      if: steps.package-info.outputs.packages != ''
+      shell: bash
+      run: |
+        echo "${{ steps.package-info.outputs.packages }}" | while read -r package_info; do
+          [ -z "$package_info" ] && continue
+          
+          package_name=$(echo "$package_info" | cut -d@ -f1)
+          new_version=$(echo "$package_info" | cut -d@ -f2)
+          
+          # Find the package directory by searching for the package.json with matching name
+          package_dir=$(find . -type f -name "package.json" -exec sh -c '
+            if [ "$(jq -r .name "{}")" = "$1" ]; then
+              dirname "{}"
+            fi
+          ' sh "$package_name" \;)
+          
+          if [ -d "$package_dir" ]; then
+            echo "Publishing $package_name@$new_version from $package_dir"
+            (cd "$package_dir" && npm publish --dry-run --access public)
+            
+            # # Create and push git tag
+            # git config --local user.email "github-actions[bot]@users.noreply.github.com"
+            # git config --local user.name "github-actions[bot]"
+            # git tag -a "${package_name}@${new_version}" -m "Release ${package_name}@${new_version}"
+            # git push origin "${package_name}@${new_version}"
+            
+            # Wait between publishes to avoid rate limits
+            if [ ! -z "$(echo "${{ steps.package-info.outputs.packages }}" | sed -n '2p')" ]; then
+              echo "Waiting 10 seconds before next publish..."
+              sleep 10
+            fi
+          else
+            echo "Could not find directory for package $package_name"
+            exit 1
+          fi
+        done
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
     # - name: checklist-release | [NPM] publish
     #   if: |
