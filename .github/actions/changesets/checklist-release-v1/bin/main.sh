@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Source all required scripts
-source ./scripts/github-actions.sh
+source "$(dirname "$0")/scripts/github-actions.sh"
           
 # Initialize logging
 setup_logging
