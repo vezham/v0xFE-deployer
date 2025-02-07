@@ -144,7 +144,7 @@ publish_packages() {
   if [ -z "$packages" ]; then
     log_info "No packages to publish"
     return 0
-  }
+  fi
   
   setup_git
   local current=0
