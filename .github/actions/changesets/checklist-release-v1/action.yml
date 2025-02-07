@@ -12,18 +12,11 @@ runs:
           sudo apt-get install -y jq
         fi
 
-    # - name: ci-setup | Check for releases
-    #   id: check
-    #   shell: bash
-    #   run: |
-    #     # Make the check script executable
-    #     chmod +x ${{ github.action_path }}/scripts/index.js
-        
-    #     # Run the check script
-    #     node ${{ github.action_path }}/scripts/index.js
-
-    #     # Batch the check script
-    #     bash ${{ github.action_path }}/bin/main.sh
+    - name: ci-setup | Check for releases
+      id: check
+      shell: bash
+      run: |
+        bash ${{ github.action_path }}/bin/main.sh
 
     - name: ci-setup | LOG
       uses: vezham/v0xFE-deployer/.github/actions/common/log-artifact@timeline
