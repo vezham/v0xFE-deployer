@@ -109,25 +109,25 @@ runs:
           echo "new_version: $new_version"
           echo "package_dir: $package_dir"
           
-          # if [ -d "$package_dir" ]; then
-          #   echo "Publishing $package_name@$new_version from $package_dir"
-          #   # (cd "$package_dir" && npm publish --dry-run --access public)
+          if [ -d "$package_dir" ]; then
+            echo "Publishing $package_name@$new_version from $package_dir"
+            # # (cd "$package_dir" && npm publish --dry-run --access public)
             
-          #   # # Create and push git tag
-          #   # git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          #   # git config --local user.name "github-actions[bot]"
-          #   # git tag -a "${package_name}@${new_version}" -m "Release ${package_name}@${new_version}"
-          #   # git push origin "${package_name}@${new_version}"
+            # # # Create and push git tag
+            # # git config --local user.email "github-actions[bot]@users.noreply.github.com"
+            # # git config --local user.name "github-actions[bot]"
+            # # git tag -a "${package_name}@${new_version}" -m "Release ${package_name}@${new_version}"
+            # # git push origin "${package_name}@${new_version}"
             
-          #   # Wait between publishes to avoid rate limits
-          #   if [ ! -z "$(echo "${{ steps.package-info.outputs.packages }}" | sed -n '2p')" ]; then
-          #     echo "Waiting 10 seconds before next publish..."
-          #     sleep 10
-          #   fi
-          # else
-          #   echo "Could not find directory $package_dir for package $package_name"
-          #   exit 1
-          # fi
+            # # Wait between publishes to avoid rate limits
+            # if [ ! -z "$(echo "${{ steps.package-info.outputs.packages }}" | sed -n '2p')" ]; then
+            #   echo "Waiting 10 seconds before next publish..."
+            #   sleep 10
+            # fi
+          else
+            echo "Could not find directory $package_dir for package $package_name"
+            exit 1
+          fi
         done
       env:
         GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
