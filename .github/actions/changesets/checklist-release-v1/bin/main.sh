@@ -1,15 +1,25 @@
 #!/bin/bash
 
-# Source all required scripts
-source "$(dirname "$0")/scripts/github-actions.sh"
-          
-# Initialize logging
-setup_logging
+# wjdlz/NOTE: Source all required scripts by DIR
+source "$(dirname "$0")/scripts/utils-log.sh"
+source "$(dirname "$0")/scripts/utils.sh"
+source "$(dirname "$0")/github-actions.sh"
 
-PACKAGES=$(get_package_info)
+pre_setup(){
+  # Set strict mode, error handling
+  set -euo pipefail
+  trap cleanup EXIT
 
-if [ ! -z "$PACKAGES" ]; then
-    publish_packages "$PACKAGES"
-else
-    log_info "No packages to publish"
-fi
+  # Initialize logging
+  setup_logging
+}
+
+main() {
+    pre_setup
+
+    get_package_info
+    publish_packages
+}
+
+# Run main function
+main

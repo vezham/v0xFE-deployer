@@ -1,7 +1,8 @@
 #!/bin/bash
 
-source "./scripts/config.sh"
-source "./scripts/utils.sh"
+# wjdlz/NOTE: Source all required scripts by DIR
+source "$(dirname "$0")/scripts/config.sh"
+source "$(dirname "$0")/scripts/utils-log.sh"
 
 process_packages_in_batches() {
     local changed_packages=$1
