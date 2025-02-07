@@ -1,0 +1,20 @@
+name: Upload Logs to artifact
+description: Upload the logs for debugging
+
+runs:
+  using: composite
+  steps:
+    - name: logs | dir
+      shell: bash
+      run: |
+        echo "logs -> artifact"
+        pwd
+        ls
+
+    - name: ci-setup | Upload Logs
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: publish-logs
+        path: logs/
+        retention-days: 30
