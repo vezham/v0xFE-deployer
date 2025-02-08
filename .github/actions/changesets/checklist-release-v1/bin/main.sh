@@ -8,7 +8,7 @@ source "$(dirname "$0")/github-actions.sh"
 pre_setup(){
   # Set strict mode, error handling
   # set -euo pipefail
-  set -eu
+  set -o pipefail
   trap cleanup EXIT
 
   # Initialize logging
