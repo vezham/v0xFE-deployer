@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Configuration | $V
-readonly V_HOME_DIR=".vezham"
+readonly V_HOME_DIR="v0x"
 readonly V_NS='wjdlz/WS'
 
 # Configuration | LOGS
