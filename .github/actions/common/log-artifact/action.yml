@@ -12,7 +12,6 @@ runs:
         ls
 
     - name: ci-setup | Upload Logs
-      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: v0x-ci-logs
