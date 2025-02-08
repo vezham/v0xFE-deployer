@@ -15,13 +15,6 @@ runs:
     - name: ci-setup | LOG
       uses: vezham/v0xFE-deployer/.github/actions/common/log-setup@timeline
     
-    - name: npm | whoami
-      shell: bash
-      run: |
-        npm whoami
-      env:
-        NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
-    
     - name: checklist-status
       uses: vezham/v0xFE-deployer/.github/actions/changesets/checklist-status@timeline
       env:
@@ -55,49 +48,7 @@ runs:
       env:
         NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
 
-    - name: Get Package Info
-      id: package-info
-      shell: bash
-      run: |
-        # Get the list of all modified package.json files from the PR
-        FILES=$(git diff --name-only HEAD^ HEAD | grep "package.json" || true)
-        
-        if [ -z "$FILES" ]; then
-          echo "No package.json files were modified"
-          exit 0
-        fi
-        
-        # Extract package info from modified package.json files
-        PACKAGES=""
-        for file in $FILES; do
-          # Skip root package.json
-          if [ "$file" = "package.json" ]; then
-            continue
-          fi
-          
-          # Get package info and directory
-          if [ -f "$file" ]; then
-            PKG_NAME=$(jq -r '.name' "$file")
-            PKG_VERSION=$(jq -r '.version' "$file")
-            PKG_DIR=$(dirname "$file")
-            if [ "$PKG_NAME" != "null" ] && [ "$PKG_VERSION" != "null" ] && [ ! -z "$PKG_NAME" ] && [ ! -z "$PKG_VERSION" ]; then
-              PACKAGES="${PACKAGES}${PKG_NAME}::${PKG_VERSION}::${PKG_DIR}\n"
-            fi
-          fi
-        done
-        
-        # Save the package info
-        echo "packages<<EOF" >> $GITHUB_OUTPUT
-        echo -e "$PACKAGES" >> $GITHUB_OUTPUT
-        echo "EOF" >> $GITHUB_OUTPUT
-
-    - name: npm | INFO
-      shell: bash
-      run: |
-        echo "info: ${{steps.package-info.outputs.packages}}"
-
     - name: checklist-release
-      # uses: vezham/v0xFE-deployer/.github/actions/changesets/checklist-release-v1@timeline
       uses: vezham/v0xFE-deployer/.github/actions/changesets/checklist-release@timeline
       env:
         NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
@@ -107,7 +58,6 @@ runs:
     #     github.event_name == 'pull_request' &&
     #     github.event.pull_request.merged == true &&
     #     github.event.pull_request.title == 'ci(changesets): :package: release packages'
-    #   # id: checklist-release # changed
     #   uses: vezham/v0xFE-deployer/.github/actions/changesets/checklist-release@timeline
     #   env:
     #     NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}

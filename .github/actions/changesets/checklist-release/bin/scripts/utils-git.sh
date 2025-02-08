@@ -14,6 +14,6 @@ create_git_tag() {
   local tag="${package_name}@${new_version}"
   
   log_debug "Creating git tag: $tag" "GIT"
-  git tag -a "$tag" -m "Release $tag"
+  git tag -a "$tag" -m "ci: Release $tag"
   git push origin "$tag"
 }
