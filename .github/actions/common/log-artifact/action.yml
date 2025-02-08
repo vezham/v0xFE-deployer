@@ -15,6 +15,6 @@ runs:
     - name: ci-setup | Upload Logs
       uses: actions/upload-artifact@v4
       with:
-        name: v0x-ci-logs
+        name: v0xCI
         path: v0xCI/
         retention-days: 20
