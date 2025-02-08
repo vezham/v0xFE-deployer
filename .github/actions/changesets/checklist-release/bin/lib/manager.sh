@@ -18,12 +18,12 @@ do_publish() {
   
   log_debug "Publishing $package_name@$new_version → $package_dir" "NPM"
   # Attempt to publish the package
-  if ! (cd "$package_dir" && npm publish --dry-run --access public); then
+  if ! (cd "$package_dir" && npm publish --access public); then # --dry-run
     log_error "Unable to publish $package_name" "NPM"
     return 1
   fi
 
-  # create_git_tag "$package_name" "$new_version"  # wjdlz/TODO: POC
+  create_git_tag "$package_name" "$new_version"  # wjdlz/TODO: POC
   return 0
 }
 
