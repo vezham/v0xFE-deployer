@@ -9,17 +9,18 @@ setup_logging() {
     touch "$LOG_FILE"
 
     echo -e "${GREEN} v0xCLI ${RED}${V_NS}${NC} Executing setup_logging..."
-    log_info "Log file created at $LOG_FILE"
+    log_info "Log file created at $LOG_FILE" "LOGGER"
 }
 
 # Logging functions
 log() {
     local level=$1
     local message=$2
+    local v_ns=${3:-'unknown'}
     local timestamp
     timestamp=$(date +'%Y-%m-%d %H:%M:%S')
-    local log_console="[vezham] [$timestamp] $V_NS: "
-    local log_message="[vezham] [$timestamp] [$level] $V_NS: $message"
+    local log_console="[vezham] [$timestamp] [$v_ns]: "
+    local log_message="[vezham] [$timestamp] [$level] [$v_ns]: $message"
 
     # Log to console
     if [ "$level" = "INFO" ]; then
@@ -38,7 +39,7 @@ log() {
     echo "$log_message" >> "$LOG_FILE"
 }
 
-log_info() { log "INFO" "$1"; }
-log_warn() { log "WARN" "$1"; }
-log_debug() { log "DEBUG" "$1"; }
-log_error() { log "ERROR" "$1"; }
+log_info() { log "INFO" "$1" "${2:-${BASH_SOURCE[0]}}"; }
+log_warn() { log "WARN" "$1" "${2:-${BASH_SOURCE[0]}}"; }
+log_debug() { log "DEBUG" "$1" "${2:-${BASH_SOURCE[0]}}"; }
+log_error() { log "ERROR" "$1" "${2:-${BASH_SOURCE[0]}}"; }

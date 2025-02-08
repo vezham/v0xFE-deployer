@@ -2,7 +2,6 @@
 
 # Configuration | $V
 readonly V_HOME_DIR=".vezham"
-readonly V_NS='wjdlz/WS'
 
 # Configuration | LOGS
 readonly LOG_DIR="${V_HOME_DIR}/logs"

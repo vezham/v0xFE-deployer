@@ -119,7 +119,7 @@ publish_packages() {
     new_version=$(echo "$package_info" | jq -r '.version')
     package_dir=$(echo "$package_info" | jq -r '.directory')
     
-    log_info "Publishing $package_name ( $new_version → $current/$total_packages )"
+    log_debug "Publishing $package_name ( $new_version → $current/$total_packages )"
     
     if ! do_publish "$package_name" "$new_version" "$package_dir"; then
       log_error "Failed to process $package_name, continuing with next package"
@@ -134,7 +134,7 @@ publish_packages() {
     
     # Wait between publishes if there are more packages
     if [ "$current" -lt "$total_packages" ]; then
-      log_info "Waiting $PACKAGE_DELAY seconds before next package..."
+      log_debug "Waiting $PACKAGE_DELAY seconds before next package..."
       sleep "$PACKAGE_DELAY"
     fi
   done
