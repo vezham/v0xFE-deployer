@@ -17,4 +17,4 @@ runs:
       with:
         name: v0xCI-artifact
         path: v0xCI/
-        retention-days: 20
+        retention-days: 30
