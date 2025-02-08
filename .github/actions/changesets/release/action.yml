@@ -15,11 +15,6 @@ runs:
     - name: ci-setup | LOG
       uses: vezham/v0xFE-deployer/.github/actions/common/log-setup@timeline
     
-    - name: checklist-status
-      uses: vezham/v0xFE-deployer/.github/actions/changesets/checklist-status@timeline
-      env:
-        NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
-
     - name: checklist-pr | [NPM] create release PR
       if: github.event_name != 'pull_request'
       id: changesets
@@ -48,37 +43,29 @@ runs:
       env:
         NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
 
-    - name: checklist-release
+    - name: checklist-release | [NPM] publish
+      if: |
+        github.event_name == 'pull_request'
+      # if: |
+      #   github.event_name == 'pull_request' &&
+      #   github.event.pull_request.merged == true &&
+      #   github.event.pull_request.title == 'ci(changesets): :package: release packages'
+      
+      # - if: steps.changesets.outputs.hasChangesets == 'false'
       uses: vezham/v0xFE-deployer/.github/actions/changesets/checklist-release@timeline
       env:
         NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
     
-    # - name: checklist-release | [NPM] publish
-    #   if: |
-    #     github.event_name == 'pull_request' &&
-    #     github.event.pull_request.merged == true &&
-    #     github.event.pull_request.title == 'ci(changesets): :package: release packages'
-    #   uses: vezham/v0xFE-deployer/.github/actions/changesets/checklist-release@timeline
-    #   env:
-    #     NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
-    
     # --------------
-    # - name: checklist-release
-    #   # if: steps.changesets.outputs.hasChangesets == 'false'
-    #   if: steps.changesets.outputs.published == 'true'
-    #   # id: checklist-release #changed
-    #   uses: vezham/v0xFE-deployer/.github/actions/changesets/checklist-release@timeline
-    #   env:
-    #     NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
-
-    # - name: checklist-release
-    #   if: steps.changesets.outputs.hasChangesets == 'false'
-    #   if: |
-    #     github.event_name == 'pull_request' &&
-    #     github.event.pull_request.merged == true &&
-    #     github.event.pull_request.title == 'ci(changesets): :package: release packages'
-    #   shell: bash
-    #   run: |
-    #     npm whoami
-    #   env:
-    #     NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
+    - name: checklist-release-poc
+      if: steps.changesets.outputs.hasChangesets == 'false'
+      if: |
+        github.event_name == 'pull_request' &&
+        github.event.pull_request.merged == true &&
+        github.event.pull_request.title == 'ci(changesets): :package: release packages'
+      shell: bash
+      run: |
+        echo "checklist-release-poc-testcase"
+        npm whoami
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
