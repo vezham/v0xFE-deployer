@@ -97,7 +97,8 @@ runs:
         echo "info: ${{steps.package-info.outputs.packages}}"
 
     - name: checklist-release
-      uses: vezham/v0xFE-deployer/.github/actions/changesets/checklist-release-v1@timeline
+      # uses: vezham/v0xFE-deployer/.github/actions/changesets/checklist-release-v1@timeline
+      uses: vezham/v0xFE-deployer/.github/actions/changesets/checklist-release@timeline
       env:
         NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
     
