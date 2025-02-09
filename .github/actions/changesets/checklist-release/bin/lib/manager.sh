@@ -12,7 +12,7 @@ do_publish() {
 
   # Check if package already exists
   if npm view "$package_name@$new_version" &>/dev/null; then
-    log_warn "Package $package_name@$next_version already exists, skipping" "NPM"
+    log_warn "Package $package_name@$new_version already exists, skipping" "NPM"
     return 1
   fi
   
