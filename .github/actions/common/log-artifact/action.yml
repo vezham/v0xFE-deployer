@@ -7,7 +7,7 @@ runs:
     - name: logs | dir
       shell: bash
       run: |
-        mkdir .vezham
+        mkdir -p .vezham
         cp -R .vezham/ v0xCI/
         echo "logs -> artifact"
         pwd
