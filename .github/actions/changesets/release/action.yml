@@ -31,82 +31,11 @@ runs:
         NPM_TOKEN: ${{ inputs.NPM_TOKEN }}
         NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
 
-    - name: npm | INFO
-      shell: bash
-      run: |
-        echo "event_name: ${{ github.event_name }}"
-        echo "PR_merged: ${{ github.pull_request.merged }}"
-        echo "PR_title: ${{ github.pull_request.title }}"
-        echo "published: ${{steps.changesets.outputs.published}}"
-        echo "pkg: ${{steps.changesets.outputs.publishedPackages}}"
-        echo "hasChangesets: ${{steps.changesets.outputs.hasChangesets}}"
-      env:
-        NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
-
     - name: checklist-release | [NPM] publish
-      if: |
-        github.event_name == 'pull_request'
-      # if: |
-      #   github.event_name == 'pull_request' &&
-      #   github.event.pull_request.merged == true &&
-      #   github.event.pull_request.title == 'ci(changesets): :package: release packages'
-      
-      # - if: steps.changesets.outputs.hasChangesets == 'false'
-      uses: vezham/v0xFE-deployer/.github/actions/changesets/checklist-release@timeline
-      env:
-        NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
-    
-    # --------------
-    - name: checklist-release-poc
-      # if: steps.changesets.outputs.hasChangesets == 'false'
       if: |
         github.event_name == 'pull_request' &&
         github.event.pull_request.merged == true &&
         github.event.pull_request.title == 'ci(changesets): :package: release packages'
-      shell: bash
-      run: |
-        echo "checklist-release-poc-testcase"
-        npm whoami
+      uses: vezham/v0xFE-deployer/.github/actions/changesets/checklist-release@timeline
       env:
         NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
-
-    # ------
-    - name: Dump GitHub context
-      env:
-        GITHUB_CONTEXT: ${{ toJson(github) }}
-      shell: bash
-      run: echo "$GITHUB_CONTEXT"
-    - name: Dump job context
-      env:
-        JOB_CONTEXT: ${{ toJson(job) }}
-      shell: bash
-      run: echo "$JOB_CONTEXT"
-    - name: Dump steps context
-      env:
-        STEPS_CONTEXT: ${{ toJson(steps) }}
-      shell: bash
-      run: echo "$STEPS_CONTEXT"
-    - name: Dump runner context
-      env:
-        RUNNER_CONTEXT: ${{ toJson(runner) }}
-      shell: bash
-      run: echo "$RUNNER_CONTEXT"
-    - name: Dump strategy context
-      env:
-        STRATEGY_CONTEXT: ${{ toJson(strategy) }}
-      shell: bash
-      run: echo "$STRATEGY_CONTEXT"
-    - name: Dump matrix context
-      env:
-        MATRIX_CONTEXT: ${{ toJson(matrix) }}
-      shell: bash
-      run: echo "$MATRIX_CONTEXT"
-
-    - name: Show default environment variables
-      shell: bash
-      run: |
-        echo "The job_id is: $GITHUB_JOB"   # reference the default environment variables
-        echo "The id of this action is: $GITHUB_ACTION"   # reference the default environment variables
-        echo "The run id is: $GITHUB_RUN_ID"
-        echo "The GitHub Actor's username is: $GITHUB_ACTOR"
-        echo "GitHub SHA: $GITHUB_SHA"
