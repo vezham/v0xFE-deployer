@@ -70,18 +70,6 @@ runs:
       env:
         NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
 
-    - name: npm | INFO
-      shell: bash
-      run: |
-        echo "steps: ${{ toJson(steps) }}"
-      # echo "github: ${{ toJson(github) }}"
-      # echo "job: ${{ toJson(job) }}"
-      # echo "runner: ${{ toJson(runner) }}"
-      # echo "strategy: ${{ toJson(strategy) }}"
-      # echo "matrix: ${{ toJson(matrix) }}"
-      env:
-        NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
-
     # ------
     - name: Dump GitHub context
       env:
