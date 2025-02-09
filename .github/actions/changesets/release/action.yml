@@ -58,7 +58,7 @@ runs:
     
     # --------------
     - name: checklist-release-poc
-      if: steps.changesets.outputs.hasChangesets == 'false'
+      # if: steps.changesets.outputs.hasChangesets == 'false'
       if: |
         github.event_name == 'pull_request' &&
         github.event.pull_request.merged == true &&
