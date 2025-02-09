@@ -22,7 +22,7 @@ readonly GIT_BOT_NAME="github-actions[bot]"
 # ------ MODULE BASED CONFIG ------
 
 # Configuration variables
-BATCH_SIZE=5   # Number of packages to publish in each batch
+BATCH_SIZE=10   # Number of packages to publish in each batch
 BATCH_DELAY=5   #[300] # Delay between batches in seconds (5 minutes)
 PACKAGE_DELAY=1 #[5] Delay between individual packages in seconds 
 
