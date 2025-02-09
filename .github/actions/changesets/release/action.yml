@@ -34,7 +34,13 @@ runs:
     - name: npm | INFO
       shell: bash
       run: |
-        echo "github: ${{ github }}"
+        echo "github: ${{ toJson(github) }}"
+        echo "job: ${{ toJson(job) }}"
+        echo "steps: ${{ toJson(steps) }}"
+        echo "runner: ${{ toJson(runner) }}"
+        echo "strategy: ${{ toJson(strategy) }}"
+        echo "matrix: ${{ toJson(matrix) }}"
+        echo "----------"
         echo "event_name: ${{ github.event_name }}"
         echo "PR_merged: ${{ github.pull_request.merged }}"
         echo "PR_title: ${{ github.pull_request.title }}"
