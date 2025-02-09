@@ -74,8 +74,8 @@ runs:
       shell: bash
       run: |
         echo "github: ${{ toJson(github) }}"
-        echo "job: ${{ toJson(job) }}"
         echo "steps: ${{ toJson(steps) }}"
+      # echo "job: ${{ toJson(job) }}"
       # echo "runner: ${{ toJson(runner) }}"
       # echo "strategy: ${{ toJson(strategy) }}"
       # echo "matrix: ${{ toJson(matrix) }}"
