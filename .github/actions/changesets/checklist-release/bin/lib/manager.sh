@@ -16,9 +16,15 @@ do_publish() {
     return 1
   fi
   
+  # Attempt to log the dist
+  if ! (cd "$package_dir/dist" && pwd && ls); then
+    log_error "Unable to log dist $package_name" "NPM"
+    return 1
+  fi
+  
   log_debug "Publishing $package_name@$new_version → $package_dir" "NPM"
   # Attempt to publish the package
-  if ! (cd "$package_dir" && pwd && ls && npm publish --access public); then # --dry-run
+  if ! (cd "$package_dir" && npm publish --access public); then # --dry-run
     log_error "Unable to publish $package_name" "NPM"
     return 1
   fi
