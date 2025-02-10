@@ -16,8 +16,14 @@ do_publish() {
     return 1
   fi
   
-  # Attempt to log the dist
-  if ! (cd "$package_dir/dist" && pwd && ls); then
+  # verify DIST
+  if [ ! -d "$package_dir/dist" ]; then
+    (cd "$package_dir" && pnpm build)
+    log_warn "init re-build dist for $package_name"
+  fi
+
+  # Attempt to log the dist 
+  if ! (cd "$package_dir/dist" && pwd); then
     log_error "Unable to log dist $package_name" "NPM"
     return 1
   fi
