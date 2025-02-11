@@ -4,7 +4,7 @@ do_publish() {
   local package_name=$1
   local new_version=$2
   local package_dir=$3
-  local ns_npm = "NPM"
+  local ns_npm="NPM"
 
   if [ ! -d "$package_dir" ]; then
     log_error "Directory not found: $package_dir"
