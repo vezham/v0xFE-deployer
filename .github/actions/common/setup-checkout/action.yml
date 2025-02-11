@@ -3,10 +3,10 @@ description: Sets up repo & branch
 
 inputs:
   GIT_REPO:
-    required: false
+    required: true
     type: string
   GIT_BRANCH:
-    required: false
+    required: true
     type: string
 
 runs:

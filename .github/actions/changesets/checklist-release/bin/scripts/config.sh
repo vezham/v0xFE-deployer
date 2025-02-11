@@ -15,7 +15,7 @@ YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Configuration | GIT variables
+# Configuration | GIT variables # wjdlz/TODO: set v0x-bot
 readonly GIT_BOT_EMAIL="github-actions[bot]@users.noreply.github.com"
 readonly GIT_BOT_NAME="github-actions[bot]"
 

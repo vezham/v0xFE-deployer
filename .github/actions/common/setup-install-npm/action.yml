@@ -25,11 +25,6 @@ runs:
       env:
         NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
 
-    # - name: npm | Create .npmrc
-    #   shell: bash
-    #   run: |
-    #     echo "registry.npmjs.org/:_authToken=${NPM_TOKEN}" >> .npmrc
-    
     - name: npm | Check NPM Auth
       shell: bash
       run: |

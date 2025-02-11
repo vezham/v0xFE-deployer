@@ -4,6 +4,7 @@ do_publish() {
   local package_name=$1
   local new_version=$2
   local package_dir=$3
+  local ns_npm = "NPM"
 
   if [ ! -d "$package_dir" ]; then
     log_error "Directory not found: $package_dir"
@@ -12,7 +13,7 @@ do_publish() {
 
   # Check if package already exists
   if npm view "$package_name@$new_version" &>/dev/null; then
-    log_warn "Package $package_name@$new_version already exists, skipping" "NPM"
+    log_warn "Package $package_name@$new_version already exists, skipping" $ns_npm
     return 1
   fi
   
@@ -24,18 +25,18 @@ do_publish() {
 
   # Attempt to log the dist 
   if ! (cd "$package_dir/dist" && pwd); then
-    log_error "Unable to log dist $package_name" "NPM"
+    log_error "Unable to log dist $package_name" $ns_npm
     return 1
   fi
   
-  log_debug "Publishing $package_name@$new_version → $package_dir" "NPM"
+  log_debug "Publishing $package_name@$new_version → $package_dir" $ns_npm
   # Attempt to publish the package
   if ! (cd "$package_dir" && pnpm publish --access public --no-git-checks); then # --dry-run
-    log_error "Unable to publish $package_name" "NPM"
+    log_error "Unable to publish $package_name" $ns_npm
     return 1
   fi
 
-  create_git_tag "$package_name" "$new_version"  # wjdlz/TODO: POC
+  create_git_tag "$package_name" "$new_version"
   return 0
 }
 
@@ -43,7 +44,7 @@ publish_packages_in_batches() {
   local total_packages=$1
   local packages_json=$(cat "$CHANGESET_STATUS_JSON")
 
-  # setup_git # wjdlz/TODO: set v0x-bot
+  setup_git
 
   local batch_count=$(( ($total_packages + $BATCH_SIZE - 1) / $BATCH_SIZE ))
   log_info "Starting to publish $total_packages packages in $batch_count batches..."

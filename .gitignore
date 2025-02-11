@@ -1,0 +1,7 @@
+# wjdlz/NOTE: Add files here to ignore them from prettier formatting
+
+.v
+
+#  --- END of v0xFE config ---
+
+node_modules

@@ -1,5 +1,5 @@
-name: log-ctx
-description: log-ctx
+name: log git ctx
+description: log the current git action's workflow context
 
 runs:
   using: composite
