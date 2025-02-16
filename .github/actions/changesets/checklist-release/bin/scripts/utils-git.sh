@@ -43,8 +43,7 @@ EOF
   if create_github_release "$tag" "Release $tag" "$release_notes" "$repo_path" > /dev/null; then
     log_info "Successfully created release for $tag" "GIT"
   else
-    log_error "Failed to create release for $tag" "GIT"
-    return 1
+    log_warn "Failed to create GitHub release for $tag, but package was published successfully" "GIT"
   fi
   
   return 0
@@ -64,6 +63,12 @@ create_github_release() {
   local body=$3
   local repo_path=$4
   
+  # Check if GITHUB_TOKEN is available
+  if [ -z "$GITHUB_TOKEN" ]; then
+    log_error "GITHUB_TOKEN is not set. Skipping GitHub release creation." "GIT"
+    return 1
+  fi
+
   curl -s -X POST \
     -H "Authorization: token $GITHUB_TOKEN" \
     -H "Accept: application/vnd.github.v3+json" \

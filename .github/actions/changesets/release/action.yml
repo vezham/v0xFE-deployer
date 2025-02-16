@@ -38,4 +38,5 @@ runs:
         github.event.pull_request.title == 'ci(changesets): :package: release packages'
       uses: vezham/v0xFE-deployer/.github/actions/changesets/checklist-release@timeline
       env:
+        GITHUB_TOKEN: ${{ inputs.GITHUB_TOKEN }}
         NODE_AUTH_TOKEN: ${{ inputs.NPM_TOKEN }}
