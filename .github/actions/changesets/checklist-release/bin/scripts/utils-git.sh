@@ -13,7 +13,7 @@ create_git_tag() {
   local new_version=$2
   local tag="${package_name}@${new_version}"
   local release_notes
-  local repo_path
+  local pr_number
   
   log_debug "Creating git tag and release: $tag" "GIT"
 
@@ -21,13 +21,20 @@ create_git_tag() {
   git tag -a "$tag" -m "ci: Release $tag"
   git push origin "$tag"
 
+  # Get PR information
+  pr_number=$(get_pr_info)
+  local pr_link=""
+  if [ -n "$pr_number" ]; then
+    pr_link=$'\n\n'"- This release was created from PR [#${pr_number}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/pull/${pr_number})"
+  fi
+
   # Generate release notes
   release_notes=$(cat <<EOF
-## ${package_name} v${new_version}
+## Release ${package_name} v${new_version}
 
 ### Changes
 - Package published to npm
-- For detailed changes, see the [changelog](./CHANGELOG.md) (if available)
+- For detailed changes, see the [changelog](./CHANGELOG.md) (if available)${pr_link}
 
 ### Installation
 \`\`\`bash
@@ -38,9 +45,8 @@ EOF
 
   # Create GitHub release
   log_debug "Creating GitHub release for $tag" "GIT"
-  repo_path=$(get_repo_info)
   
-  if create_github_release "$tag" "Release $tag" "$release_notes" "$repo_path"; then
+  if create_github_release "$tag" "$tag" "$release_notes"; then
     log_info "Successfully created release for $tag" "GIT"
   else
     log_warn "Failed to create GitHub release for $tag, but package was published successfully" "GIT"
@@ -49,19 +55,25 @@ EOF
   return 0
 }
 
-# git | get repo
-get_repo_info() {
-  local repo_url=$(git config --get remote.origin.url)
-  log_debug "repo_url: $repo_url" "GIT"
-
-  echo "$repo_url" | sed -E 's/.*github.com[:/]([^/]+\/[^/]+)(\.git)?$/\1/'
+get_pr_info() {
+  local pr_number
+  
+  # Get PR number from GitHub environment
+  if [ -n "${GITHUB_EVENT_PATH:-}" ] && [ -f "$GITHUB_EVENT_PATH" ]; then
+    pr_number=$(jq -r '.pull_request.number' "$GITHUB_EVENT_PATH")
+    if [ "$pr_number" != "null" ]; then
+      echo "$pr_number"
+      return 0
+    fi
+  fi
+  
+  return 1
 }
 
 create_github_release() {
   local tag=$1
   local name=$2
   local body=$3
-  local repo_path=$4
   
   # Check if GITHUB_TOKEN is available
   if [ -z "$GITHUB_TOKEN" ]; then
@@ -74,23 +86,7 @@ create_github_release() {
     --title "$name" \
     --notes-file - \
     --verify-tag; then
-    log_error "Failed to create GitHub release for $tag" "GIT"
     return 1
   fi
-  log_info "Successfully created release for $tag" "GIT"
   return 0
-
-#   curl -s -X POST \
-#     -H "Authorization: token $GITHUB_TOKEN" \
-#     -H "Accept: application/vnd.github.v3+json" \
-#     "${GITHUB_API}/repos/${repo_path}/releases" \
-#     -d @- <<EOF
-# {
-#   "tag_name": "${tag}",
-#   "name": "${name}",
-#   "body": $(echo "$body" | jq -R -s .),
-#   "draft": false,
-#   "prerelease": false
-# }
-# EOF
 }

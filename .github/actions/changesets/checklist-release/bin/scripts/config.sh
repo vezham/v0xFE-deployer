@@ -18,7 +18,6 @@ NC='\033[0m' # No Color
 # Configuration | GIT variables # wjdlz/TODO: set v0x-bot
 readonly GIT_BOT_EMAIL="github-actions[bot]@users.noreply.github.com"
 readonly GIT_BOT_NAME="github-actions[bot]"
-readonly GITHUB_API="https://api.github.com"
 readonly GITHUB_TOKEN="${GITHUB_TOKEN:-}"
 
 # ------ MODULE BASED CONFIG ------
