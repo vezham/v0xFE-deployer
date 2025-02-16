@@ -34,7 +34,7 @@ create_git_tag() {
 
 ### Changes
 - Package published to npm
-- For detailed changes, see the [changelog](./CHANGELOG.md) (if available)${pr_link}
+${pr_link}
 
 ### Installation
 \`\`\`bash
