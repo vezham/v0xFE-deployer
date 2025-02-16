@@ -40,7 +40,7 @@ EOF
   log_debug "Creating GitHub release for $tag" "GIT"
   repo_path=$(get_repo_info)
   
-  if create_github_release "$tag" "Release $tag" "$release_notes" "$repo_path" > /dev/null; then
+  if create_github_release "$tag" "Release $tag" "$release_notes" "$repo_path"; then
     log_info "Successfully created release for $tag" "GIT"
   else
     log_warn "Failed to create GitHub release for $tag, but package was published successfully" "GIT"
@@ -69,17 +69,28 @@ create_github_release() {
     return 1
   fi
 
-  curl -s -X POST \
-    -H "Authorization: token $GITHUB_TOKEN" \
-    -H "Accept: application/vnd.github.v3+json" \
-    "${GITHUB_API}/repos/${repo_path}/releases" \
-    -d @- <<EOF
-{
-  "tag_name": "${tag}",
-  "name": "${name}",
-  "body": $(echo "$body" | jq -R -s .),
-  "draft": false,
-  "prerelease": false
-}
-EOF
+  # Create release using gh CLI
+  if ! echo "$body" | gh release create "$tag" \
+    --title "$name" \
+    --notes-file - \
+    --verify-tag; then
+    log_error "Failed to create GitHub release for $tag" "GIT"
+    return 1
+  fi
+  log_info "Successfully created release for $tag" "GIT"
+  return 0
+
+#   curl -s -X POST \
+#     -H "Authorization: token $GITHUB_TOKEN" \
+#     -H "Accept: application/vnd.github.v3+json" \
+#     "${GITHUB_API}/repos/${repo_path}/releases" \
+#     -d @- <<EOF
+# {
+#   "tag_name": "${tag}",
+#   "name": "${name}",
+#   "body": $(echo "$body" | jq -R -s .),
+#   "draft": false,
+#   "prerelease": false
+# }
+# EOF
 }
