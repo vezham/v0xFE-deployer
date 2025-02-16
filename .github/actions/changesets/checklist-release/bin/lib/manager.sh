@@ -31,7 +31,7 @@ do_publish() {
   
   log_debug "Publishing $package_name@$new_version → $package_dir" $ns_npm
   # Attempt to publish the package
-  if ! (cd "$package_dir" && pnpm publish --access public --no-git-checks); then # --dry-run
+  if ! (cd "$package_dir" && pnpm publish --provenance --access public --no-git-checks); then # --dry-run
     log_error "Unable to publish $package_name" $ns_npm
     return 1
   fi
