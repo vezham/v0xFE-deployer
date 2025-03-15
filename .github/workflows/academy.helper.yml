@@ -76,8 +76,20 @@ jobs:
           # -EOD
 
           # wjdlz/NOTE: clean up
-          rm token.json
+          # rm token.json
 
+      - name: logs | dir
+        shell: bash
+        run: |
+          pwd
+          ls
+          echo "chk -> "
+          pwd
+          ls
+          cd .vezham/
+          pwd
+          ls
+          
       - name: ci-setup | gen $ENV_TOKENS
         id: gen-env-tokens
         env:
