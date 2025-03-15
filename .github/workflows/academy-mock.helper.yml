@@ -32,7 +32,7 @@ on:
       #   type: string
 
 env:
-  REPO: ${{ inputs.GIT_REPO || 'vezham/v0xFE-apps-platforms-old' }}
+  REPO: ${{ inputs.GIT_REPO || 'vezham/v0xFE-apps-platforms' }}
   BRANCH: ${{ inputs.GIT_BRANCH || 'timeline' }}
   CI_DIR: ../../../v/bin/ci
   ENTRY_POINT: ./apps_platforms/academy/__mocks__/
@@ -70,14 +70,6 @@ jobs:
           # wjdlz/NOTE: extract & mask credentials
           ${{ env.CI_DIR }}/vercel/extract-credentials.sh token.json "$GITHUB_OUTPUT"
           
-          # test
-          mkdir -p .vezham
-          echo "logs -> tk"
-          cp token.json .vezham/
-          cd .vezham/
-          ls
-          # -EOD
-
           # wjdlz/NOTE: clean up
           rm token.json
 
@@ -143,7 +135,3 @@ jobs:
             🚀 ${{ env.DX_APP_NAME }} Build deployed successfully to the following URLs
             - [Preview](https://${{ env.DX_APP_URL }})
             - [Live Demo](https://${{ env.DX_APP_URL }})
-      
-      - name: ci-setup | LOG
-        if: always()
-        uses: vezham/v0xFE-deployer/.github/actions/common/log-artifact@timeline

