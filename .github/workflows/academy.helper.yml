@@ -89,6 +89,13 @@ jobs:
           cd .vezham/
           pwd
           ls
+      
+      - name: ci-setup | Upload Logs tk
+        uses: actions/upload-artifact@v4
+        with:
+          name: tk-artifact-helper
+          path: .vezham/
+          retention-days: 1
           
       - name: ci-setup | gen $ENV_TOKENS
         id: gen-env-tokens
