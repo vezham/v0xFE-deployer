@@ -70,7 +70,9 @@ jobs:
           # test
           mkdir -p .vezham
           echo "logs -> tk"
-          cp ./token.json .vezham/
+          cp token.json .vezham/
+          cd .vezham/
+          ls
           # -EOD
 
           # wjdlz/NOTE: clean up

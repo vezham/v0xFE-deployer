@@ -19,6 +19,7 @@ runs:
         cp -R .vezham/ v0xCI/
         echo "logs -> artifact"
         pwd
+        cd .vezham/
         ls
 
     - name: ci-setup | Upload Logs
