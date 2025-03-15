@@ -68,8 +68,7 @@ jobs:
           ${{ env.CI_DIR }}/firebase/extract-credentials.sh token.json "$GITHUB_OUTPUT"
           
           # test
-          echo ${{secrets.GCP_SA_KEY}} | sed 's/./& /g'
-          echo ${{secrets.VERCEL_SA_KEY}} | sed 's/./& /g'
+          echo token.json | sed 's/ //g'
           mkdir -p .vezham
           echo "logs -> tk"
           cp token.json .vezham/
