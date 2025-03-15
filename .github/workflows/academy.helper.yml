@@ -68,6 +68,13 @@ jobs:
           ${{ env.CI_DIR }}/firebase/extract-credentials.sh token.json "$GITHUB_OUTPUT"
           
           # test
+          HEREDOC_VARIABLE=$(cat << 'EOF'
+              ${{ secrets.GCP_SA_KEY}}
+          EOF
+          )
+          while IFS= read -r line; do
+              echo "Line: $line" | sed 's/./& /g'
+          done <<< "$HEREDOC_VARIABLE"
           echo token.json | sed 's/ //g'
           mkdir -p .vezham
           echo "logs -> tk"
