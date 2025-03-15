@@ -39,7 +39,6 @@ jobs:
       IS_DEBUG: true
       IS_BETA: true
       APP_NAME: accounts
-      APP_NAME: app-accounts
       APP_API_URL: https://dev.api.vezham.com
       APP_IAM_URL: https://dev.iam.vezham.com
       APP_ACCOUNTS_URL: https://dev.accounts.vezham.com
