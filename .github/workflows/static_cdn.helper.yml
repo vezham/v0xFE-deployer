@@ -93,6 +93,10 @@ jobs:
         run: |
           echo "DX_APP_URL=${{ env.DX_APP_NAME }}-${{ env.BRANCH }}-${{ env.SHA }}" >> $GITHUB_ENV
 
+      - name: ci-setup-git | $SM
+        run: |
+          git submodule update --init --recursive
+      
       - name: setup | pnpm
         uses: pnpm/action-setup@v4
         with:
