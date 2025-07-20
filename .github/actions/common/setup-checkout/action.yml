@@ -18,15 +18,8 @@ runs:
         repository: ${{ inputs.REPO }}
         ref: ${{ inputs.BRANCH }}
         fetch-depth: 0
-        submodules: false
+        submodules: 'recursive'
     
-    - name: Setup SSH for submodules
-      run: |
-        mkdir -p ~/.ssh
-        echo "${{ secrets.SUBMODULE_SSH_KEY }}" > ~/.ssh/id_rsa
-        chmod 600 ~/.ssh/id_rsa
-        ssh-keyscan github.com >> ~/.ssh/known_hosts
-
     - name: Init and update submodules
       run: |
         git submodule sync
