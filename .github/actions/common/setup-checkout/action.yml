@@ -21,6 +21,7 @@ runs:
         submodules: 'recursive'
     
     - name: Init and update submodules
+      shell: bash
       run: |
         git submodule sync
         git submodule update --init --recursive
