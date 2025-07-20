@@ -18,3 +18,4 @@ runs:
         repository: ${{ inputs.REPO }}
         ref: ${{ inputs.BRANCH }}
         fetch-depth: 0
+        submodules: true
