@@ -10,7 +10,7 @@ on:
 jobs:
   tva:
     name: dc/TVA
-    if: ${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'feat/sm' || inputs.CALLER == 'scheduler' }}
+    if: ${{ inputs.CALLER == 'timeline' || inputs.CALLER == 'scheduler' }}
     uses: vezham/v0xFE-deployer/.github/workflows/static_cdn.helper.yml@timeline
     secrets:
       GCP_SA_KEY: ${{ secrets.STATIC_CDN_TVA_GCP_SA_KEY }}
