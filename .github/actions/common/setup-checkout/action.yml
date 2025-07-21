@@ -18,10 +18,3 @@ runs:
         repository: ${{ inputs.REPO }}
         ref: ${{ inputs.BRANCH }}
         fetch-depth: 0
-        submodules: 'recursive'
-    
-    - name: Init and update submodules
-      shell: bash
-      run: |
-        git submodule sync
-        git submodule update --init --recursive

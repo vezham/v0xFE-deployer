@@ -16,13 +16,6 @@ runs:
         cache: 'pnpm'
         cache-dependency-path: '**/pnpm-lock.yaml'
 
-    - name: setup | Git SM
-      shell: bash
-      run: |
-        git config --global user.email "vigneshwaran@vezham.com"
-        git config --global user.name "v0xvigneshwaran"
-        git submodule update --init --recursive
-    
     # - name: setup | Git User (Deployer)
     #   shell: bash
     #   run: |
